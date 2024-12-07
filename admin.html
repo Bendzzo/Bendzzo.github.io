@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leavya - Admin</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Leavya - Admin Panel</h1>
+        <nav>
+            <a href="#invitations">Správa Pozvánok</a>
+            <a href="#bans">Správa Banov</a>
+            <a href="#domains">Správa Domén</a>
+            <a href="#problems">Technické Problémy</a>
+            <a href="index.html">Domov</a>
+            <div style="float: right">admin1</div>
+        </nav>
+    </header>
+    <main>
+        <!-- Správa Pozvánok -->
+        <section id="invitations">
+            <h2>Správa Pozvánok</h2>
+            <button onclick="openForm('invitation')">Pridať Pozvánku</button>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Dátum</th>
+                        <th>Od koho</th>
+                        <th>Akcie</th>
+                    </tr>
+                </thead>
+                <tbody id="invitation-list">
+                    <tr>
+                        <td>Jozo.Raz@gmail.com</td>
+                        <td>01.12.2024</td>
+                        <td>admin1</td>
+                        <td><button onclick="removeItem(this)">Odstrániť</button></td>
+                    </tr>
+                    <tr>
+                        <td>Adela.Banasova@gmail.com</td>
+                        <td>02.12.2024</td>
+                        <td>admin1</td>
+                        <td><button onclick="removeItem(this)">Odstrániť</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Správa Banov -->
+        <section id="bans">
+            <h2>Správa Banov</h2>
+            <button onclick="openForm('ban')">Zabanovať Používateľa</button>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Používateľ</th>
+                        <th>Dátum</th>
+                        <th>Dôvod</th>
+                        <th>Od koho</th>
+                        <th>Akcie</th>
+                    </tr>
+                </thead>
+                <tbody id="ban-list">
+                    <tr>
+                        <td>Rober Fico</td>
+                        <td>01.12.2024</td>
+                        <td>Populizmus, Klamstvo</td>
+                        <td>admin1</td>
+                        <td><button onclick="removeItem(this)">Odbanovať</button></td>
+                    </tr>
+                    <tr>
+                        <td>user2</td>
+                        <td>02.12.2024</td>
+                        <td>Vulgarizmy</td>
+                        <td>admin1</td>
+                        <td><button onclick="removeItem(this)">Odbanovať</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Správa Domén -->
+        <section id="domains">
+            <h2>Správa Domén</h2>
+            <button onclick="openForm('domain')">Pridať Doménu</button>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Doména</th>
+                        <th>Dátum Pridania</th>
+                        <th>Správca</th>
+                        <th>Akcie</th>
+                    </tr>
+                </thead>
+                <tbody id="domain-list">
+                    <tr>
+                        <td>leavya.com</td>
+                        <td>01.12.2024</td>
+                        <td>admin1</td>
+                        <td><button onclick="removeItem(this)">Odstrániť</button></td>
+                    </tr>
+                    <tr>
+                        <td>example.net</td>
+                        <td>02.12.2024</td>
+                        <td>admin1</td>
+                        <td><button onclick="removeItem(this)">Odstrániť</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Technické Problémy -->
+        <section id="problems">
+            <h2>Technické Problémy</h2>
+            <button onclick="openForm('problem')">Pridať Problém</button>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Problém</th>
+                        <th>Dátum</th>
+                        <th>Stav</th>
+                        <th>Správca</th>
+                        <th>Akcie</th>
+                    </tr>
+                </thead>
+                <tbody id="problem-list">
+                    <tr>
+                        <td>Nezobrazuje sa obsah emailu</td>
+                        <td>01.12.2024</td>
+                        <td>Vyriešený</td>
+                        <td>admin1</td>
+                        <td><button onclick="removeItem(this)">Odstrániť</button></td>
+                    </tr>
+                    <tr>
+                        <td>Chyba pri prihlásení</td>
+                        <td>02.12.2024</td>
+                        <td>Čaká na vyriešenie</td>
+                        <td>admin1</td>
+                        <td><button onclick="removeItem(this)">Odstrániť</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Modálne okno -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p><strong>Podrobnosti:</strong></p>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

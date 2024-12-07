@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leavya - Používateľ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Leavya</h1>
+        <nav>
+            <a href="#inbox">Doručené Správy</a>
+            <a href="#spam">Spam</a>
+            <a href="#new-email">Napísať Email</a>
+            <a href="index.html">Domov</a>
+            <div style="float: right">Jozo Raz</div>
+        </nav>
+    </header>
+    <main>
+        <section id="inbox">
+                <h2>Doručené Správy</h2>
+                <ul id="inbox-list" class="email-list">
+                    <li>
+                        <span>Predmet: Pozvánka na udalosť</span>
+                        <button onclick="showModal('Pozvánka na udalosť', 'organizator@example.com', 'Príloha: Žiadna', 'Ste pozvaný na udalosť.')">Detail</button>
+                    </li>
+                    <li>
+                        <span>Predmet: Faktúra za služby</span>
+                        <button onclick="showModal('Faktúra za služby', 'billing@example.com', 'Faktúra.pdf', 'Vaša faktúra za služby je k dispozícii.')">Detail</button>
+                    </li>
+                    <li>
+                        <span>Predmet: Ďakujeme za vašu objednávku</span>
+                        <button onclick="showModal('Ďakujeme za vašu objednávku', 'eshop@example.com', 'Potvrdenie.pdf', 'Vaša objednávka bola úspešne spracovaná.')">Detail</button>
+                    </li>
+                    <li>
+                        <li>
+                            <span>Predmet: Business</span>
+                            <button onclick="showModal('Business', 'partner@example.com', '<a href=&quot;https://content.bridgepointeducation.com/curriculum/file/48d7a132-3143-4b60-a261-5d9dca5b88de/1/Sample%20Business%20Report.pdf&quot; target=&quot;_blank&quot;>Sample Business Report</a>', 'Pre viac informácií si prosím prezrite priložený súbor.')">Detail</button>
+                        </li>
+                        
+                    </li>
+                    <li>
+                        <span>Predmet: Dôležitý oznam</span>
+                        <button onclick="showModal('Dôležitý oznam', 'info@example.com', 'Žiadna', 'Tento e-mail vás upozorňuje na dôležitú aktualizáciu.')">Detail</button>
+                    </li>
+                    <li>
+                        <span>Predmet: Zamilovaný list</span>
+                        <button onclick="showModal('Zamilovaný list', 'secret_admirer@example.com', 'Žiadna', 'Ahoj, Chcela by som ti len povedať, že vždy, keď na teba myslím, môj deň je krajší...S láskou, Tvoja tajna ctitelka.')">Detail</button>
+                    </li>
+                </ul>
+            </section>
+        <section id="spam">
+            <h2>Spam</h2>
+            <ul id="spam-list">
+                <li>
+                    <span>Predmet: Ponuka na výhru</span>
+                    <button onclick="showModal('Ponuka na výhru', 'scammer@example.com', 'Žiadna', 'Gratulujeme, vyhrali ste!')">Detail</button>
+                    <button onclick="removeItem(this)">Vymazat</button>
+                </li>
+            </ul>
+        </section>
+        <section id="new-email">
+            <h2>Napísať Email</h2>
+            <form>
+                <label for="to">Komu:</label>
+                <input type="email" id="to" placeholder="Email príjemcu" required>
+                <label for="subject">Predmet:</label>
+                <input type="text" id="subject" placeholder="Predmet" required>
+                <label for="message">Správa:</label>
+                <textarea id="message" placeholder="Napíšte správu..." required></textarea>
+                <button type="button" onclick="addEmailToInbox()">Odoslať</button>
+                <label for="myfile">Vybrat subor:</label>
+                <input type="file" id="myfile" name="myfile">
+            </form>
+        </section>
+    </main>
+
+    <!-- Modálne okno -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modal-title"></h2>
+            <p><strong>Odosielateľ:</strong> <span id="modal-sender"></span></p>
+            <p><strong>Prílohy:</strong> <span id="modal-attachments"></span></p>
+            <p><strong>Obsah:</strong></p>
+            <p id="modal-message"></p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
