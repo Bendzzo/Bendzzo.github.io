@@ -1,0 +1,377 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome file</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html"><h1 id="odpovede-na-otázky-na-základe-pdf-prednaskaaaus-1-6-merged.pdf">Odpovede na otázky na základe PDF “PrednaskaAaUS 1-6 merged.pdf”</h1>
+<p>Tu sú odpovede na vaše otázky spolu so zdôvodnením, prevažne na základe poskytnutého PDF dokumentu.</p>
+<h2 id="abstraktné-pamäťové-a-údajové-typy-apt--aus">Abstraktné pamäťové a údajové typy (APT / AUS)</h2>
+<p><strong>1. Napíšte tri druhy APT (abstraktné pamäťové typy).</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Tri základné druhy logického usporiadania údajov (a teda APT) sú:
+<ol>
+<li><strong>Sekvencia:</strong> Blok pamäte má najviac jedného predchodcu a najviac jedného nasledovníka (vzťah 1:1).</li>
+<li><strong>Hierarchia:</strong> Blok pamäte má najviac jedného predchodcu (otec) a N nasledovníkov (synovia) (vzťah 1:N).</li>
+<li><strong>Sieť:</strong> Blok pamäte môže mať vzťahy s viacerými inými prvkami (vzťah N:N).</li>
+</ol>
+</li>
+<li><strong>Zdôvodnenie:</strong> Tieto tri typy logického usporiadania sú definované a vizuálne znázornené na stranách 103 [zdroj 422] a 105 [zdroje 427-429].</li>
+</ul>
+<p><strong>2. Čo je implicitná sekvencia? Popíšte ju a uveďte príklad použitia.</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Implicitná sekvencia je abstraktná pamäťová štruktúra (APS), ktorá realizuje abstraktný pamäťový typ (APT) Sekvencia. Jej kľúčovou vlastnosťou je, že bloky pamäte, ktoré spravuje, <strong>nemajú vzťahovú časť</strong> – vzťahy medzi prvkami (predchodca, nasledovník) sa explicitne neukladajú, ale <strong>vypočítavajú sa</strong> na základe pozície (indexu) prvku. Aby bol tento výpočet možný, musia byť bloky pamäte uložené v <strong>kompaktnej (súvislej) pamäti</strong>. Typicky je nasledovník prvku na indexe <code>i</code> na indexe <code>i+1</code> a predchodca na <code>i-1</code>. Umožňuje veľmi rýchly prístup k prvku podľa indexu (O(1)), ale vkladanie alebo mazanie prvkov kdekoľvek okrem konca je pomalé (O(n)), pretože vyžaduje posúvanie ostatných prvkov.</li>
+<li><strong>Príklad použitia:</strong> Základná štruktúra pre implementáciu polí (arrays) alebo dynamických polí (ako <code>std::vector</code> v C++, kde sa pri vkladaní/mazaní v strede prvky posúvajú, alebo pri expanzii sa kopíruje celá pamäť).</li>
+<li><strong>Zdôvodnenie:</strong> Popis implicitných APS je na strane 120 [zdroje 488-490] a špecificky pre implicitnú sekvenciu na strane 147 [zdroj 579]. Efektivita operácií je diskutovaná a zhrnutá v tabuľke na strane 273 [zdroj 968].</li>
+</ul>
+<p><strong>3. Aký typ sekvencie by ste použili pri:</strong><br>
+* <strong>častom sprístupňovaní prvku podľa indexu?</strong><br>
+* <strong>Odpoveď:</strong> <strong>Implicitnú sekvenciu.</strong><br>
+* <strong>Zdôvodnenie:</strong> Implicitná sekvencia umožňuje priamy výpočet adresy prvku na základe indexu, keďže prvky sú uložené v súvislej pamäti. Operácia <code>Sprístupni</code> podľa indexu má preto zložitosť O(1) [zdroj: str. 148, zdroj 585; str. 273, tabuľka 968]. Explicitné sekvencie vyžadujú prechod od začiatku (alebo konca pri obojsmerných), čo vedie k zložitosti O(n) alebo O(n/2) [zdroj: str. 168, zdroj 646, 647; str. 273, tabuľka 968].<br>
+* <strong>častom pridávaní/odstraňovaní prvkov na konci?</strong><br>
+* <strong>Odpoveď:</strong> <strong>Obojstranne zreťazenú explicitnú sekvenciu</strong> (s referenciou na posledný prvok) alebo <strong>implicitnú sekvenciu</strong> (ak nedochádza často k expanzii pamäte).<br>
+* <strong>Zdôvodnenie:</strong><br>
+* Implicitná sekvencia: <code>Zruš posledný</code> je O(1). <code>Vlož posledný</code> je O(1), <em>pokiaľ</em> nie je potrebná expanzia pamäte (realokácia), ktorá je O(n) [zdroj: str. 273, tabuľka 968]. Ak sú expanzie časté, stáva sa neefektívnou.<br>
+* Explicitná obojstranne zreťazená: Ak si pamätá referenciu na posledný prvok, <code>Vlož posledný</code> aj <code>Zruš posledný</code> sú O(1), pretože stačí upraviť len niekoľko ukazovateľov bez posúvania prvkov [zdroj: str. 273, tabuľka 968].<br>
+* Explicitná jednostranne zreťazená: <code>Vlož posledný</code> je O(1) (ak si pamätá referenciu na posledný), ale <code>Zruš posledný</code> je O(n), pretože treba nájsť <em>predchodcu</em> posledného prvku [zdroj: str. 273, tabuľka 968].<br>
+* Pre garantovanú O(1) zložitosť <em>oboch</em> operácií je najistejšia obojstranne zreťazená explicitná sekvencia.</p>
+<p><strong>4. Akú sekvenciu by ste použili na vrcholy viaccestnej hierarchie? Zdôvodnite.</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> <strong>Explicitnú sekvenciu</strong> (napr. jednostranne alebo obojstranne zreťazenú, alebo dynamické pole).</li>
+<li><strong>Zdôvodnenie:</strong> Viaccestná hierarchia má neobmedzený počet synov (K=∞) [zdroj: str. 190, zdroj 700]. Potrebujeme teda dynamicky meniť počet uložených referencií na synov. Implicitná sekvencia by bola nevhodná, pretože vyžaduje fixné K pre výpočet vzťahov a súvislú pamäť pred-alokovanú pre maximálny možný počet synov, čo tu nie je možné. Explicitné sekvencie umožňujú dynamicky pridávať a odoberať referencie na synov podľa potreby [zdroj: str. 216, zdroj 798, 801; str. 224, zdroj 824]. Pseudokód na stranách 225 a 230 [zdroje 828, 840] priamo ukazuje použitie sekvencie (<code>otec-&gt;synovia-&gt;...</code>) na ukladanie synov.</li>
+</ul>
+<p><strong>5. Akú sekvenciu by ste použili pri prehľadávaní po úrovniach?</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> <strong>Explicitnú sekvenciu fungujúcu ako front (FIFO - First-In, First-Out)</strong>, napríklad jednostranne zreťazenú sekvenciu.</li>
+<li><strong>Zdôvodnenie:</strong> Algoritmus prehľadávania do šírky (po úrovniach) potrebuje uchovávať vrcholy, ktoré má navštíviť. Navštívený vrchol sa vyberie zo začiatku štruktúry a jeho synovia sa pridajú na koniec. Toto správanie presne zodpovedá frontu (FIFO). Pseudokód na strane 201 [zdroj 751] priamo používa <code>JednostranneZS</code> (jednostranne zreťazenú sekvenciu), kde operácia <code>vložPosledný</code> pridáva na koniec a <code>zrušPrvý</code> odoberá zo začiatku, čím efektívne implementuje front.</li>
+</ul>
+<p><strong>6. Čo znamená „prehliadanie stromu na úrovni bajtov“?</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Pravdepodobne sa tým myslí spracovanie pamäťovej reprezentácie stromu (alebo jeho častí) ako súvislého bloku bajtov pomocou nízkoúrovňových pamäťových operácií (napr. <code>memcpy</code>, <code>memcmp</code>), bez ohľadu na logickú štruktúru stromu (vzťahy medzi vrcholmi, údaje vo vrcholoch).</li>
+<li><strong>Zdôvodnenie:</strong> PDF na strane 364 [zdroj 363] spomína nazeranie na pamäť “nízkoúrovňovo ako na pole bajtov” v kontexte efektívnych operácií s kompaktnou pamäťou. Toto sa môže aplikovať pri operáciách ako kopírovanie alebo porovnávanie celých pamäťových blokov, kde sa ignoruje ich vnútorná štruktúra a pracuje sa priamo s bajtami pre vyššiu rýchlosť.</li>
+</ul>
+<p><strong>7. Čo je úplný / plný / dokonalý / vyvážený strom? Rozpoznať na obrázku.</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Definície (pre K-cestné stromy):
+<ul>
+<li><strong>Vyvážený (Balanced):</strong> Hĺbka ľubovoľných dvoch listov sa líši len o malú konštantu (napr. o 1 alebo 2, definícia sa môže líšiť). Všetky listy sú “približne” rovnako ďaleko od koreňa.</li>
+<li><strong>Úplný (Complete):</strong> Všetky úrovne okrem (možno) poslednej sú úplne zaplnené a v poslednej úrovni sú vrcholy zarovnané čo najviac doľava. (PDF definuje: “všetky listy majú hĺbku n alebo n-1 a všetky listy s hĺbkou n ležia vľavo”).</li>
+<li><strong>Plný (Full):</strong> Každý vrchol má buď presne K synov, alebo žiadneho (je list).</li>
+<li><strong>Dokonalý (Perfect):</strong> Všetky listy sú na rovnakej úrovni (hĺbke) a všetky vnútorné vrcholy majú presne K synov. Je to zároveň plný aj kompletný strom.</li>
+<li><strong>Rozpoznanie na obrázku:</strong> Vyžaduje vizuálnu kontrolu štruktúry stromu a aplikáciu týchto definícií.</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Tieto definície sú uvedené aj s ilustračnými obrázkami na strane 190 [zdroje 706-709].</li>
+</ul>
+<p><strong>8. Napíšte pseudokód:</strong><br>
+* <strong>prechod v postorder (spätnom poradí):</strong><br>
+```pseudocode<br>
+operácia Hierarchia.spracujVSpätnomPoradí(<br>
+vrchol: ↑TypBloku,<br>
+operácia: λ(↑TypBloku)<br>
+) {<br>
+Ak (vrchol ≠ NULL) potom {<br>
+definuj premennú stupeňVrcholu: int ⇐ stupeň(vrchol↓)<br>
+definuj premennú poradieSyna: int ⇐ 0<br>
+definuj premennú početSpracovanýchSynov: int ⇐ 0<br>
+Pokiaľ (početSpracovanýchSynov &lt; stupeňVrcholu) opakuj {<br>
+definuj premennú syn: ↑TypBloku ⇐ sprístupniSyna(vrchol↓, poradieSyna)<br>
+Ak (syn ≠ NULL) potom {<br>
+spracujVSpätnomPoradí(syn, operácia) // Najprv rekurzia na synov<br>
+početSpracovanýchSynov++<br>
+}<br>
+poradieSyna++<br>
+}<br>
+operácia(vrchol) // Potom spracovanie vrcholu<br>
+}<br>
+}</p>
+<pre><code>    // Volanie pre celý strom:
+    operácia Hierarchia&lt;TypBloku&gt;.spracujVšetkyVrcholyVSpätnomPoradí ( 
+        operácia: λ(↑TypBloku)
+    ) {
+        spracujVSpätnomPoradí(sprístupniKoreň(), operácia)
+    }
+    ```
+    * **Zdôvodnenie:** Pseudokód je na strane 197 [zdroje 740, 741, 743]. Spracuje synov, potom rodiča.
+* **prechod v preorder (priamom poradí):**
+    ```pseudocode
+    operácia Hierarchia&lt;TypBloku&gt;.spracujVPriamomPoradí(
+        vrchol: ↑TypBloku,
+        operácia: λ(↑TypBloku)
+    ) {
+        Ak (vrchol ≠ NULL) potom {
+            operácia(vrchol) // Najprv spracovanie vrcholu
+            definuj premennú stupeňVrcholu: int ⇐ stupeň(vrchol↓)
+            definuj premennú poradieSyna: int ⇐ 0
+            definuj premennú početSpracovanýchSynov: int ⇐ 0
+            Pokiaľ (početSpracovanýchSynov &lt; stupeňVrcholu) opakuj {
+                definuj premennú syn: ↑TypBloku ⇐ sprístupniSyna(vrchol↓, poradieSyna)
+                Ak (syn ≠ NULL) potom {
+                    spracujVPriamomPoradí(syn, operácia) // Potom rekurzia na synov
+                    početSpracovanýchSynov++
+                }
+                poradieSyna++
+            }
+        }
+    }
+
+    // Volanie pre celý strom:
+    operácia Hierarchia&lt;TypBloku&gt;.spracujVšetkyVrcholyVPriamomPoradí ( 
+        operácia: λ(↑TypBloku)
+    ) {
+        spracujVPriamomPoradí(sprístupniKoreň(), operácia)
+    }
+    ```
+    * **Zdôvodnenie:** Pseudokód je na strane 197 [zdroje 740, 742]. Spracuje rodiča, potom synov.
+* **prehľadávanie po úrovniach:**
+    ```pseudocode
+    operácia Hierarchia&lt;TypBloku&gt;.spracujPoÚrovniach(
+        vrchol: ↑TypBloku, 
+        operácia: λ(↑TypBloku)
+    ) {
+        Ak (vrchol ≠ NULL) potom {
+            definuj premennú sekvencia: JednostranneZS&lt;↑TypBloku&gt; // Front
+            sekvencia→vložPosledný()→dáta ⇐ vrchol // Vlož koreň do frontu
+            Pokiaľ (¬sekvencia→jePrázdny()) opakuj {
+                definuj premennú aktuálny: ↑TypBloku ⇐ sekvencia→sprístupniPrvý()→dáta // Vyber z frontu
+                sekvencia→zrušPrvý()
+                Ak (aktuálny ≠ NULL) potom { // Ak nie je null (v niektorých implementáciách)
+                    operácia(aktuálny) // Spracuj vrchol
+                    definuj premennú stupeňVrcholu: int ⇐ stupeň(aktuálny↓)
+                    Opakuj pre premennú n: int od 0 do stupeňVrcholu - 1 { // Pridaj synov do frontu
+                        definuj premennú syn: ↑TypBloku ⇐ sprístupniSyna(aktuálny↓, n)
+                        // Pridávame aj NULL synov pri implicitnej hierarchii? 
+                        // Pseudokód pridáva len existujúcich. Ak by sme pridávali NULL, 
+                        // musíme ich na začiatku cyklu kontrolovať a nespracovať.
+                        // Pre explicitnú pridávame len existujúcich.
+                        // Originálny pseudokód z PDF:
+                        // sekvencia→vložPosledný()→dáta ⇐ sprístupniSyna(aktuálny↓, n) 
+                        // - toto by mohlo vložiť NULL. Nasledujúca úprava je bezpečnejšia:
+                        Ak (syn != NULL) {
+                            sekvencia→vložPosledný()→dáta ⇐ syn
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Volanie pre celý strom:
+    operácia Hierarchia&lt;TypBloku&gt;.spracujVšetkyVrcholyPoÚrovniach( 
+        operácia: λ(↑TypBloku)
+    ) {
+        spracujPoÚrovniach(sprístupniKoreň(), operácia)
+    }
+    ```
+    * **Zdôvodnenie:** Pseudokód je na strane 201 [zdroj 751]. Používa front na uchovanie vrcholov na spracovanie úroveň po úrovni.
+</code></pre>
+<p><strong>9. Ako vypočítať pozíciu dieťaťa uzla v binárnom strome (ak je uložený v poli)?</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> V implicitnej reprezentácii binárneho stromu (K=2) uloženej v poli (kompaktnej pamäti), kde koreň má index 0:
+<ul>
+<li>Pozícia (index) ľavého syna uzla s indexom <code>i</code> je: <code>2 * i + 1</code></li>
+<li>Pozícia (index) pravého syna uzla s indexom <code>i</code> je: <code>2 * i + 2</code></li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Tieto vzorce sú odvodené zo všeobecného vzorca <code>Syn(i, p) = K*i + p</code> pre K=2 a poradie <code>p=1</code> (ľavý syn) a <code>p=2</code> (pravý syn). Sú uvedené na strane 207 [zdroj 768, 769].</li>
+</ul>
+<p><strong>10. Čo znamená „preorder“ prechod a akú má úlohu v dátových štruktúrach?</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> “Preorder” prechod (prehliadka v priamom poradí) je spôsob rekurzívnej návštevy vrcholov stromu (hierarchie), pri ktorom sa najprv spracuje aktuálny vrchol (rodič) a až potom sa postupne rekurzívne spracujú jeho synovia (podstromy), zvyčajne zľava doprava.</li>
+<li><strong>Úloha/Použitie:</strong> Používa sa napríklad na:
+<ul>
+<li>Vytvorenie kópie stromu (pretože rodiča vytvoríme skôr ako jeho synov).</li>
+<li>Získanie prefixovej notácie aritmetického výrazu reprezentovaného stromom.</li>
+<li>Serializáciu stromu, kde je potrebné uložiť informáciu o rodičovi pred informáciou o jeho deťoch.</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Popis preorder prechodu je na strane 195 [zdroj 738]. Príklad použitia (kopírovanie) je naznačený v pseudokóde operácie <code>priraď</code> pre explicitnú hierarchiu na strane 218 [zdroj 806], kde sa rodič spracuje pred rekurzívnym volaním na synov.</li>
+</ul>
+<p><strong>11. Určiť hĺbku a stupeň vrchola zo schémy / obrázku.</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong>
+<ul>
+<li><strong>Stupeň vrchola:</strong> Počet priamych potomkov (synov) daného vrchola. Zistí sa spočítaním hrán vychádzajúcich z vrchola smerom “nadol” v hierarchii.</li>
+<li><strong>Hĺbka stromu (nie vrchola):</strong> Maximálna úroveň ktoréhokoľvek vrcholu v strome. Je to dĺžka najdlhšej cesty od koreňa k ľubovoľnému listu.</li>
+<li><strong>Úroveň vrchola:</strong> Dĺžka cesty (počet hrán) od koreňa k danému vrcholu. Koreň má úroveň 0.</li>
+<li><strong>Určenie z obrázku:</strong> Pre stupeň spočítame synov. Pre úroveň spočítame cestu od koreňa. Pre hĺbku stromu nájdeme najdlhšiu cestu od koreňa k listu.</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Definície stupňa, úrovne a hĺbky sú uvedené na strane 189 [zdroje 694, 695].</li>
+</ul>
+<h2 id="💾-pamäť-pointery-endianita">💾 Pamäť, pointery, endianita</h2>
+<p><strong>12. Kde sa ukladá lokálna premenná v pamäti?</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Lokálne premenné (definované v rámci funkcií, ktorých obsah sa nezachováva medzi volaniami) sa ukladajú na <strong>zásobníku (call stack)</strong>.</li>
+<li><strong>Zdôvodnenie:</strong> Uvedené na strane 62 [zdroj 240] a strana 63 [zdroj 245] popisuje rámec (frame) na zásobníku, ktorý obsahuje pamäť pre lokálne premenné.</li>
+</ul>
+<p><strong>13. Na čo slúži halda (heap) v pamäti procesora?</strong> (<em>Poznámka: Halda je časť pamäte procesu, nie priamo procesora</em>)</p>
+<ul>
+<li><strong>Odpoveď:</strong> Halda (heap) slúži na ukladanie <strong>dynamicky alokovaných premenných</strong>. Sú to premenné, ktorých životný cyklus (vznik a zánik) riadi programátor explicitne pomocou operácií ako <code>new</code>/<code>delete</code> alebo <code>malloc</code>/<code>free</code>. Tieto premenné existujú nezávisle od životného cyklu funkcií a sú dostupné medzi jednotlivými funkčnými volaniami (pokiaľ na ne existuje platný ukazovateľ).</li>
+<li><strong>Zdôvodnenie:</strong> Popísané na strane 62 [zdroj 241] a detailnejšie na strane 69 [zdroje 279-281].</li>
+</ul>
+<p><strong>14. Čo je to call stack a akú má úlohu pri vykonávaní programu?</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Call stack (zásobník volaní) je segment pamäte procesu, ktorý slúži na riadenie vykonávania funkcií (procedúr, metód). Pri každom volaní funkcie sa na vrchol zásobníka pridá nový <strong>rámec (frame)</strong>, ktorý obsahuje miesto pre:
+<ul>
+<li>Lokálne premenné danej funkcie.</li>
+<li>Parametre odovzdané funkcii.</li>
+<li>Návratovú adresu (kam sa má program vrátiť po skončení funkcie).</li>
+<li>Prípadne návratovú hodnotu funkcie.<br>
+Po skončení funkcie sa jej rámec zo zásobníka odstráni. Zásobník teda spravuje postupnosť volaní funkcií a ich lokálne dáta.</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Vysvetlené na strane 63 [zdroje 242-246].</li>
+</ul>
+<p><strong>15. Pointerová aritmetika – vysvetlenie a príklad.</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Pointerová (ukazovateľová) aritmetika umožňuje vykonávať aritmetické operácie (sčítanie/odčítanie celého čísla, inkrementácia/dekrementácia, rozdiel dvoch ukazovateľov) s adresami uloženými v ukazovateľoch. Kľúčové je, že tieto operácie sú škálované <strong>veľkosťou dátového typu</strong>, na ktorý ukazovateľ ukazuje.
+<ul>
+<li><code>ptr + n</code>: Vypočíta adresu, ktorá je <code>n * sizeof(typ)</code> bajtov za adresou <code>ptr</code>.</li>
+<li><code>ptr - n</code>: Vypočíta adresu, ktorá je <code>n * sizeof(typ)</code> bajtov pred adresou <code>ptr</code>.</li>
+<li><code>ptr++</code>: Posunie <code>ptr</code> na adresu nasledujúceho prvku (o <code>sizeof(typ)</code> bajtov ďalej).</li>
+<li><code>ptr--</code>: Posunie <code>ptr</code> na adresu predchádzajúceho prvku (o <code>sizeof(typ)</code> bajtov skôr).</li>
+<li><code>ptr2 - ptr1</code>: Vypočíta počet prvkov typu <code>typ</code> medzi adresami <code>ptr1</code> a <code>ptr2</code> (má zmysel len ak ukazujú do toho istého poľa).</li>
+</ul>
+</li>
+<li><strong>Príklad:</strong><pre class=" language-c"><code class="prism ++ language-c"><span class="token keyword">int</span> arr<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token number">10</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">30</span><span class="token punctuation">,</span> <span class="token number">40</span><span class="token punctuation">}</span><span class="token punctuation">;</span>
+<span class="token keyword">int</span><span class="token operator">*</span> p <span class="token operator">=</span> arr<span class="token punctuation">;</span> <span class="token comment">// p ukazuje na arr[0] (hodnota 10)</span>
+p<span class="token operator">++</span><span class="token punctuation">;</span>          <span class="token comment">// p teraz ukazuje na arr[1] (hodnota 20)</span>
+              <span class="token comment">// Adresa v p sa zvýšila o sizeof(int) bajtov</span>
+<span class="token keyword">int</span><span class="token operator">*</span> p2 <span class="token operator">=</span> p <span class="token operator">+</span> <span class="token number">2</span><span class="token punctuation">;</span> <span class="token comment">// p2 teraz ukazuje na arr[3] (hodnota 40)</span>
+                 <span class="token comment">// Adresa p2 je adresa p + 2 * sizeof(int)</span>
+<span class="token keyword">int</span> diff <span class="token operator">=</span> p2 <span class="token operator">-</span> p<span class="token punctuation">;</span> <span class="token comment">// diff bude 2 (počet prvkov medzi p a p2)</span>
+</code></pre>
+</li>
+<li><strong>Zdôvodnenie:</strong> Operácie sú vymenované na strane 40 [zdroj 147]. Príklad na strane 43 [zdroj 161-163] ukazuje <code>pT = pT + 3</code>, čo ilustruje sčítanie konštanty, aj keď bez explicitného vysvetlenia škálovania veľkosťou typu <code>T</code>.</li>
+</ul>
+<p><em><em>16. Čo je generický ukazovateľ (napr. void</em>)?</em>*</p>
+<ul>
+<li><strong>Odpoveď:</strong> Generický ukazovateľ (<code>void*</code>) je špeciálny typ ukazovateľa v C/C++, ktorý môže uchovávať adresu objektu <strong>ľubovoľného dátového typu</strong>. Nedá sa však priamo dereferencovať (získať hodnotu, na ktorú ukazuje), pretože kompilátor nevie, akého typu dáta na danej adrese sú a ako ich interpretovať. Taktiež nepodporuje pointerovú aritmetiku. Aby sa dal použiť, musí sa explicitne pretypovať na ukazovateľ konkrétneho typu. Slúži na písanie všeobecných funkcií, ktoré pracujú s pamäťou bez znalosti konkrétneho typu dát (napr. funkcie pre kopírovanie pamäte, alokáciu pamäte).</li>
+<li><strong>Zdôvodnenie:</strong> Popísané na strane 43 [zdroje 164-167].</li>
+</ul>
+<p><strong>17. Vplyv endianity na typ unsigned char (1 bajt).</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Endianita <strong>nemá žiadny vplyv</strong> na pamäťovú reprezentáciu typu <code>unsigned char</code>.</li>
+<li><strong>Zdôvodnenie:</strong> Endianita definuje poradie <strong>bajtov</strong> v rámci <strong>viacbajtových</strong> dátových typov [zdroj: str. 24, zdroj 87]. Keďže <code>unsigned char</code> (a <code>char</code>) má veľkosť iba 1 bajt [zdroj: str. 23, zdroj 84], neexistuje viacero bajtov, ktorých poradie by sa mohlo meniť.</li>
+</ul>
+<p><strong>18. Rozdiel medzi little-endian a big-endian reprezentáciou.</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Rozdiel je v poradí, v akom sa ukladajú jednotlivé bajty viacbajtového dátového typu do pamäte:
+<ul>
+<li><strong>Big-Endian:</strong> Najvýznamnejší bajt (Most Significant Byte - MSB) sa ukladá na najnižšiu pamäťovú adresu. Ostatné bajty nasledujú v poradí klesajúcej významnosti. (Napr. číslo <code>0x12345678</code> sa uloží ako <code>12 34 56 78</code>). Často sa označuje ako “sieťové poradie”.</li>
+<li><strong>Little-Endian:</strong> Najmenej významný bajt (Least Significant Byte - LSB) sa ukladá na najnižšiu pamäťovú adresu. Ostatné bajty nasledujú v poradí rastúcej významnosti. (Napr. číslo <code>0x12345678</code> sa uloží ako <code>78 56 34 12</code>). Používa sa napr. v PC architektúrach Intel/AMD.</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Definície a ilustrácie sú na strane 24 [zdroje 87-90].</li>
+</ul>
+<p><strong>19. Znak ‘č’:</strong><br>
+* <strong>Koľko bajtov zaberá v UTF-8?</strong><br>
+* <strong>Odpoveď:</strong> 2 bajty.<br>
+* <strong>Zdôvodnenie:</strong> Znak ‘č’ má Unicode kód U+010D (dec 269). Tento kód spadá do rozsahu U+0080 až U+07FF. Podľa pravidiel kódovania UTF-8 (ilustrovaných na stranách 31-32 [zdroje 113-118]), znaky v tomto rozsahu sa kódujú pomocou 2 bajtov. Konkrétne bajty sú <code>C4 8D</code> (hex).<br>
+* <strong>Ako vyzerá zápis v big-endiane?</strong><br>
+* <strong>Odpoveď:</strong> Endianita stroja neovplyvňuje poradie bajtov v samotnom <strong>UTF-8 reťazci</strong>. Poradie bajtov <code>C4</code> nasledované <code>8D</code> je dané štandardom UTF-8. Ak by sme však ukladali Unicode kód U+010D ako 16-bitové číslo (napr. <code>wchar_t</code> na Windows), na big-endian architektúre by sa uložil viac významný bajt (0x01) ako prvý a menej významný (0x0D) ako druhý, teda <code>01 0D</code>.<br>
+* <strong>Zdôvodnenie:</strong> Endianita sa týka uloženia viacbajtových <em>číselných typov</em> [zdroj: str. 24, zdroj 87]. UTF-8 je sekvencia <em>bajtov</em>. Samotná sekvencia sa nemení, menilo by sa len uloženie napr. 16-bitového alebo 32-bitového Unicode kódu ako jedného čísla.<br>
+* <strong>Ak má kód 269 – binárna reprezentácia v UTF-32?</strong><br>
+* <strong>Odpoveď:</strong> <code>00000000 00000000 00000001 00001101</code><br>
+* <strong>Zdôvodnenie:</strong> UTF-32 kóduje každý Unicode znak pomocou jedného 4-bajtového (32-bitového) čísla, ktorého hodnota priamo zodpovedá Unicode kódu znaku [zdroj: str. 30, zdroj 111]. Kód 269 (dec) je 0x010D (hex). Toto číslo sa rozšíri nulami do 32 bitov.</p>
+<p><strong>20. Znak ‘A’ (Unicode 65): UTF-8 zápis, veľkosť, binárna reprezentácia v char (big-endian).</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong>
+<ul>
+<li>UTF-8 zápis: Jeden bajt s hodnotou 0x41 (dec 65). Binárne <code>01000001</code>.</li>
+<li>Veľkosť: 1 bajt.</li>
+<li>Binárna reprezentácia v <code>char</code>: <code>01000001</code>.</li>
+<li>Vplyv Big-endian: Žiadny (je to 1 bajt).</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> ‘A’ (U+0041) je ASCII znak [zdroj: str. 27, zdroj 96]. UTF-8 je spätne kompatibilný s ASCII a kóduje tieto znaky jedným bajtom s rovnakou hodnotou [zdroj: str. 30, zdroj 106, 107]. Typ <code>char</code> má zvyčajne 1 bajt [zdroj: str. 35, zdroj 125]. Endianita neovplyvňuje jednobajtové typy.</li>
+</ul>
+<h2 id="🧮-zložitosť-odhady-grafy">🧮 Zložitosť, odhady, grafy</h2>
+<p><strong>21. Horný asymptotický odhad (napr. O(n), O(n log n), …) danej operácie / grafu.</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Horný asymptotický odhad, označovaný ako O(f(n)) (“Veľké O”), popisuje hornú hranicu rastu časovej alebo pamäťovej zložitosti algoritmu <code>z(n)</code> v závislosti od veľkosti vstupných dát <code>n</code>, pre dostatočne veľké <code>n</code>. Formálne, <code>z(n)</code> je O(f(n)), ak existujú konštanty <code>c &gt; 0</code> a <code>k &gt; 0</code> také, že <code>0 ≤ z(n) ≤ c * f(n)</code> pre všetky <code>n ≥ k</code>. Udáva teda, že algoritmus nebude rásť “horšie” (rýchlejšie) ako nejaký násobok funkcie <code>f(n)</code>. Bežné funkcie <code>f(n)</code> zahŕňajú <code>1</code> (konštantná), <code>log n</code> (logaritmická), <code>n</code> (lineárna), <code>n log n</code> (linearitmická), <code>n²</code> (kvadratická), <code>n^k</code> (polynomiálna), <code>a^n</code> (exponenciálna).</li>
+<li><strong>Zdôvodnenie:</strong> Definícia a grafické znázornenie horného asymptotického odhadu O(f(n)) sú na strane 14 [zdroj 49]. Tabuľka tried zložitostí je na strane 17 [zdroj 58].</li>
+</ul>
+<p><strong>22. Napísať horný odhad zložitosti pre daný graf.</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> (Toto sa vzťahuje na graf z otázky 2b) Horný asymptotický odhad pre zobrazený graf je <strong>O(log n)</strong>.</li>
+<li><strong>Zdôvodnenie:</strong> Ako bolo uvedené v odpovedi 2b, rast funkcie v grafe je sublineárny a zodpovedá logaritmickej závislosti.</li>
+</ul>
+<p><strong>23. Čo je to úplný (kompletný) graf?</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Úplný (kompletný) graf je jednoduchý neorientovaný graf, v ktorom existuje hrana medzi každou dvojicou rôznych vrcholov. Úplný graf s <code>n</code> vrcholmi sa označuje K<sub>n</sub>.</li>
+<li><strong>Zdôvodnenie:</strong> Tento pojem nie je definovaný v poskytnutom PDF. Ide o štandardný pojem z teórie grafov.</li>
+</ul>
+<h2 id="🛠️-programovanie-a-ladenie">🛠️ Programovanie a ladenie</h2>
+<p><strong>24. Rozdiel medzi plnou a skrátenou operáciou AND (&amp; vs &amp;&amp;).</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong>
+<ul>
+<li><code>&amp;&amp;</code> (Logické AND): Operátor pre logický súčin (konjunkciu). Pracuje s logickými hodnotami (pravda/nepravda). Vyhodnocuje sa <strong>skrátene (short-circuit)</strong>: ak je ľavý operand <code>false</code>, pravý operand sa už nevyhodnocuje, pretože výsledok bude určite <code>false</code>.</li>
+<li><code>&amp;</code> (Bitové AND): Operátor pre bitový súčin. Pracuje s celočíselnými typmi na úrovni jednotlivých bitov. Vyhodnocuje <strong>vždy oba operandy</strong> a vykoná operáciu AND pre každý pár zodpovedajúcich bitov. V C++ má <code>&amp;</code> aj význam operátora “adresa premennej” (unárny operátor) a používa sa pri deklarácii referencií.</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Skrátené vyhodnocovanie pre <code>&amp;&amp;</code> je popísané na strane 39 [zdroj 143]. Bitový operátor <code>&amp;</code> nie je v PDF explicitne diskutovaný v tomto kontexte.</li>
+</ul>
+<p><strong>25. Nájsť a opraviť chybu v kóde (napr. zlá syntax, nesprávny operátor, chybný ampersand, atď.).</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> (Toto sa vzťahuje na kód z otázky 3a) Chyba je v riadku <code>(*cislo)++;</code> vo funkcii <code>void navys(const int* cislo)</code>. Pokúša sa inkrementovať hodnotu, na ktorú ukazuje <code>cislo</code>, ale <code>cislo</code> je ukazovateľ na <code>const int</code>, čo znamená, že hodnota sa nesmie meniť.</li>
+<li><strong>Oprava:</strong> Závisí od zámeru.
+<ul>
+<li>Ak funkcia <em>nemá</em> meniť hodnotu, treba odstrániť riadok <code>(*cislo)++;</code>.</li>
+<li>Ak funkcia <em>má</em> meniť hodnotu, treba odstrániť <code>const</code> z deklarácie parametra: <code>void navys(int* cislo)</code>.</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Ako v odpovedi 3a, problém je porušenie <code>const</code> kvalifikátora.</li>
+</ul>
+<p><strong>26. Napíšte 2 základné funkcie správcu pamäte (napr. malloc/free alebo new/delete).</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Dve základné operácie (funkcie) správcu pamäte sú:
+<ol>
+<li><strong>Alokácia (pridelenie) pamäte:</strong> Vyžiadanie bloku pamäte určitej veľkosti. Vráti ukazovateľ na začiatok alokovaného bloku (alebo NULL/nullptr pri neúspechu). Príklady: <code>malloc(size_t size)</code> v C, <code>new Typ</code> v C++. V PDF je abstraktná operácia <code>Prideľ pamäť</code>.</li>
+<li><strong>Dealokácia (uvoľnenie) pamäte:</strong> Vrátenie predtým alokovaného bloku pamäte späť správcovi, aby ju mohol znovu použiť. Ako parameter berie ukazovateľ vrátený alokačnou funkciou. Príklady: <code>free(void* ptr)</code> v C, <code>delete ptr</code> v C++. V PDF je abstraktná operácia <code>Uvoľni pamäť</code>.</li>
+</ol>
+</li>
+<li><strong>Zdôvodnenie:</strong> Základné operácie <code>Prideľ pamäť</code> a <code>Uvoľni pamäť</code> sú definované na strane 73 [zdroj 301, 302]. Konkrétne funkcie <code>malloc</code>/<code>free</code> a <code>new</code>/<code>delete</code> sú spomenuté na strane 69 [zdroj 280, 281].</li>
+</ul>
+<p><strong>27. Ako vlastnosti typu int (napr. veľkosť v bajtoch) ovplyvňujú operácie s dátami?</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Veľkosť typu <code>int</code> (napr. 4 bajty na bežných 32/64-bit systémoch) ovplyvňuje operácie nasledovne:
+<ul>
+<li><strong>Rozsah hodnôt:</strong> Veľkosť určuje maximálnu a minimálnu hodnotu, ktorú môže <code>int</code> reprezentovať. Operácie môžu viesť k pretečeniu (overflow) alebo podtečeniu (underflow), ak výsledok prekročí tento rozsah, čo vedie k nesprávnym výsledkom.</li>
+<li><strong>Pointerová aritmetika:</strong> Pri operáciách ako <code>ptr + 1</code> sa adresa v ukazovateli typu <code>int*</code> posunie o <code>sizeof(int)</code> bajtov (teda o 4 bajty, ak <code>sizeof(int)</code> je 4).</li>
+<li><strong>Pamäťové nároky:</strong> Veľkosť ovplyvňuje celkovú pamäť potrebnú pre polia alebo štruktúry obsahujúce <code>int</code>.</li>
+<li><strong>Zarovnanie (Padding):</strong> V štruktúrach môže veľkosť <code>int</code> ovplyvniť zarovnanie ostatných členov a celkovú veľkosť štruktúry kvôli pridaniu výplňových bajtov (padding) prekladačom pre efektívnejší prístup k pamäti.</li>
+<li><strong>Výkon:</strong> Operácie s typmi, ktoré zodpovedajú natívnej veľkosti slova procesora (často veľkosti <code>int</code> alebo <code>long</code>), môžu byť rýchlejšie.</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Veľkosť <code>int</code> (4B pre LLP64) je uvedená na strane 23 [zdroj 84]. Pointerová aritmetika je spomenutá na str. 40 [zdroj 147] a str. 43 [zdroj 161-163]. Zarovnanie (padding) je vysvetlené na stranách 49-50 [zdroje 190-193]. Pretečenie je spomenuté na str. 23 [zdroj 82].</li>
+</ul>
+<p><strong>28. Implicitný vs explicitný prístup pri manipulácii s prvkami (napr. pri odstraňovaní posledného prvku).</strong></p>
+<ul>
+<li><strong>Odpoveď:</strong> Rozdiel je v tom, ako štruktúra pristupuje k prvkom a ako sa vykonávajú operácie:
+<ul>
+<li><strong>Implicitný prístup (napr. v implicitnej sekvencii):</strong> Pozícia (a teda adresa) prvku je priamo vypočítateľná z jeho indexu (napr. <code>adresa = báza + index * veľkosť_prvku</code>). Vzťahy (následník, predchodca) sa tiež počítajú. Pri odstraňovaní posledného prvku stačí znížiť počet prvkov (a prípadne uvoľniť pamäť, ak to správca podporuje). Táto operácia má zložitosť O(1).</li>
+<li><strong>Explicitný prístup (napr. v explicitnej sekvencii):</strong> Pozícia prvku nie je priamo viazaná na index. Prvky sú prepojené explicitne uloženými referenciami (ukazovateľmi). Pri odstraňovaní posledného prvku:
+<ul>
+<li>Musíme nájsť predchodcu posledného prvku (čo môže trvať O(n) pri jednostranne zreťazenej sekvencii, alebo O(1) pri obojstranne zreťazenej).</li>
+<li>Aktualizovať referenciu <code>nasledovník</code> predchodcu na NULL.</li>
+<li>Aktualizovať referenciu na posledný prvok v riadiacom bloku štruktúry (ak existuje).</li>
+<li>Uvoľniť pamäť posledného prvku.<br>
+Operácia má zložitosť O(1) len vtedy, ak ide o obojstranne zreťazenú sekvenciu <em>a</em> štruktúra si udržiava priamu referenciu na posledný prvok. V ostatných explicitných prípadoch je to O(n).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Zdôvodnenie:</strong> Princípy implicitných a explicitných APS sú na stranách 120-122 [zdroje 488-502]. Zložitosti operácie <code>Zruš posledný</code> pre rôzne typy sekvencií sú v tabuľke na strane 273 [zdroj 968]. PDF na strane 153 [zdroj 600] uvádza O(1) pre <code>Zruš posledný</code> v implicitnej sekvencii. Strana 178 [zdroj 670] uvádza O(1) alebo O(n) pre explicitnú sekvenciu v závislosti od jej typu a uloženia referencie na posledný prvok.</li>
+</ul>
+</div>
+</body>
+
+</html>
