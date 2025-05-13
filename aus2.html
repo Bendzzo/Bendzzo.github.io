@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUS - Doplňujúce otázky</title>
+  <link rel="stylesheet" href="https://stackedit.io/style.css" />
+</head>
+
+<body class="stackedit">
+  <div class="stackedit__html">
+    <h1>Odpovede na doplňujúce otázky z Algoritmov a Údajových Štruktúr</h1>
+    <h2 id="doplnujuce-otazky">Doplňujúce otázky a odpovede</h2>
+    <p><strong>1. Ako bude vyzerať BVS po vložení prvku s daným kľúčom?</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: Binárny vyhľadávací strom po vložení prvku]</em></p>
+        <p>BVS musí spĺňať nasledujúce vlastnosti:<br>– pre každý vrchol platí, že všetky kľúče v jeho ľavom podstrome sú menšie<br>– všetky kľúče v jeho pravom podstrome sú väčšie ako kľúč daného vrcholu<br>Proces vkladania zahŕňa nasledujúce kroky:<br>– vyhľadanie pozície pre nový prvok – kľúč vkladaného prvku porovnáva s kľúčmi v navštívených vrcholoch<br>– ak je vkladaný kľúč rovnaký ako kľúč niektorého vrcholu, prvok sa nevloží<br>– ak sa kľúč nerovná, vyhľadávanie identifikuje otcovský vrchol, pod ktorý sa nový prvok zaradí<br>– nový prvok sa vloží ako listový vrchol (teda bez synov) – buď ako ľavý syn identifikovaného otca (ak má nový prvok menší kľúč ako otec), alebo ako pravý syn (ak má nový prvok väčší kľúč ako otec)</p>
+      </li>
+    </ul>
+    <p><strong>2. Zdôvodnite, či je možné efektívne implementovať front ako implicitnú sekvenciu s neobmedzenou kapacitou.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Front nie je možné efektívne implementovať ako implicitnú sekvenciu s neobmedzenou kapacitou. Ak by sme zachovali využitie všeobecnej implicitnej sekvencie, potom by operácia frontu vlož, vyber a vrchol dosiahli lineárne zložitosti (čo nie je prípustné).</p>
+      </li>
+    </ul>
+    <p><strong>3. Zdôvodnite, na ktorých koncoch sekvencie by ste robili operácie vlož a vyber v prípade zásobníka implementovaného implicitnou sekvenciou, aby mal zložitosť O(1).</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <ul>
+          <li>na konci sekvencie</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>4. Uveďte 2 implementácie prioritného frontu, v ktorých má operácia vyber prvok s danou prioritou zložitosť O(1).</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <ul>
+          <li>utriedený sekvenčný prioritný front</li>
+          <li>ľavostranná halda</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>5. Uveďte 2 implementácie prioritného frontu, v ktorých má operácia vlož prvok s danou prioritou zložitosť O(1).</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <ul>
+          <li>neutriedený implicitný sekvenčný prioritný front</li>
+          <li>neutriedený explicitný sekvenčný prioritný front</li>
+          <li>dvojzoznam – vloženie do dlhej (neutriedenej) sekvencie dvojzoznamu</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>6. Uveďte aspoň 3 spôsoby riešenia kolízií v tabuľke s rozptýlenými záznamami.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <ul>
+          <li>Zreťazovanie</li>
+          <li>Otvorená adresácia</li>
+          <li>Využitie preplňovacej oblasti</li>
+          <li>Opätovné hešovanie</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>7. Napíšte mapovaciu funkciu pre kompaktné dvojrozmerné pole s prístupnými indexmi [0..4][0..3], ktorého prvky sa mapujú na pamäťové bloky v kolexikografickom poradí.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <pre>Kolexikografické poradie
+		– zoskupovanie podľa posledného indexu, potom podľa predposledného, atď.
+		– prvky sa ukladajú po stĺpcoch (najskôr celý 1. stĺpec, potom celý 2., atď.)
+počet riadkov = 5
+	počet stĺpcov = 4
+	mapovacia funkcia je teda:
+		map(i, j) = j * 5 + i
+		pre prvok na pozícií (i, j)
+Prvok [0][0]: map(0, 0) = 0 * 5 + 0 = 0
+Prvok [1][0]: map(1, 0) = 0 * 5 + 1 = 1
+Prvok [4][0]: map(4, 0) = 0 * 5 + 4 = 4 (koniec prvého stĺpca)
+Prvok [0][1]: map(0, 1) = 1 * 5 + 0 = 5 (začiatok druhého stĺpca)
+Prvok [4][3]: map(4, 3) = 3 * 5 + 4 = 15 + 4 = 19 (posledný prvok)</pre>
+      </li>
+    </ul>
+    <p><strong>8. Napíšte mapovaciu funkciu pre kompaktné dvojrozmerné pole s prístupnými indexmi [0..2][0..3], ktorého prvky sa mapujú na pamäťové bloky v kolexikografickom poradí.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <pre>počet riadkov = 3
+	počet stĺpcov = 4
+	mapovacia funkcia je teda: map(i, j) = j * 3 + i</pre>
+      </li>
+    </ul>
+    <p><strong>9. Ako utriedi triediaca sieť vstup?</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: Príklad triediacej siete]</em></p>
+        <p>Triediaca sieť sa skladá z liniek (po ktorých "tečú" dáta (prvky, ktoré sa majú utriediť)) a komparátorov (zoberie dva prvky z dvoch liniek, porovná ich a na výstupné linky ich umiestni v usporiadanom poradí).<br>Triediaca sieť zoradí akékoľvek dáta na vstupe do dát na výstupe tak, že budú vykazovať definované usporiadanie.</p>
+      </li>
+    </ul>
+    <p><strong>10. Na ktorý koniec implicitného frontu sa vkladá, aby vkladanie bolo efektívne?</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Pre implicitný front s obmedzenou kapacitou sa vkladanie realizuje na jeden koniec a vyberanie z druhého konca, pričom je jedno, na ktorom konci sekvencie budú operácie vykonané.</p>
+      </li>
+    </ul>
+    <p><strong>11. V akých dvoch fázach pracuje triedenie?</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <ul>
+          <li>Vytvorenie monotónií (vytváranie pomocných usporiadaných sekvenčných súborov = monotónie)</li>
+          <li>Spájanie monotónií do jedného finálneho, úplne utriedeného sekvenčného súboru</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>12. Napíš dve tabuľky, ktorých operácia vlož má zložitosť O(n).</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Utriedená sekvenčná tabuľka<br>BVS v najhoršom prípade<br>Neutriedená sekvenčná tabuľka (implicitná aj explicitná)</p>
+      </li>
+    </ul>
+    <p><strong>13. Rozpíš, či je možné efektívne implementovať prioritný front s využitím implicitnej sekvencie s obmedzeným množstvom prvkov.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Áno, je to možné. Najefektívnejšou takouto implementáciou je halda (heap), kde operácie vlož a vyber majú časovú zložitosť O(log n).</p>
+      </li>
+    </ul>
+    <p><strong>14. Uveďte výhody a nevýhody opakovaného hešovania.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Výhody:<br>– jednoduchá implementácia<br>Nevýhody:<br>– rast časovej zložitosti operácií – vlož (kontrola unikátnosti), skúsNájsť, obsahuje, vyber<br>– rast pamäťovej náročnosti<br>– obmedzený maximálny počet synoným</p>
+      </li>
+    </ul>
+    <p><strong>15. Uveďte, na ktorých koncoch obojstrannej explicitnej sekvencii majú operácie vlož a vyber zložitosť O(1).</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Na obidvoch koncoch sekvencie. Vkladanie a vyberanie prvkov na začiatku a na konci sekvencie má rovnakú zložitosť.</p>
+      </li>
+    </ul>
+    <p><strong>16. Nakreslite, ako bude vyzerať halda po operácii vyber prvok s maximálnou prioritou. Uveďte implicitnú reprezentáciu.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: Halda po operácii vyber]</em></p>
+        <pre>Implicitná reprezentácia (finálna):
+Index:		0  1  2  3  4
+Dáta:		G  F  P  O  N
+Priorita:	4  5  6  7  8</pre>
+      </li>
+    </ul>
+    <p><strong>17. Nakreslite, ako bude vyzerať halda po operácii vlož prvok X s prioritou 3. Uveďte implicitnú reprezentáciu.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: Halda po vložení prvku X (priorita 3)]</em></p>
+        <p></p>
+      </li>
+    </ul>
+    <p><strong>18. Nakreslite, ako bude vyzerať halda vpravo po operácii vlož prvok X s prioritou 5. Uveďte implicitnú reprezentáciu.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: Halda po vložení prvku X (priorita 5)]</em></p>
+        <p></p>
+      </li>
+    </ul>
+    <p><strong>19. Čo sú synonymá?</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Keď hešovacia funkcia H(kľúč) priradí dvom rôznym kľúčom rovnaký index (teda rovnaký výsledok hešovacej funkcie), tieto kľúče sa označujú ako synonymá. Táto situácia, kedy hešovacia funkcia vyprodukuje rovnaký index pre rôzne kľúče, sa nazýva kolízia. Synonymá sú teda kľúče, ktoré spôsobujú kolíziu. Aby bola hešovacia funkcia efektívna, musí minimalizovať kolízie. Ak K je množina kľúčov, potom pod kolíziou rozumieme dvojicu rôznych kľúčov k1 a k2 z množiny K, pre ktoré vráti H rovnaký výsledok.</p>
+      </li>
+    </ul>
+    <p><strong>20. Čo je multištruktúra?</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Používa sa na označenie dátovej štruktúry, ktorá je interne zložená z viacerých iných dátových štruktúr. Tieto vnútorné štruktúry spolupracujú, aby poskytli funkcionalitu komplexnejšej multištruktúry.<br>Dvojzoznam sa skladá z dvoch sekvencií, ktoré spolu tvoria funkčnosť dvojzoznamu.<br>Krátka sekvencia (často implicitná sekvencia s pevnou kapacitou) na uchovávanie prvkov s najvyššou prioritou (utriedená).<br>Dlhá sekvencia (často jednostranne zreťazená sekvencia) na uchovávanie ostatných prvkov (neutriedená). Tieto dve štruktúry (sekvencie) spolu tvoria funkčnosť dvojzoznamu.</p>
+      </li>
+    </ul>
+    <p><strong>21. Uveďte výhody a nevýhody riešenia kolízií zreťazovaním s využitím atribútu synonymum v prípade tabuľky s rozptýlenými záznamami.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Výhody:<br>– neobmedzenosť počtu prvkov<br>– jednoduché algoritmy<br>– malé dodatočné pamäťové nároky<br>Nevýhody:<br>– degenerácia na zreťazenú tabuľku (v prípade, kedy by všetky vkladané prvky boli synonymá)</p>
+      </li>
+    </ul>
+    <p><strong>22. Vysvetlite, na čo slúži hešovacia funkcia v tabuľke s rozptýlenými záznamami.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Hešovacia funkcia H(kľúč) slúži na prevod kľúča prvku na celočíselný index do implicitnej sekvencie (poľa), kde sú prvky tabuľky uložené. Cieľom je umožniť rýchly prístup k prvkom tabuľky podobne, ako sa pristupuje k prvkom poľa pomocou indexu. Efektívna hešovacia funkcia by mala:<br>– Byť rýchla na výpočet.<br>– Rovnomerne rozmiestňovať prvky v sekvencii (rozptyľovať ich).<br>– Minimalizovať kolízie (situácie, kedy rôzne kľúče produkujú rovnaký hešovaný index).</p>
+      </li>
+    </ul>
+    <p><strong>23. Napíšte pseudokód operácie nájdi blok s daným kľúčom v utriedenej sekvenčnej tabuľke. Hlavička tejto operácie môže mať tvar napr.:</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <pre><code>operácia UtriedenáSTab.nájdiBlokSKľúčom(K): ↑TypBlokuSekvencie
+// TODO: Doplňte pseudokód na základe hlavičky.</code></pre>
+      </li>
+    </ul>
+    <p><strong>24. Napíšte pseudokód operácie vlož v sekvenčnej tabuľke, orientácia v BVS. Hlavička tejto operácie môže mať tvar napr.:</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <pre><code>operácia UtriedenáSTab.vlož(kľúč: K, prvok: T)
+// TODO: Doplňte pseudokód na základe hlavičky.</code></pre>
+      </li>
+    </ul>
+    <p><strong>25. Napíšte pseudokód operácie nájdi vrchol s daným kľúčom v binárnom vyhľadávacom strome. Hlavička tejto operácie môže mať tvar napr.:</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <pre><code>operácia VšeobecnýBVS.skúsNájsťVrcholSKľúčom(kľúč: K, Vrchol: ↑↑TypVrcholuBVS): bool
+Význam: Pokúsi sa vyhľadať vrchol s daným kľúčom. Vráti referenciu na vrchol, kde algoritmus skončil a príznak, či tento vrchol obsahuje daný kľúč.
+// TODO: Doplňte pseudokód na základe hlavičky a významu.</code></pre>
+      </li>
+    </ul>
+    <p><strong>26. Napíšte pseudokód operácie nájdi blok s daným kľúčom v utriedenej sekvenčnej tabuľke. Hlavička tejto operácie môže mať tvar napr.:</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <pre><code>operácia UtriedenáSekvenčnáTabuľka.skúsNájsťBlokSKľúčom(kľúč: K, prvýIndex: int, poslednýIndex: int, poslednýBlok: ↑↑TypVrcholuSekvencie): bool
+Význam: Pomocou polenia intervalov sa pokúsi vyhľadať blok pamäte sekvencie s daným kľúčom. Vráti referenciu na blok pamäte, kde algoritmus skončil a príznak, či tento blok obsahuje daný kľúč.
+// TODO: Doplňte pseudokód na základe hlavičky a významu.</code></pre>
+      </li>
+    </ul>
+    <p><strong>27. Nakreslite, ako bude vyzerať binárny vyhľadávací strom vpravo po jednoduchej rotácii vrchola B okolo vrcholu A.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: BVS po rotácii B okolo A]</em></p>
+        <p></p>
+      </li>
+    </ul>
+    <p><strong>28. Nakreslite, ako bude vyzerať binárny vyhľadávací strom vpravo po jednoduchej ľavej rotácii vrchola E okolo vrcholu C.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: BVS po ľavej rotácii E okolo C]</em></p>
+        <p>Štruktúra pred operáciou (alebo relevantný ASCII art):</p>
+        <pre>		A
+	       B           E
+	           D   C</pre>
+        <p></p>
+      </li>
+    </ul>
+    <p><strong>29. Nakreslite, ako bude vyzerať binárny vyhľadávací strom po jednoduchej ľavej rotácii vrchola C okolo vrcholu A.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: BVS po ľavej rotácii C okolo A]</em></p>
+        <p></p>
+      </li>
+    </ul>
+    <p><strong>30. Utrieďte sekvenciu vzostupne pomocou bublinkovým triedením. Uveďte poradie prvkov sekvencie po prvom a po druhom vsunutí prvku.	→ bubble sort</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Sekvencia: 7, 3, 6, 2, 4, 1<br>– 3, 7, 6, 2, 4, 1<br>– 3, 6, 7, 2, 4, 1</p>
+      </li>
+    </ul>
+    <p><strong>31. Utrieďte sekvenciu vzostupne pomocou triedenia priamym vkladaním. Uveďte poradie prvkov sekvencie po prvom a po druhom vsunutí prvku.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Sekvencia: 5, 8, 2, 9, 1, 4<br>– 5, 8, 2, 9, 1, 4<br>– 2, 5, 8, 9, 1, 4</p>
+      </li>
+    </ul>
+    <p><strong>32. Utrieďte sekvenciu vzostupne pomocou triedenia priamym vkladaním. Uveďte poradie prvkov sekvencie po prvom a po druhom vsunutí prvku.	→ insert sort</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Sekvencia: 7, 3, 6, 2, 4, 1<br>– 3, 7, 6, 2, 4, 1<br>– 3, 6, 7, 2, 4, 1</p>
+      </li>
+    </ul>
+    <p><strong>33. Utrieďte sekvenciu vzostupne pomocou triedenia priamym výberom. Uveďte poradie prvkov sekvencie po prvom a po druhom výbere prvku.	→ select sort</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p>Sekvencia: 7, 2, 8, 5, 3 (možno ešte niečo za tým)<br>– 2, 7, 8, 5, 3<br>– 2, 3, 8, 5, 7</p>
+      </li>
+    </ul>
+    <p><strong>34. Uveďte, koľko komparátorov je v triedacej sieti.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: Triediaca sieť (k otázke o počte komparátorov)]</em></p>
+        <p>=> 6 komparátov a 4 linky<br>Hlbka triediacej siete je 6</p>
+      </li>
+    </ul>
+    <p><strong>35. Uveďte, aká je hĺbka triediacej siete na obrázku vpravo.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <p><em>[Obrázok: Triediaca sieť (k otázke o hĺbke)]</em></p>
+        <p>AI -> 4?<br>Spravna odpoved 6 i guess?</p>
+      </li>
+    </ul>
+    <p><strong>36. Zoraďte nasledujúce implementácie prioritného frontu podľa zložitosti operácie vlož prvok s danou prioritou: neusporiadaný sekvenčný PF, dvojzoznam, halda, usporiadaný sekvenčný PF.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <ul>
+          <li>Neusporiadaný sekvenčný PF (O(1))</li>
+          <li>Halda (O(log n))</li>
+          <li>Dvojzoznam (O(√n))</li>
+          <li>Usporiadaný sekvenčný PF (O(n))</li>
+        </ul>
+      </li>
+    </ul>
+    <p><strong>37. Zoraďte nasledujúce implementácie prioritného frontu podľa zložitosti operácie vyber prvok s najvyššou prioritou: neusporiadaný sekvenčný PF, dvojzoznam, halda, usporiadaný sekvenčný PF.</strong></p>
+    <ul>
+      <li><strong>Odpoveď:</strong>
+        <ul>
+          <li>Usporiadaný sekvenčný PF (O(1))</li>
+          <li>Halda (O(log n))</li>
+          <li>Dvojzoznam (O(√n))</li>
+          <li>Neusporiadaný sekvenčný PF (O(n))</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>
