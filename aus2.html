@@ -186,31 +186,107 @@ Priorita:	4  5  6  7  8</pre>
     <p><strong>23. Napíšte pseudokód operácie nájdi blok s daným kľúčom v utriedenej sekvenčnej tabuľke. Hlavička tejto operácie môže mať tvar napr.:</strong></p>
     <ul>
       <li><strong>Odpoveď:</strong>
-        <pre><code>operácia UtriedenáSTab.nájdiBlokSKľúčom(K): ↑TypBlokuSekvencie
-// TODO: Doplňte pseudokód na základe hlavičky.</code></pre>
+        <pre><code> operácia UtriedenáSTab.nájdiBlokSKľúčom(kľúč: K): ↑TypBloku { 
+     definuj premennú blokSKľúčom: ↑TypBlokuSekvencie ⇐ NULL 
+     Keď platí (skúsNájsťBlokSKľúčom(kľúč, 0, veľkosť(), 
+                    blokSKľúčom)) 
+         tak vráť blokSKľúčom 
+         inak vráť NULL 
+   } </code></pre>
       </li>
     </ul>
     <p><strong>24. Napíšte pseudokód operácie vlož v sekvenčnej tabuľke, orientácia v BVS. Hlavička tejto operácie môže mať tvar napr.:</strong></p>
     <ul>
       <li><strong>Odpoveď:</strong>
-        <pre><code>operácia UtriedenáSTab.vlož(kľúč: K, prvok: T)
-// TODO: Doplňte pseudokód na základe hlavičky.</code></pre>
+        <pre><code>operácia UtriedenáSTab.vlož(kľúč: K, dáta: T) { 
+     definuj premennú dátaTabuľky: ↑PrvokTabuľky 
+     Ak (jePrázdny()) potom { 
+      dátaTabuľky ⇐ dajAdresu(pamäťováŠtruktúra→vložPrvý()→dáta) 
+     } 
+    inak { 
+       definuj premennú blokSKľúčom: ↑TypBlokuSekvencie ⇐ NULL 
+       Ak (skúsNájsťBlokSKľúčom(kľúč, 0, veľkosť(), blokSKľúčom))  
+         potom { 
+         CHYBA: Tabuľka už obsahuje prvok s daným kľúčom. 
+     } 
+      dátaTabuľky ⇐ Keď platí (kľúč > blokSKľúčom→dáta→kľúč) 
+           tak vráť dajAdresu(pamäťováŠtruktúra→vložZa( 
+                                blokSKľúčom↓)→dáta) 
+           inak vráť dajAdresu(pamäťováŠtruktúra→vložPred( 
+                                 blokSKľúčom↓)→dáta) 
+    } 
+    dátaTabuľky→kľúč ⇐ kľúč 
+    dátaTabuľky→dáta ⇐ dáta 
+  } </code></pre>
       </li>
     </ul>
     <p><strong>25. Napíšte pseudokód operácie nájdi vrchol s daným kľúčom v binárnom vyhľadávacom strome. Hlavička tejto operácie môže mať tvar napr.:</strong></p>
     <ul>
       <li><strong>Odpoveď:</strong>
-        <pre><code>operácia VšeobecnýBVS.skúsNájsťVrcholSKľúčom(kľúč: K, Vrchol: ↑↑TypVrcholuBVS): bool
-Význam: Pokúsi sa vyhľadať vrchol s daným kľúčom. Vráti referenciu na vrchol, kde algoritmus skončil a príznak, či tento vrchol obsahuje daný kľúč.
-// TODO: Doplňte pseudokód na základe hlavičky a významu.</code></pre>
+        <pre><code> operácia VšeobecnýBinárnyVyhľadávacíStrom<K, T, TypPrvku>. 
+                skúsNájsťVrcholSKľúčom( 
+       kľúč: K, 
+       vrchol: ↑↑TypVrcholuBVS 
+     ): bool { 
+    Ak (jePrázdny()) potom { 
+      Vráť nepravda 
+    } 
+     vrchol ⇐ pamäťováŠtruktúra→sprístupniKoreň() 
+    Pokiaľ (vrchol→dáta→kľúč ≠ kľúč ∧ 
+               ¬pamäťováŠtruktúra→jeList(vrchol↓)) opakuj { 
+      Ak (kľúč < vrchol→dáta→kľúč) potom { 
+        Ak (vrchol→ľavý ≠ NULL) potom { 
+           vrchol ⇐ vrchol→ľavý 
+        } 
+        inak { 
+         Vráť nepravda 
+        } 
+      } 
+      inak { 
+        Ak (vrchol→pravý ≠ NULL) potom { 
+         vrchol ⇐ vrchol→pravý 
+        } 
+        inak { 
+          Vráť nepravda 
+        } 
+      } 
+    } 
+    Vráť vrchol→dáta→kľúč = kľúč 
+}</code></pre>
       </li>
     </ul>
     <p><strong>26. Napíšte pseudokód operácie nájdi blok s daným kľúčom v utriedenej sekvenčnej tabuľke. Hlavička tejto operácie môže mať tvar napr.:</strong></p>
     <ul>
       <li><strong>Odpoveď:</strong>
-        <pre><code>operácia UtriedenáSekvenčnáTabuľka.skúsNájsťBlokSKľúčom(kľúč: K, prvýIndex: int, poslednýIndex: int, poslednýBlok: ↑↑TypVrcholuSekvencie): bool
-Význam: Pomocou polenia intervalov sa pokúsi vyhľadať blok pamäte sekvencie s daným kľúčom. Vráti referenciu na blok pamäte, kde algoritmus skončil a príznak, či tento blok obsahuje daný kľúč.
-// TODO: Doplňte pseudokód na základe hlavičky a významu.</code></pre>
+        <pre><code>operácia UtriedenáSTab.skúsNájsťBlokSKľúčom( 
+       kľúč: K, 
+       prvýIndex: int, 
+       poslednýIndex: int, 
+       poslednýBlok: ↑↑TypBlokuSekvencie 
+     ): bool { 
+     Ak (jePrázdny()) potom { 
+       poslednýBlok ⇐ NULL 
+       Vráť nepravda 
+     } 
+     definuj premennú indexStredu: int ⇐ prvýIndex 
+     Pokiaľ (prvýIndex < poslednýIndex) opakuj { 
+      indexStredu ⇐ prvýIndex + (poslednýIndex - prvýIndex) / 2 
+       poslednýBlok ⇐ pamäťováŠtruktúra→sprístupni(indexStredu) 
+      Ak (poslednýBlok→dáta→kľúč < kľúč) potom { 
+        prvýIndex ⇐ indexStredu + 1 
+     } 
+      inak { 
+        Ak (poslednýBlok→dáta→kľúč > kľúč) potom { 
+          poslednýIndex ⇐ indexStredu 
+        } 
+        inak { 
+          koniec cyklu 
+        } 
+      } 
+    } 
+    poslednýBlok ⇐ pamäťováŠtruktúra→sprístupni(indexStredu) 
+    Vráť poslednýBlok→dáta→kľúč = kľúč 
+  }</code></pre>
       </li>
     </ul>
     <p><strong>27. Nakreslite, ako bude vyzerať binárny vyhľadávací strom vpravo po jednoduchej rotácii vrchola B okolo vrcholu A.</strong></p>
