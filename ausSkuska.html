@@ -28,7 +28,6 @@
 
         #flashcard-viewport { /* Kontajner pre perspektívu 3D otáčania */
             perspective: 1500px; /* Mierne zvýšená perspektíva pre plynulejšie otáčanie */
-            /* Rozmery budú definované cez .flashcard */
             margin-bottom: 25px; /* Odstup od tlačidiel hodnotenia */
         }
 
@@ -185,8 +184,6 @@
 
     <script>
         const initialCardsData = [
-            // ... (Všetky vaše kartičky sem) ...
-            // Príklad jednej kartičky:
             {
                 question: "Rozdiel medzi AUT a APT:",
                 answer: `AUT (Abstraktný údajový typ):
@@ -261,9 +258,9 @@ Implicitná hierarchia je pamäťovo efektívnejšia, ale menej flexibilná. Exp
 Nákres s 13 vrcholmi (napr. pre ternárnu perfektnú hierarchiu, kde K=3):
 (Koreň na úrovni 0)
         O
-       /|\
+       /|\\
       O O O  (Úroveň 1)
-     /|\/|\/|\
+     /|\\/|\\/|\\
     O O O O O O O O O (Úroveň 2 - listy)
     
 Spolu: 1 (koreň) + 3 (úroveň 1) + 9 (úroveň 2) = 13 vrcholov. 
@@ -305,8 +302,6 @@ AUŠ (Abstraktná údajová štruktúra):
 
 Hlavný rozdiel: AUT je špecifikácia, AUŠ je realizácia.`
             },
-             // Sem doplňte zvyšok vašich kartičiek z predchádzajúceho kódu
-             // Napríklad:
             {
                 question: "Riadiaci blok explicitnej hierarchie, z čoho sa skladá, teda atribúty a ešte niečo k tomu asi popis na čo sú tie atribúty:",
                 answer: `Riadiaci blok explicitnej hierarchie typicky obsahuje:
@@ -314,7 +309,209 @@ Hlavný rozdiel: AUT je špecifikácia, AUŠ je realizácia.`
 2.  **Počet prvkov (\`pocetPrvkov\`):** Celkový počet vrcholov v hierarchii.
 3.  **(Voliteľne) Referencia na posledný použitý vrchol (\`aktualnyVrchol\`):** Môže zrýchliť niektoré operácie.`
             },
-            // ... a tak ďalej pre všetky kartičky
+            {
+                question: "Z čoho sa skladá Bitonic sort:",
+                answer: `Bitonic sorter (Bitonická triediaca sieť) sa skladá z kaskádovo zapojených jednoduchších komponentov:
+1.  **Porovnávač (Comparator):** Základný stavebný blok. Zariadenie s dvoma vstupmi a dvoma výstupmi, ktoré na výstup dáva hodnoty usporiadané.
+2.  **Bitonic Sequence (Bitonická sekvencia):** Typ sekvencie, ktorá najprv monotónne neklesá a potom monotónne nerastie (alebo naopak, po cyklickom posune).
+3.  **Half-Cleaner (Polovičný čistič / Bitonic Splitter):**
+    *   Vstup: bitonická sekvencia dĺžky N.
+    *   Výstup: dve bitonické sekvencie dĺžky N/2, kde všetky prvky v jednej sú ≤ všetkým prvkom v druhej.
+    *   Pozostáva z N/2 porovnávačov.
+4.  **Merger (Zlučovač / Bitonic Merger):**
+    *   Vstup: bitonická sekvencia.
+    *   Výstup: utriedená sekvencia.
+    *   Realizuje sa rekurzívnym použitím Half-Cleaneru.
+5.  **Bitonic Sorter (Celá triediaca sieť):**
+    *   Najprv transformuje vstupnú sekvenciu na bitonickú sekvenciu (zlučovaním menších utriedených/bitonických podsekvencií).
+    *   Potom na túto veľkú bitonickú sekvenciu aplikuje Merger, ktorý ju utriedi.
+
+V skratke: Porovnávače -> Half-Cleaners -> Mergers -> Bitonic Sorter.`
+            },
+            {
+                question: "Binárny vyhľadávací strom ako fungujú metódy vlož, vyhľadaj a vyber a ich zložitosti a dôvod danej zložitosti, kedy BVS zdegeneruje a príklad a zložitosti daných operácií pri zdegenerovaní a mechanizmus na predídenie zdegenerovania:",
+                answer: `**Metóda vyhľadaj (search):** O(h), priemerne O(log n), najhoršie O(n). Prechádza stromom podľa hodnoty kľúča.
+**Metóda vlož (insert):** O(h), priemerne O(log n), najhoršie O(n). Nájde miesto a vloží nový vrchol.
+**Metóda vyber (delete/remove):** O(h), priemerne O(log n), najhoršie O(n). Nájde vrchol a odstráni ho s ohľadom na synov (0, 1, alebo 2).
+**Dôvod zložitosti:** Operácie sledujú cestu od koreňa, dĺžka cesty je výška stromu h.
+**Degenerácia BVS:** Nastane, keď sa strom zmení na lineárny zoznam (napr. vkladaním usporiadaných dát: 1, 2, 3...). Všetky operácie majú potom zložitosť O(n).
+**Mechanizmy na predídenie degenerácie:** Samo-vyvažovacie stromy (AVL, Red-Black), náhodné vkladanie (Treap), periodické preusporiadanie.`
+            },
+            {
+                question: "Čo je to hĺbka a čo mohutnosť hierarchie:",
+                answer: `1.  **Hĺbka hierarchie (Depth/Height):**
+    *   Maximálna úroveň vrcholu v hierarchii. Je to najdlhšia cesta (počet hrán) od koreňa k listu. Ak je koreň na úrovni 0, hĺbka prázdneho stromu je -1, stromu s jedným vrcholom je 0.
+2.  **Mohutnosť hierarchie (Size/Order):**
+    *   Celkový počet vrcholov v hierarchii (koreň, vnútorné vrcholy, listy).`
+            },
+            {
+                question: "4 implementácie prioritného frontu a zoraď ich na základe operácie vlož (ak sa nemýlim):",
+                answer: `Zoradenie implementácií PF podľa operácie **VLOŽ** (od najlepšej):
+1.  **Neutriedený sekvenčný PF:** O(1) - pridá na koniec.
+2.  **Dvojzoznam:** O(1) amortizovane - vkladá do krátkej sekvencie.
+3.  **Binárny vyhľadávací strom (BVS):** O(log n) v priemere, O(n) v najhoršom prípade. (Lepšie s vyvažovaným BVS: O(log n))
+4.  **Utriedený sekvenčný PF:** O(n) - musí nájsť správne miesto.`
+            },
+            {
+                question: "Ľavostranna halda, opísať, napísať APS, operácie všetky 3 popísať a zložitosti k nim aj vysvetliť ich:",
+                answer: `**Ľavostranná halda (Binárna halda):**
+• Úplný binárny strom s vlastnosťou haldy (rodič >= synovia pre max-haldu). Implementovaná implicitnou binárnou hierarchiou (pole).
+**APS:** Implicitná binárna hierarchia (pole prvkov <Priorita, Údaje>). Atribúty: \`pocetPrvkov\`, \`kapacitaPola\`.
+**Operácie (pre Max-Haldu):**
+1.  **Vrchol (Top/Peek):** O(1). Vráti koreň (prvý prvok poľa).
+2.  **Vlož (Insert):** O(log n). Vloží prvok na koniec, potom "prebubláva nahor" (sift-up) výmenami s rodičom, kým nie je obnovená vlastnosť haldy.
+3.  **Vyber (Extract-Max/Pop):** O(log n). Odstráni koreň, nahradí ho posledným prvkom, potom tento prvok "klesá nadol" (sift-down) výmenami s väčším synom, kým nie je obnovená vlastnosť haldy.`
+            },
+            {
+                question: "Rozdiel medzi horným a dolným asymptotickým odhadom a ktorý je pre programátora viac podstatný a prečo:",
+                answer: `1.  **Horný asymptotický odhad (O-notácia):** O(f(n)). Horná hranica rastu funkcie (nanajvýš tak rýchlo ako f(n)). Popisuje najhorší scenár.
+2.  **Dolný asymptotický odhad (Ω-notácia):** Ω(f(n)). Dolná hranica rastu funkcie (aspoň tak rýchlo ako f(n)). Popisuje najlepší scenár.
+
+Pre programátora je **viac podstatný horný asymptotický odhad (O-notácia)**, pretože:
+•   Garantuje maximálny výkon (worst-case).
+•   Pomáha pri optimalizácii a výbere algoritmov.
+•   Umožňuje plánovanie zdrojov a odhad času behu.
+•   Je štandardom pre porovnávanie efektivity.`
+            },
+            {
+                question: "Rozdiel medzi primitívnymi a odvodenými typmi:",
+                answer: `**Primitívne typy:**
+1.  Sú priamo vstavané do programovacích jazykov (napr. \`int\`, \`char\`, \`float\`, \`boolean\`).
+2.  Sú základné, nie sú odvodené od iných typov.
+3.  Často skalárne (hodnoty sa dajú priamo porovnávať).
+
+**Odvodené typy (User-Defined/Composite Types):**
+1.  Sú vytvorené programátorom z primitívnych alebo iných odvodených typov.
+2.  Spôsoby vytvárania:
+    •   **Agregácia:** Zlúčenie viacerých typov (napr. štruktúry, triedy, polia).
+    •   **Enumerácia:** Vymenovanie všetkých možných hodnôt (napr. \`enum Day {MON, TUE...}\`).`
+            },
+            {
+                question: "Čo sa ukladá v halde, ako sa tam alokuje a dealokuje, čo je ukazovateľ a čo je visiaci ukazovateľ a čo je to a kedy vzniká únik pamäte:",
+                answer: `1.  **Čo sa ukladá v halde:** Dynamicky alokované premenné/objekty (vytvorené \`new\`, \`malloc\`).
+2.  **Ako sa alokuje v halde:** Explicitnou požiadavkou programu (\`new\`, \`malloc\`). Vracia ukazovateľ na alokovaný blok.
+3.  **Ako sa dealokuje z haldy:** Explicitným uvoľnením programátorom (\`delete\`, \`free\`).
+4.  **Ukazovateľ (Pointer):** Premenná uchovávajúca adresu iného miesta v pamäti.
+5.  **Visiaci ukazovateľ (Dangling Pointer):** Ukazovateľ na pamäť, ktorá už bola dealokovaná alebo nie je platná. Jeho použitie vedie k nedefinovanému správaniu.
+6.  **Únik pamäte (Memory Leak):** Vzniká, keď sa stratia všetky referencie na alokovaný blok pamäte bez jeho uvoľnenia. Pamäť zostáva obsadená, ale nedostupná. Prevencia: dôsledné uvoľňovanie, smart pointers, garbage collector.`
+            },
+            {
+                question: "3 príklady APT a k nim APS:",
+                answer: `1.  **APT: Sekvencia**
+    *   APS: Implicitná sekvencia (pole), Explicitná sekvencia (zreťazený zoznam).
+2.  **APT: Hierarchia**
+    *   APS: Implicitná hierarchia (napr. binárna halda v poli), Explicitná hierarchia (dynamicky alokovaný strom s ukazovateľmi na synov).
+3.  **APT: Sieť (Graf)**
+    *   APS: Matica susednosti (2D pole), Zoznamy susednosti (pole zreťazených zoznamov).`
+            },
+            {
+                question: "Rozdiel medzi dynamickými a statickými sieťami:",
+                answer: `**Statická sieť:**
+•   Počet vrcholov a hrán je **fixný**, nemení sa počas behu.
+•   Implementácia brány (prístup k vrcholom): Často **implicitná sekvencia** (pole referencií).
+•   Modifikátory (pridanie/odobratie) sú neefektívne alebo nepodporované.
+•   Nižšia flexibilita.
+
+**Dynamická sieť:**
+•   Počet vrcholov a hrán sa **môže meniť** počas behu.
+•   Implementácia brány: Často **explicitná sekvencia** (zreťazený zoznam referencií).
+•   Efektívne modifikátory.
+•   Vyššia flexibilita.`
+            },
+            {
+                question: "Čo je to kvadratická zložitosť a 3 príklady:",
+                answer: `**Kvadratická zložitosť (O(n²)):** Počet operácií rastie úmerne druhej mocnine veľkosti vstupu (n). Ak vstup zdvojnásobíme, čas sa zoštvornásobí.
+**Príklady:**
+1.  **Jednoduché triediace algoritmy:** Bubble Sort, Selection Sort, Insertion Sort (v najhoršom prípade). Majú vnorené cykly prechádzajúce n-krát.
+2.  **Porovnanie všetkých párov prvkov v kolekcii:** Napr. nájdenie duplikátov pomocou dvoch vnorených cyklov.
+3.  **Sčítanie/Odčítanie dvoch matíc n x n:** Každý z n² prvkov vyžaduje jednu operáciu.`
+            },
+            {
+                question: "Rozdiel medzi ukazovateľom a odkazom:",
+                answer: `**Ukazovateľ (Pointer):**
+•   Premenná uchovávajúca adresu iného objektu.
+•   Môže byť neinicializovaný, NULL, alebo meniť cieľ.
+•   Vyžaduje dereferencovanie (\`*\`) pre prístup k hodnote.
+•   Podporuje aritmetiku ukazovateľov.
+
+**Odkaz (Reference - hlavne C++):**
+•   Alternatívny názov (alias) pre už existujúci objekt.
+•   Musí byť inicializovaný pri vzniku a nemôže meniť cieľ.
+•   Nemôže byť NULL.
+•   Používa sa priamo, bez explicitného dereferencovania.
+•   Nepodporuje aritmetiku.`
+            },
+            {
+                question: "Opísať pamäťový blok explicitnej jednostranne zreťazenej sekvencie:",
+                answer: `Pamäťový blok (uzol/Node) explicitnej jednostranne zreťazenej sekvencie sa skladá z:
+1.  **Údajová časť (Data):** Obsahuje samotné dáta uložené v bloku.
+2.  **Vzťahová časť (Next Pointer):** Obsahuje referenciu (ukazovateľ) na nasledujúci blok v sekvencii.
+Posledný blok v sekvencii má svoj \`next\` ukazovateľ nastavený na NULL (alebo ekvivalent). Prístup k sekvencii je cez ukazovateľ na prvý blok (head).`
+            },
+            {
+                question: "Napísať 3 tabuľky s konštantnou zložitosťou a v jednej opísať operáciu vlož:",
+                answer: `Tri tabuľky (hešovacie) snažiace sa o O(1) priemernú zložitosť:
+1.  Tabuľka s rozptýlenými záznamami (riešenie kolízií zreťazovaním).
+2.  Tabuľka s rozptýlenými záznamami (riešenie kolízií otvorenou adresáciou).
+3.  Tabuľka s rozptýlenými záznamami (riešenie kolízií preplňovacou oblasťou).
+
+**Operácia VLOŽ pre tabuľku s rozptýlenými záznamami (zreťazovanie):**
+1.  Vypočíta sa heš kľúča K a z neho index \`idx\` do poľa tabuľky.
+2.  Ak na \`M[idx]\` existuje zreťazený zoznam, (voliteľne) sa prejde kvôli kontrole duplikátov.
+3.  Vytvorí sa nový prvok (uzol) s kľúčom K a dátami.
+4.  Tento nový prvok sa vloží do zreťazeného zoznamu na pozícii \`M[idx]\` (typicky na začiatok).`
+            },
+            {
+                question: "Rozdiel medzi usporiadanými a neusporiadanými K-cestnými hierarchiami:",
+                answer: `**Usporiadané K-cestné hierarchie:**
+•   Synovia každého vrcholu tvoria **lineárne usporiadanú množinu** (existuje 1., 2., ..., K-ty syn).
+•   Poradie synov má význam.
+•   Implementácia: explicitná (pole K referencií na synov) alebo implicitná (ak je kompletná).
+
+**Neusporiadané K-cestné hierarchie:**
+•   Synovia každého vrcholu tvoria **neusporiadanú množinu**.
+•   Na poradí synov nezáleží.
+•   Implementácia: explicitná (napr. vrchol má zoznam referencií na synov).`
+            },
+            {
+                question: "Zoraďte 4 PF od najlepšej po najhoršiu (operácia vyber prvok s najvyššou prioritou):",
+                answer: `Zoradenie PF podľa operácie **VYBER** (od najlepšej):
+1.  **Utriedený sekvenčný PF:** O(1) - prvok je na známom konci.
+2.  **Ľavostranná halda (Binárna halda):** O(log n) - odstráni koreň, obnoví haldu.
+3.  **Dvojzoznam:** Závisí od implementácie. Môže byť od O(1) (ak v krátkej časti a tá je malá/triedená) po O(k) alebo O(m), kde k, m sú veľkosti častí. Typicky efektívnejší ako úplne neutriedený.
+4.  **Neutriedený sekvenčný PF:** O(n) - musí prejsť celú sekvenciu.`
+            },
+            {
+                question: "Napíš čo je to sAPT(blok siete) a brána:",
+                answer: `**sAPT (blok siete):** V sieťových Abstraktných Pamäťových Typoch (APT) sa bloky pamäte označujú ako **vrcholy**. Každý vrchol môže mať vzťah s každým iným vrcholom. Vzťahy sú nelineárne a nehierarchické.
+
+**Brána (Gateway/Portal):** Keďže v sieti nie je prirodzený vstupný bod (ako koreň), brána je mechanizmus, ktorý udržiava **referencie na všetky (alebo podmnožinu) vrcholov siete.** Tieto referencie sú typicky uložené v sekvencii (implicitnej pre statické siete, explicitnej pre dynamické siete). Umožňuje prístup k vrcholom siete.`
+            },
+            {
+                question: "Napíš presné údajové typy, ktoré využívajú sekvenciu:",
+                answer: `Údajové typy/štruktúry využívajúce sekvenciu:
+•   **Základné sekvencie:** Implicitná (pole), Explicitná (jednostranne/obojsmerne zreťazený zoznam), Cyklické varianty.
+•   **AUT implementované sekvenciami:** Zásobník, Rad, Prioritný front (neutriedený/utriedený sekvenčný).
+•   **Komplexnejšie štruktúry:** AUMS Dvojzoznam (krátka a dlhá sekvencia), Hašovacia tabuľka (zreťazovanie používa sekvencie), Zoznamy susednosti (pole sekvencií), Brána v sieťach.`
+            },
+            {
+                question: "Neinicializovaný údajový segment, inicializovaný údajový segment, kódový segment) + popísať čo každý robí a ako sa v tej \"štruktúre\" nachádzajú:",
+                answer: `Pamäťové segmenty procesu (typické usporiadanie od nízkych adries):
+1.  **Kódový segment (.text):**
+    *   Obsahuje vykonateľné inštrukcie programu (strojový kód).
+    *   Read-only, môže byť zdieľaný.
+    *   Nachádza sa na spodku pamäte procesu.
+2.  **Inicializovaný údajový segment (.data):**
+    *   Obsahuje globálne a statické premenné s explicitnou počiatočnou hodnotou.
+    *   Read-write.
+    *   Nachádza sa nad kódovým segmentom.
+3.  **Neinicializovaný údajový segment (.bss):**
+    *   Obsahuje globálne a statické premenné bez explicitnej inicializácie (alebo inicializované na 0).
+    *   Operačný systém ich inicializuje na nulu. Šetrí miesto vo vykonateľnom súbore.
+    *   Read-write.
+    *   Nachádza sa nad inicializovaným údajovým segmentom.
+Nad nimi typicky nasleduje Halda (Heap) a Zásobník (Stack).`
+            },
             {
                 question: "Napíš 3 riešenia kolízii (popis, výhody, nevýhody):",
                 answer: `Kolízie v hešovacích tabuľkách nastávajú, keď dva alebo viac rôznych kľúčov vygeneruje rovnakú hešovaciu hodnotu. Tu sú tri bežné metódy riešenia kolízií:
@@ -358,7 +555,6 @@ Hlavný rozdiel: AUT je špecifikácia, AUŠ je realizácia.`
         }
 
         function displayCurrentCard() {
-            // Skrytie všetkého pred zobrazením alebo dokončením
             flashcardViewport.style.display = 'none';
             evaluationControlsElement.style.display = 'none';
             statusBarElement.style.display = 'none';
@@ -369,20 +565,18 @@ Hlavný rozdiel: AUT je špecifikácia, AUŠ je realizácia.`
                 return;
             }
 
-            flashcardViewport.style.display = 'block'; // Zobrazí kontajner karty
-            statusBarElement.style.display = 'block'; // Zobrazí status bar
+            flashcardViewport.style.display = 'block'; 
+            statusBarElement.style.display = 'block'; 
 
             const cardData = deck[0];
             frontFace.textContent = cardData.question;
             backFace.innerHTML = cardData.answer; 
 
-            // Reset scroll pozície pre obe strany karty
             frontFace.scrollTop = 0;
             backFace.scrollTop = 0;
 
             flashcardElement.classList.remove('flipped');
             isFlipped = false;
-            // evaluationControlsElement zostáva skrytý, kým sa karta neotočí
             updateStatus();
         }
 
@@ -390,27 +584,27 @@ Hlavný rozdiel: AUT je špecifikácia, AUŠ je realizácia.`
             statusElement.textContent = `Zostáva kariet: ${deck.length}`;
         }
 
-        flashcardElement.addEventListener('click', () => {
-            if (deck.length === 0 || !flashcardViewport.contains(event.target)) return; // Kontrola, či sa kliklo na kartu
+        flashcardElement.addEventListener('click', (event) => {
+            if (deck.length === 0 || !flashcardViewport.contains(event.target)) return; 
             
             flashcardElement.classList.toggle('flipped');
             isFlipped = !isFlipped;
             if (isFlipped) {
-                evaluationControlsElement.style.display = 'flex'; // Zobrazí tlačidlá
+                evaluationControlsElement.style.display = 'flex'; 
             } else {
-                evaluationControlsElement.style.display = 'none'; // Skryje tlačidlá
+                evaluationControlsElement.style.display = 'none'; 
             }
         });
 
         correctBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Zabráni otočeniu karty späť pri kliknutí na tlačidlo
+            event.stopPropagation(); 
             if (deck.length === 0) return;
             deck.shift(); 
             displayCurrentCard();
         });
 
         incorrectBtn.addEventListener('click', (event) => {
-            event.stopPropagation(); // Zabráni otočeniu karty späť
+            event.stopPropagation(); 
             if (deck.length === 0) return;
             const incorrectCard = deck.shift(); 
             deck.push(incorrectCard); 
