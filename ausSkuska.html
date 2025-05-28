@@ -63,6 +63,7 @@
             overflow-y: auto; /* Skrolovanie pre dlhý text */
             border-radius: 16px; /* Aby sa zdedili zaoblené rohy */
             color: #282e3e; /* Tmavšia farba textu */
+            line-height: 1.6; /* Lepšia čitateľnosť riadkov */
         }
         /* Štýl pre scrollbar (voliteľné, pre Webkit prehliadače) */
         .flashcard-face::-webkit-scrollbar {
@@ -85,15 +86,19 @@
 
         .flashcard-back {
             transform: rotateY(180deg);
-            font-size: 1.1em; /* Primerané písmo pre odpoveď */
+            font-size: 1.05em; /* Mierne zväčšené písmo pre odpoveď pre lepšiu čitateľnosť */
             white-space: pre-wrap; /* Zachová formátovanie textu vrátane nových riadkov */
             justify-content: flex-start; /* Odpoveď zarovnaná na vrch, ak je dlhá a skroluje sa */
             align-items: flex-start; /* text-align: left pre zoznamy bude fungovať lepšie */
             text-align: left; /* Odpovede často vyzerajú lepšie zarovnané doľava */
         }
         
+        .flashcard-back strong { /* Štýl pre zvýraznené časti */
+            color: #1a237e; /* Tmavomodrá pre zvýraznenie */
+        }
+
         .flashcard-back ul, .flashcard-back ol {
-            padding-left: 20px;
+            padding-left: 25px; /* Trochu väčší odstup pre zoznamy */
             margin-top: 10px;
             margin-bottom: 10px;
             width: 100%; /* Aby zoznamy využili plnú šírku v rámci paddingu */
@@ -186,416 +191,413 @@
         const initialCardsData = [
             {
                 question: "Rozdiel medzi AUT a APT:",
-                answer: `AUT (Abstraktný údajový typ):
+                answer: `<strong>AUT (Abstraktný údajový typ):</strong>
 • Určuje doménu prvkov (prípadne viac domén)
 • Definuje operácie na prvkoch domény
 • Je nezávislý na konkrétnej implementácii
 • Je realizovateľný viacerými abstraktnými údajovými štruktúrami (AUS)
-APT (Abstraktný pamäťový typ):
+
+<strong>APT (Abstraktný pamäťový typ):</strong>
 • Určuje ako údajová štruktúra organizuje bloky pamäte v pamäti
 • Definuje operácie typické pre dané pamäťové usporiadanie
 • Špecifikuje požiadavky na bloky pamäte
 • Je typicky implementovaný ako rozhranie
 • Je realizovateľný viacerými spôsobmi s odlišnou organizáciou blokov pamäte
-Oba typy sú abstraktné a fungujú ako "čierne skrinky". Hlavný rozdiel je v tom, že AUT sa zameriava na údaje a operácie s nimi, zatiaľ čo APT sa zameriava na organizáciu pamäte a operácie s ňou.`
+
+<strong>Hlavný rozdiel:</strong> AUT sa zameriava na údaje a operácie s nimi, zatiaľ čo APT sa zameriava na organizáciu pamäte a operácie s ňou. Oba typy sú abstraktné ("čierne skrinky").`
             },
             {
                 question: "Čo je to endianita a jej 2 typy:",
-                answer: `Endianita sa týka spôsobu, akým sa viacbajtové údaje ukladajú v pamäti počítača. Existujú dva hlavné typy endianity:
-1.	Big-endian:
-•	Najviac významný bajt sa ukladá na nižšiu adresu.
-•	Najmenej významný bajt sa ukladá na vyššiu adresu.
-•	Označuje sa ako "sieťové poradie bajtov", pretože sa v tomto poradí posielajú údaje vo väčšine sieťových protokolov.
-2.	Little-endian:
-•	Najmenej významný bajt sa ukladá na nižšiu adresu.
-•	Najviac významný bajt sa ukladá na vyššiu adresu.
-•	Tento typ endianity sa používa v architektúre PC.`
+                answer: `<strong>Endianita</strong> sa týka spôsobu, akým sa viacbajtové údaje ukladajú v pamäti počítača.
+Existujú dva hlavné typy:
+1.  <strong>Big-endian:</strong>
+    • Najviac významný bajt (MSB) sa ukladá na nižšiu adresu.
+    • Najmenej významný bajt (LSB) sa ukladá na vyššiu adresu.
+    • Označuje sa ako "sieťové poradie bajtov" (používané vo väčšine sieťových protokolov).
+2.  <strong>Little-endian:</strong>
+    • Najmenej významný bajt (LSB) sa ukladá na nižšiu adresu.
+    • Najviac významný bajt (MSB) sa ukladá na vyššiu adresu.
+    • Používa sa v architektúre PC.`
             },
             {
-                question: "Aký je rozdiel medzi Implicitnou Sekvenciou a Explicitnou Sekvenciou:",
-                answer: `Implicitná hierarchia:
-1.	Musí byť v kompaktnej pamäti
-2.	Možné len pre usporiadané K-cestné hierarchie
-3.	Vzťahy medzi vrcholmi (otec-syn) sa vypočítavajú
-4.	Limitovaná množina modifikátorov - musí zostať kompletná
-5.	Efektívna z hľadiska pamäte, ale menej flexibilná
-6.	Vhodná pre kompletné a vyvážené hierarchie
-Explicitná hierarchia:
-1.	Môže byť v ľubovoľnej pamäti (vrátane externej)
-2.	Možná pre všetky typy hierarchií
-3.	Vzťahy medzi vrcholmi sú explicitne uložené (referencie)
-4.	Väčšia flexibilita pri modifikácii štruktúry
-5.	Vyššia pamäťová náročnosť kvôli ukladaniu referencií
-6.	Vhodná pre dynamické a nepravidelné hierarchie
-Implicitná hierarchia je pamäťovo efektívnejšia, ale menej flexibilná. Explicitná hierarchia je flexibilnejšia, ale náročnejšia na pamäť.`
+                question: "Aký je rozdiel medzi Implicitnou a Explicitnou Hierarchiou:",
+                answer: `<strong>Implicitná hierarchia:</strong>
+• Musí byť v kompaktnej pamäti.
+• Možné len pre usporiadané K-cestné hierarchie.
+• Vzťahy medzi vrcholmi (otec-syn) sa vypočítavajú.
+• Limitovaná množina modifikátorov - musí zostať kompletná.
+• Efektívna z hľadiska pamäte, ale menej flexibilná.
+• Vhodná pre kompletné a vyvážené hierarchie.
+
+<strong>Explicitná hierarchia:</strong>
+• Môže byť v ľubovoľnej pamäti (vrátane externej).
+• Možná pre všetky typy hierarchií.
+• Vzťahy medzi vrcholmi sú explicitne uložené (referencie).
+• Väčšia flexibilita pri modifikácii štruktúry.
+• Vyššia pamäťová náročnosť kvôli ukladaniu referencií.
+• Vhodná pre dynamické a nepravidelné hierarchie.
+
+<strong>Zhrnutie:</strong> Implicitná hierarchia je pamäťovo efektívnejšia, ale menej flexibilná. Explicitná hierarchia je flexibilnejšia, ale náročnejšia na pamäť.`
             },
             {
                 question: "Vypísať 3 druhy O-notácie a jej názvy:",
-                answer: `3.	O(f(n)) - Horný asymptotický odhad: Funkcia z(n) je asymptoticky menšia alebo rovná ako c*f(n) pre nejaké kladné konštanty c a k.
-4.	Ω(f(n)) - Dolný asymptotický odhad: Funkcia z(n) je asymptoticky väčšia alebo rovná ako c*f(n) pre nejaké kladné konštanty c a k.
-5.	Θ(f(n)) - Tesný asymptotický odhad: Funkcia z(n) je asymptoticky rovná ako c*f(n) pre nejaké kladné konštanty c a k.`
+                answer: `Tri druhy asymptotickej notácie:
+• <strong>O(f(n)) - Horný asymptotický odhad:</strong> Funkcia z(n) je asymptoticky menšia alebo rovná ako c*f(n).
+• <strong>Ω(f(n)) - Dolný asymptotický odhad:</strong> Funkcia z(n) je asymptoticky väčšia alebo rovná ako c*f(n).
+• <strong>Θ(f(n)) - Tesný asymptotický odhad:</strong> Funkcia z(n) je asymptoticky rovná ako c*f(n).
+(Pre nejaké kladné konštanty c a k).`
             },
             {
                 question: "Zoradiť tabuľky podľa operácie odober s daným kľúčom:",
-                answer: `1.	Tabuľka s rozptýlenými záznamami (bez riešenia kolízií): O(1)
-2.	Tabuľka s rozptýlenými záznamami (zreťazovanie): O(1)
-3.	Tabuľka s rozptýlenými záznamami (preplňovacia oblasť): O(1)
-4.	Binárny vyhľadávací strom: O(log n) v priemernom prípade, O(n) v najhoršom prípade`
+                answer: `Poradie tabuliek podľa zložitosti operácie <strong>Odober s daným kľúčom</strong>:
+• Tabuľka s rozptýlenými záznamami (bez riešenia kolízií): <strong>O(1)</strong>
+• Tabuľka s rozptýlenými záznamami (zreťazovanie): <strong>O(1)</strong> (priemerne, ak je faktor zaplnenia malý)
+• Tabuľka s rozptýlenými záznamami (preplňovacia oblasť): <strong>O(1)</strong> (priemerne)
+• Binárny vyhľadávací strom: <strong>O(log n)</strong> v priemernom prípade, <strong>O(n)</strong> v najhoršom prípade.`
             },
             {
                 question: "Vysvetliť aká je to perfektná hierarchia, a nakresliť ju s 13timi vrcholmi:",
-                answer: `5.	Všetky listy sú v rovnakej hĺbke. To znamená, že všetky vrcholy bez synov (listy) sú vzdialené od koreňa rovnaký počet úrovní.
-6.	Všetky vnútorné vrcholy majú stupeň n. To znamená, že každý vrchol s aspoň jedným synom má presne n synov.
-(Nákres tu nie je možné vložiť, ale pre ternárnu hierarchiu (stupeň n=3) by to vyzeralo ako koreň, pod ním 3 synovia, a pod každým z týchto 3 synov ďalší 3 synovia, čo dáva 1+3+9=13 vrcholov.)`
+                answer: `<strong>Perfektná hierarchia:</strong>
+• Všetky listy sú v rovnakej hĺbke (vzdialené od koreňa rovnaký počet úrovní).
+• Všetky vnútorné vrcholy majú stupeň n (každý vrchol s aspoň jedným synom má presne n synov).
+
+<strong>Príklad perfektnej ternárnej hierarchie (n=3) s 13 vrcholmi:</strong>
+  Koreň (1 vrchol, úroveň 0)
+   └── 3 synovia (úroveň 1)
+        └── Každý z nich má 3 synov (spolu 9 vrcholov, úroveň 2 - listy)
+Celkovo: 1 (koreň) + 3 (úroveň 1) + 9 (úroveň 2) = 13 vrcholov.`
             },
             {
                 question: "BVS popis, akú implementáciu hierarchie používa, a popísať logiku operácií vlož a vyber:",
-                answer: `Implementácia hierarchie:
-•	BVS používa explicitnú binárnu hierarchiu
-•	Každý vrchol je reprezentovaný samostatným objektom v pamäti
-•	Vrchol obsahuje:
-•	Kľúč, údaje, odkaz na otca ľavého syna a pravého syna
-Logika operácie vlož:
-1.	Pokúsi sa nájsť vrchol s vkladaným kľúčom:
-•	Testuje unikátnosť kľúča
-•	Získa vrchol, ku ktorému má byť nový vrchol pripojený ako syn
-2.	Ak sa vrchol s daným kľúčom nenájde:
-•	Vytvorí nový vrchol
-•	Vloží ho do hierarchie tak, aby nebolo porušené usporiadanie BVS (menšie kľúče vľavo, väčšie vpravo), Priradí doň údaje, Zvýši počet prvkov
-Logika operácie vyber:
-1.	Ak sa vrchol s daným kľúčom nájde:
-•	Odstráni vrchol z hierarchie tak, aby nebolo porušené usporiadanie BVS: a) Ak vrchol nemá synov 
-•	Vráti údaje z vrcholu
-•	Dealokuje vrchol, zníži počet prvkov`
+                answer: `<strong>Binárny Vyhľadávací Strom (BVS):</strong>
+<strong>Implementácia hierarchie:</strong>
+• Používa explicitnú binárnu hierarchiu.
+• Každý vrchol je samostatný objekt v pamäti.
+• Vrchol obsahuje: Kľúč, údaje, odkaz na ľavého syna, pravého syna (a voliteľne na otca).
+
+<strong>Logika operácie VLOŽ:</strong>
+1. Hľadá sa miesto pre nový kľúč (testuje sa unikátnosť, ak treba).
+2. Ak sa kľúč nenájde (alebo duplikáty sú povolené):
+   • Vytvorí sa nový vrchol.
+   • Vloží sa do stromu tak, aby bola zachovaná vlastnosť BVS (menšie kľúče vľavo, väčšie vpravo).
+   • Priradia sa údaje, zvýši sa počet prvkov.
+
+<strong>Logika operácie VYBER:</strong>
+1. Nájde sa vrchol s daným kľúčom.
+2. Odstráni sa tak, aby sa neporušila vlastnosť BVS:
+   • <strong>Žiadni synovia (list):</strong> Jednoducho sa odstráni.
+   • <strong>Jeden syn:</strong> Nahradí sa týmto synom.
+   • <strong>Dvaja synovia:</strong> Nahradí sa inorder následníkom (najmenší v pravom podstrome) alebo predchodcom, a ten sa následne odstráni.
+3. Vrátia sa údaje, vrchol sa dealokuje, zníži sa počet prvkov.`
             },
             {
                 question: "Rozdiel medzi AUT a AUŠ, po jednom príklade:",
-                answer: `AUT (Abstraktný údajový typ):
-•	Určuje doménu prvkov (prípadne viac domén)
-•	Definuje operácie na prvkoch domény
-•	Je nezávislý na konkrétnej implementácii
-•	Je realizovateľný viacerými abstraktnými údajovými štruktúrami (AUS)
-•	Zásobnik
-Abstraktná údajová štruktúra (AUŠ):
-•	Je to konkrétna implementácia AUT
-•	Definuje, ako sú dáta organizované v pamäti
-•	Poskytuje konkrétne algoritmy pre operácie definované v AUT
-•	Popisuje "ako" štruktúra funguje interne
-•	Zásobník implementovaný pomocou poľa
-Hlavný rozdiel je teda v úrovni abstrakcie: AUT poskytuje abstraktný pohľad na štruktúru a jej správanie, zatiaľ čo AUŠ poskytuje konkrétnu implementáciu tohto správania.`
+                answer: `<strong>AUT (Abstraktný Údajový Typ):</strong>
+• Špecifikuje doménu prvkov a operácie nad nimi (ČO robí).
+• Nezávislý na implementácii.
+• Príklad: <strong>Zásobník</strong> (operácie: push, pop, top).
+
+<strong>AUŠ (Abstraktná Údajová Štruktúra):</strong>
+• Konkrétna implementácia AUT (AKO to robí).
+• Definuje organizáciu dát v pamäti a algoritmy operácií.
+• Príklad: <strong>Zásobník implementovaný pomocou poľa</strong>.
+
+<strong>Hlavný rozdiel:</strong> AUT je abstraktný pohľad, AUŠ je konkrétna realizácia.`
             },
             {
                 question: "Riadiaci blok explicitnej hierarchie, z čoho sa skladá, teda atribúty a ešte niečo k tomu asi popis na čo sú tie atribúty:",
-                answer: `1.	Referencia na koreň:
-•	Atribút: koreň (typu referencia na blok pamäte)
-•	Popis: Uchováva referenciu na koreňový vrchol hierarchie. Umožňuje rýchly prístup k začiatku štruktúry.
-2.	Referencia na posledný použitý vrchol:
-•	Atribút: poslednýVrchol (typu referencia na blok pamäte)
-•	Popis: Uchováva referenciu na posledný vrchol, s ktorým sa pracovalo. Môže zrýchliť niektoré operácie, ak sa často pracuje s tým istým vrcholom.
-3.	Referencia na Predchodcu ak je obojstranne zreťazena
-4.	Referencia na nasledovnika ak je jedno/obojstranne zreťazena`
+                answer: `<strong>Riadiaci blok explicitnej hierarchie</strong> typicky obsahuje:
+1.  <strong>Referencia na koreň:</strong>
+    • Atribút: \`koren\` (referencia na blok pamäte).
+    • Popis: Uchováva odkaz na koreňový vrchol, umožňuje prístup k štruktúre.
+2.  <strong>Referencia na posledný použitý vrchol:</strong>
+    • Atribút: \`poslednyVrchol\` (referencia na blok pamäte).
+    • Popis: Odkaz na naposledy spracovaný vrchol, môže zrýchliť niektoré operácie.
+3.  <strong>Referencia na Predchodcu</strong> (ak je obojstranne zreťazená štruktúra).
+4.  <strong>Referencia na Nasledovníka</strong> (ak je jedno/obojstranne zreťazená štruktúra).
+(Pozn.: Položky 3 a 4 sú skôr pre špecifické zreťazené štruktúry, nie pre každý riadiaci blok hierarchie. Počet prvkov je tiež častý atribút.)`
             },
             {
                 question: "Z čoho sa skladá Bitonic sort:",
-                answer: `1.	Half-cleaner:
-•	Táto časť siete berie na vstup bitonickú sekvenciu (sekvencia, ktorá monotónne klesá a potom monotónne rastie).
-2.	Bitonic sekvencia:
-•	Na vstupe bitonic sorter dostáva bitonickú sekvenciu a na výstupe dáva utriedenú sekvenciu.
-3.	Modifikovaný half-cleaner:
-•	Táto časť siete sa používa na vytvorenie bitonickej sekvencie z dvoch utriedených sekvencií.
-4.	Merger:
-•	Táto časť siete sa používa na spájanie dvoch utriedených sekvencií do jednej utriadenej sekvencie.`
+                answer: `<strong>Bitonic sort (triediaca sieť) sa skladá z:</strong>
+1.  <strong>Half-cleaner:</strong>
+    • Spracúva bitonickú sekvenciu (monotónne klesá, potom rastie, alebo naopak).
+2.  <strong>Bitonic sekvencia (ako vstup/výstup):</strong>
+    • Bitonic sorter prijíma bitonickú sekvenciu a na výstupe dáva utriedenú sekvenciu.
+3.  <strong>Modifikovaný half-cleaner:</strong>
+    • Používa sa na vytvorenie bitonickej sekvencie z dvoch utriedených sekvencií.
+4.  <strong>Merger (Zlučovač):</strong>
+    • Používa sa na spájanie (zlúčenie) dvoch utriedených sekvencií do jednej utriadenej sekvencie (často pomocou half-cleanerov).`
             },
             {
-                question: "Binárny vyhľadávací strom ako fungujú metódy vlož, vyhľadaj a vyber a ich zložitosti a dôvod danej zložitosti, kedy BVS zdegeneruje a príklad a zložitosti daných operácií pri zdegenerovaní a mechanizmus na predídenie zdegenerovania:",
-                answer: `1.	Metóda vyhľadaj:
-•	Zložitosť: O(log n) v priemernom prípade, O(n) v najhoršom prípade.
-2.	Metóda vlož:
-•	Zložitosť: O(log n) v priemernom prípade, O(n) v najhoršom prípade.
-3.	Metóda vyber:
-•	Funguje: Najprv vyhľadá vrchol na vymazanie. Ak má menej ako dvoch potomkov, jednoducho ho odstráni. Ak má dvoch potomkov, nahradí ho nasledovníkom (najmenší prvok v pravom podstrome) a odstráni nasledovníka.
-•	Zložitosť: O(log n) v priemernom prípade, O(n) v najhoršom prípade.
-Degenerácia BVS:
-•	BVS zdegeneruje, keď sa zmení na sekvenciu (lineárny zoznam).
-•	Príklad: Vkladanie už usporiadaných dát, napr. 1, 2, 3, 4, 5...
-•	Zložitosti pri zdegenerovaní: Všetky operácie majú zložitosť O(n), pretože strom sa správa ako lineárny zoznam.
-Mechanizmy na predídenie degenerácie:
-1.	Samo-vyvažovacie stromy:
-•	AVL stromy: Udržujú rozdiel hĺbok ľavého a pravého podstromu maximálne 1.
-2.	Náhodné vkladanie:
-•	Treap: Kombinuje BVS s haldou, používa náhodné priority.
-3.	Periodické preusporiadanie:
-•	Občasné prebudovanie celého stromu do vyváženej formy.`
+                question: "Binárny vyhľadávací strom: fungovanie metód vlož, vyhľadaj, vyber, ich zložitosti, degenerácia a jej predchádzanie:",
+                answer: `<strong>BVS - Operácie a vlastnosti:</strong>
+•   <strong>Metóda vyhľadaj:</strong> Zložitosť O(log n) priemerne, O(n) v najhoršom prípade.
+•   <strong>Metóda vlož:</strong> Zložitosť O(log n) priemerne, O(n) v najhoršom prípade.
+•   <strong>Metóda vyber:</strong> Vyhľadá vrchol. Ak má <2 synov, odstráni. Ak 2 synov, nahradí inorder následníkom a toho odstráni. Zložitosť O(log n) priemerne, O(n) v najhoršom.
+
+<strong>Degenerácia BVS:</strong>
+•   Nastane, keď sa strom zmení na sekvenciu (lineárny zoznam).
+•   Príklad: Vkladanie už usporiadaných dát (1, 2, 3...).
+•   Zložitosti pri zdegenerovaní: Všetky operácie O(n).
+
+<strong>Mechanizmy na predídenie degenerácie:</strong>
+•   <strong>Samo-vyvažovacie stromy:</strong> Napr. AVL stromy (udržujú rozdiel hĺbok podstromov max 1).
+•   <strong>Náhodné vkladanie:</strong> Napr. Treap (kombinuje BVS s haldou, náhodné priority).
+•   <strong>Periodické preusporiadanie:</strong> Občasné prebudovanie stromu do vyváženej formy.`
             },
             {
-                question: "čo je to hĺbka a čo mohutnosť hierarchie:",
-                answer: `1.	Hĺbka hierarchie:
-•	Definícia: Hĺbka hierarchie je maximálna úroveň vrcholu v hierarchii.
-•	Inými slovami, je to najdlhšia cesta od koreňa k listu.
-2.	Mohutnosť hierarchie:
-•	Definícia: Mohutnosť hierarchie je celkový počet vrcholov v hierarchii.
-•	Zahŕňa všetky vrcholy - koreň, vnútorné vrcholy aj listy.`
+                question: "Čo je to hĺbka a čo mohutnosť hierarchie:",
+                answer: `1.  <strong>Hĺbka hierarchie:</strong>
+    • Definícia: Maximálna úroveň vrcholu v hierarchii.
+    • Inými slovami: Najdlhšia cesta (počet hrán) od koreňa k listu.
+2.  <strong>Mohutnosť hierarchie:</strong>
+    • Definícia: Celkový počet vrcholov v hierarchii.
+    • Zahŕňa: Koreň, vnútorné vrcholy aj listy.`
             },
             {
-                question: "4 implementácie prioritného frontu a zoraď ich na základe operácie vlož (ak sa nemýlim):",
-                answer: `1.	Neutriedený sekvenčný prioritný front - O(1)
-•	Vkladanie je najrýchlejšie, pretože prvok sa jednoducho pridá na koniec sekvencie.
-2.	Dvojzoznam - O(1) amortizovane
-•	Väčšinu času je vkladanie O(1), keď sa vkladá do dlhej sekvencie. Občas môže byť potrebná reštrukturalizácia, ale amortizovaná zložitosť zostáva O(1).
-3.	Binárny vyhľadávací strom - O(log n) v priemere, O(n) v najhoršom prípade
-•	V priemernom prípade je vkladanie logaritmické, ale môže degenerovať na lineárne v najhoršom prípade.
-4.	Utriedený sekvenčný prioritný front - O(n)
-•	Najmenej efektívne, pretože pri každom vkladaní je potrebné nájsť správne miesto v utriedenej sekvencii.`
+                question: "4 implementácie prioritného frontu a zoraď ich na základe operácie VLOŽ:",
+                answer: `<strong>Implementácie prioritného frontu (PF) zoradené podľa operácie VLOŽ (od najlepšej):</strong>
+1.  <strong>Neutriedený sekvenčný PF:</strong> O(1)
+    • Vkladanie je najrýchlejšie (pridá na koniec).
+2.  <strong>Dvojzoznam:</strong> O(1) amortizovane
+    • Väčšinou O(1) do krátkej sekvencie, občas reštrukturalizácia.
+3.  <strong>Binárny vyhľadávací strom:</strong> O(log n) priemerne, O(n) v najhoršom prípade.
+4.  <strong>Utriedený sekvenčný PF:</strong> O(n)
+    • Najmenej efektívne (treba nájsť správne miesto).`
             },
             {
-                question: "Ľavostranna halda, opísať, napísať APS, operácie všetky 3 popísať a zložitosti k nim aj vysvetliť ich:",
-                answer: `Ľavostranná halda:
-•	Veľmi efektívna implementácia pomocou implicitnej binárnej hierarchie.
-•	Implicitné hierarchie sú vždy kompletné (nemajú "diery") a listy sa v nich pridávajú vždy na poslednú úroveň zľava.
-APS (Abstraktná pamäťová štruktúra): údaje Implicitná binárna hierarchia Ľavostranná halda <P, T> Prioritný front <P, T> Abstraktná údajová štruktúra
-Operácie:
-1.	Vrchol:
-•	Popis: Vráti prvok s najvyššou prioritou (koreň haldy).
-•	Zložitosť: O(1) - konštantná, pretože prvok s najvyššou prioritou je vždy v koreni.
-2.	Vlož: O(log n) - logaritmická, kde n je počet prvkov v halde. V najhoršom prípade nový prvok "vystúpa" až do koreňa, čo zodpovedá výške stromu.
-Vloží sa ako list na poslednú úroveň najviac vpravo.
-Vymieňa sa so svojim otcom, pokým nie je splnená podmienka usporiadania.
-3.	Vyber:
-•	Zložitosť: O(log n) - logaritmická. V najhoršom prípade nový koreň "klesne" až na poslednú úroveň, čo zodpovedá výške stromu.
-•	Nahradí koreň listom na poslednej úrovni najviac vpravo.
-•	Odstráni tento list.
-•	Nový koreň sa vymieňa so synom s vyššou prioritou, pokým nie je splnená podmienka usporiadania.`
+                question: "Ľavostranná halda: opísať, APS, operácie (vrchol, vlož, vyber) a ich zložitosti:",
+                answer: `<strong>Ľavostranná halda (Binárna halda):</strong>
+• Efektívna implementácia pomocou implicitnej binárnej hierarchie (pole).
+• Implicitné hierarchie sú vždy kompletné, listy sa pridávajú zľava.
+
+<strong>APS (Abstraktná Pamäťová Štruktúra):</strong>
+• Údaje: Implicitná binárna hierarchia.
+• Štruktúra: \`Ľavostranná halda <P, T>\` realizuje \`Prioritný front <P, T>\`.
+
+<strong>Operácie (Max-Halda):</strong>
+1.  <strong>Vrchol (Top/Peek):</strong>
+    • Popis: Vráti prvok s najvyššou prioritou (koreň).
+    • Zložitosť: <strong>O(1)</strong> (koreň je vždy na začiatku poľa).
+2.  <strong>Vlož (Insert):</strong>
+    • Popis: Vloží ako list na koniec, potom sa prvok vymieňa s otcom ("sift-up"), kým nie je splnená podmienka usporiadania.
+    • Zložitosť: <strong>O(log n)</strong> (cesta od listu ku koreňu).
+3.  <strong>Vyber (Extract-Max/Pop):</strong>
+    • Popis: Nahradí koreň posledným listom, odstráni tento list. Nový koreň sa vymieňa so synom s vyššou prioritou ("sift-down"), kým nie je splnená podmienka usporiadania.
+    • Zložitosť: <strong>O(log n)</strong> (cesta od koreňa k listu).`
             },
             {
                 question: "Rozdiel medzi horným a dolným asymptotickým odhadom a ktorý je pre programátora viac podstatný a prečo:",
-                answer: `1.	Horný asymptotický odhad (O-notácia):
-•	Označuje sa ako O(f(n))
-•	Vyjadruje hornú hranicu rastu funkcie
-•	Znamená, že funkcia rastie nanajvýš tak rýchlo ako f(n)
-2.	Dolný asymptotický odhad (Ω-notácia):
-•	Označuje sa ako Ω(f(n))
-•	Vyjadruje dolnú hranicu rastu funkcie
-•	Znamená, že funkcia rastie aspoň tak rýchlo ako f(n)
-Pre programátora je vo všeobecnosti viac podstatný horný asymptotický odhad (O-notácia), a to z nasledujúcich dôvodov:
-1.	Garantuje maximálny výkon: Horný odhad poskytuje záruku, že algoritmus nebude pracovať horšie než daná hranica. 
-2.	Optimalizácia: Programátori sa snažia minimalizovať hornú hranicu zložitosti, čo vedie k efektívnejším algoritmom.
-3.	Plánovanie zdrojov: Umožňuje lepšie plánovať potrebné výpočtové zdroje a odhadovať čas behu programu.
-4.	Porovnávanie algoritmov: Horný odhad poskytuje jasné kritérium pre porovnávanie efektivity rôznych algoritmov.`
+                answer: `1.  <strong>Horný asymptotický odhad (O-notácia):</strong>
+    • Označuje sa ako O(f(n)).
+    • Vyjadruje hornú hranicu rastu funkcie (rastie nanajvýš tak rýchlo ako f(n)).
+2.  <strong>Dolný asymptotický odhad (Ω-notácia):</strong>
+    • Označuje sa ako Ω(f(n)).
+    • Vyjadruje dolnú hranicu rastu funkcie (rastie aspoň tak rýchlo ako f(n)).
+
+<strong>Pre programátora je vo všeobecnosti viac podstatný horný asymptotický odhad (O-notácia), pretože:</strong>
+•   <strong>Garantuje maximálny výkon:</strong> Algoritmus nebude pracovať horšie.
+•   <strong>Optimalizácia:</strong> Snaha minimalizovať hornú hranicu.
+•   <strong>Plánovanie zdrojov:</strong> Odhad času behu a potrieb.
+•   <strong>Porovnávanie algoritmov:</strong> Jasné kritérium efektivity.`
             },
             {
                 question: "Rozdiel medzi primitívnymi a odvodenými typmi:",
-                answer: `Primitívne typy:
-1.	Sú priamo vstavané do programovacích jazykov.
-2.	Typicky zahŕňajú:
-•	celé čísla, typ znak
-•	referencie
-3.	Sú skalárne typy: hodnoty je možné navzájom porovnávať.
-Odvodené typy:
-1.	Sú vlastné údajové typy, ktoré je možné vytvoriť z primitívnych typov.
-2.	Existujú dva spôsoby vytvárania odvodených typov:
-•	Agregácia: zlúčenie viacerých existujúcich typov do jedného typu.
-•	Enumerácia: vymenovanie všetkých možných hodnôt, ktoré môže typ nadobúdať.`
+                answer: `<strong>Primitívne typy:</strong>
+• Sú priamo vstavané do programovacích jazykov.
+• Typicky zahŕňajú: celé čísla, typ znak, referencie.
+• Sú skalárne typy (hodnoty je možné navzájom porovnávať).
+
+<strong>Odvodené typy:</strong>
+• Sú vlastné údajové typy, vytvorené z primitívnych typov.
+• Dva spôsoby vytvárania:
+    • <strong>Agregácia:</strong> Zlúčenie viacerých existujúcich typov do jedného.
+    • <strong>Enumerácia:</strong> Vymenovanie všetkých možných hodnôt typu.`
             },
             {
-                question: "Čo sa ukladá v halde, ako sa tam alokuje a dealokuje, čo je ukazovateľ a čo je visiaci ukazovateľ a čo je to a kedy vzniká únik pamäte:",
-                answer: `1.	Čo sa ukladá v halde:
-•	Dynamicky alokované premenné
-•	Premenné dostupné medzi funkčnými volaniami
-2.	Ako sa alokuje v halde:
-•	V C++: pomocou funkcií malloc, calloc, realloc, new (pre objektové typy)
-•	Výsledkom je ukazovateľ do haldy, kde objekt vznikol
-3.	Ako sa dealokuje z haldy:
-•	V C++: pomocou funkcií free, delete (pre objektové typy volá aj deštruktor)
-•	Ako parameter požadujú ukazovateľ na objekt, ktorý zaniká
-4.	Ukazovateľ:
-•	Obsahuje adresu bloku pamäte v halde
-5.	Visiaci ukazovateľ (dangling pointer):
-•	Ukazovateľ, ktorý obsahuje adresu bloku pamäte vráteného operačnému systému
-6.	Únik pamäte (memory leak):
-•	Vzniká, keď prídeme o adresu alokovaného bloku pamäte (napr. prepísaním adresy v referenčnej premennej)
-•	Dôsledok: nemôžeme sa k bloku dostať ani ho uvoľniť
-•	Prevencia: a) automatická správa pamäte (garbage collector) b) inteligentný ukazovateľ (smart pointer)`
+                question: "Halda (pamäť): ukladanie, alokácia, dealokácia, ukazovateľ, visiaci ukazovateľ, únik pamäte:",
+                answer: `1.  <strong>Čo sa ukladá v halde:</strong>
+    • Dynamicky alokované premenné.
+    • Premenné dostupné medzi funkčnými volaniami.
+2.  <strong>Ako sa alokuje v halde:</strong>
+    • V C++: \`malloc\`, \`calloc\`, \`realloc\`, \`new\`.
+    • Výsledkom je ukazovateľ do haldy.
+3.  <strong>Ako sa dealokuje z haldy:</strong>
+    • V C++: \`free\`, \`delete\` (pre objekty volá aj deštruktor).
+    • Vyžaduje ukazovateľ na objekt.
+4.  <strong>Ukazovateľ:</strong>
+    • Obsahuje adresu bloku pamäte v halde.
+5.  <strong>Visiaci ukazovateľ (dangling pointer):</strong>
+    • Ukazovateľ, ktorý obsahuje adresu bloku pamäte vráteného operačnému systému (už neplatná pamäť).
+6.  <strong>Únik pamäte (memory leak):</strong>
+    • Vzniká, keď prídeme o adresu alokovaného bloku pamäte (napr. prepísaním adresy).
+    • Dôsledok: Nemôžeme sa k bloku dostať ani ho uvoľniť.
+    • Prevencia: Automatická správa pamäte (garbage collector), inteligentné ukazovatele (smart pointers).`
             },
             {
                 question: "3 príklady APT a k nim APS:",
-                answer: `1.	APT: Sekvencia APS:
-•	Implicitná sekvencia (bloky pamäte nemajú vzťahovú časť, vzťahy sú vyjadrené matematickými výrazmi)
-•	Explicitná sekvencia v kompaktnej pamäti (bloky pamäte majú vzťahovú časť, uložené v súvislej pamäti)
-2.	APT: Hierarchia APS:
-•	Implicitná hierarchia (vzťahy medzi blokmi pamäte sú vyjadrené matematicky)
-•	Explicitná hierarchia v kompaktnej pamäti (bloky pamäte majú explicitne vyjadrené vzťahy, uložené v súvislej pamäti)
-3.	APT: Sieť APS:
-•	Statická sieť (počet vrcholov a hrán je fixný)
-•	Dynamická sieť (počet vrcholov a hrán sa môže meniť)`
+                answer: `1.  <strong>APT: Sekvencia</strong>
+    • APS: Implicitná sekvencia (bloky bez vzťahovej časti, vzťahy matematicky).
+    • APS: Explicitná sekvencia v kompaktnej pamäti (bloky so vzťahovou časťou, v súvislej pamäti).
+2.  <strong>APT: Hierarchia</strong>
+    • APS: Implicitná hierarchia (vzťahy matematicky).
+    • APS: Explicitná hierarchia v kompaktnej pamäti (explicitné vzťahy, v súvislej pamäti).
+3.  <strong>APT: Sieť</strong>
+    • APS: Statická sieť (počet vrcholov a hrán fixný).
+    • APS: Dynamická sieť (počet vrcholov a hrán sa môže meniť).`
             },
             {
                 question: "Rozdiel medzi dynamickými a statickými sieťami:",
-                answer: `1.	Implementácia brány:
-•	Statická sieť: Ako brána je použitá implicitná sekvencia.
-•	Dynamická sieť: Ako brána je použitá explicitná sekvencia.
-2.	Efektivita modifikátorov:
-•	Statická sieť: Neefektívne modifikátory.
-•	Dynamická sieť: Efektívne modifikátory.
-3.	Flexibilita:
-•	Statická sieť: Počet vrcholov je fixný, nemôže sa meniť počas behu programu.
-•	Dynamická sieť: Počet vrcholov sa môže meniť, umožňuje pridávanie a odoberanie vrcholov za behu.
-4.	Pamäťová náročnosť:
-•	Statická sieť: Typicky nižšia, keďže veľkosť je fixná.
-•	Dynamická sieť: Môže byť vyššia kvôli potrebe flexibility.`
+                answer: `1.  <strong>Implementácia brány (prístup k vrcholom):</strong>
+    • Statická sieť: Ako brána je použitá implicitná sekvencia.
+    • Dynamická sieť: Ako brána je použitá explicitná sekvencia.
+2.  <strong>Efektivita modifikátorov (pridanie/odobratie):</strong>
+    • Statická sieť: Neefektívne modifikátory.
+    • Dynamická sieť: Efektívne modifikátory.
+3.  <strong>Flexibilita (zmena počtu vrcholov):</strong>
+    • Statická sieť: Počet vrcholov je fixný.
+    • Dynamická sieť: Počet vrcholov sa môže meniť za behu.
+4.  <strong>Pamäťová náročnosť:</strong>
+    • Statická sieť: Typicky nižšia (fixná veľkosť).
+    • Dynamická sieť: Môže byť vyššia kvôli flexibilite.`
             },
             {
                 question: "Čo je to kvadratická zložitosť a 3 príklady:",
-                answer: `Kvadratická zložitosť je trieda zložitosti algoritmu, kde počet operácií rastie kvadraticky s veľkosťou vstupu. V asymptotickej notácii sa označuje ako O(n^2), kde n je veľkosť vstupu.
-Príklady algoritmov alebo operácií s kvadratickou zložitosťou:
-1.	Porovnanie v sieťach: Dokument uvádza, že operácia "Porovnaj" v sieťach má zložitosť O(v^2),.
-2.	bubble sort alebo insertion sort, majú v najhoršom prípade kvadratickú zložitosť.
-3.	algoritmus pre násobenie dvoch n×n matíc má zložitosť O(n^3), čo je dokonca horšie ako kvadratická zložitosť.`
+                answer: `<strong>Kvadratická zložitosť (O(n²)):</strong> Počet operácií rastie kvadraticky s veľkosťou vstupu (n).
+Príklady:
+1.  <strong>Porovnanie v sieťach:</strong> Operácia "Porovnaj" v sieťach (napr. každý s každým) môže mať zložitosť O(v²), kde v je počet vrcholov.
+2.  <strong>Jednoduché triediace algoritmy:</strong> Bubble sort, insertion sort (v najhoršom prípade).
+3.  <strong>Operácie s maticami:</strong> Štandardné násobenie dvoch n×n matíc má zložitosť O(n³), čo je horšie. Sčítanie dvoch n×n matíc je O(n²).`
             },
             {
                 question: "Rozdiel medzi ukazovateľom a odkazom:",
-                answer: `Ukazovateľ (pointer):
-1.	Špecifický údajový typ schopný uchovávať adresu objektu v pamäti.
-2.	Podporuje operácie ako dereferencovanie (*)
-3.	Využíva sa na uchovávanie adries dynamicky alokovaných premenných, 
-Odkaz (reference):
-1.	Alternatívny názov pre už existujúci objekt v pamäti.
-2.	Od svojho vzniku až do svojho zániku musí odkazovať vždy len na pamäťové miesto (premennú), na ktorú bol pri svojom vzniku nastavený.
-Kľúčové rozdiely:
-•	Ukazovateľ môže meniť adresu, na ktorú ukazuje, zatiaľ čo odkaz je viazaný na jedno pamäťové miesto počas celej svojej existencie.`
+                answer: `<strong>Ukazovateľ (pointer):</strong>
+• Špecifický údajový typ schopný uchovávať adresu objektu v pamäti.
+• Podporuje operácie ako dereferencovanie (\`*\`).
+• Využíva sa na uchovávanie adries dynamicky alokovaných premenných.
+
+<strong>Odkaz (reference):</strong>
+• Alternatívny názov pre už existujúci objekt v pamäti.
+• Od svojho vzniku až do zániku musí odkazovať vždy len na pamäťové miesto, na ktoré bol pri vzniku nastavený.
+
+<strong>Kľúčový rozdiel:</strong> Ukazovateľ môže meniť adresu, na ktorú ukazuje; odkaz je viazaný na jedno pamäťové miesto počas celej svojej existencie.`
             },
             {
                 question: "Opísať pamäťový blok explicitnej jednostranne zreťazenej sekvencie:",
-                answer: `1.	Štruktúra bloku: Blok explicitnej jednostranne zreťazenej sekvencie sa skladá z dvoch hlavných častí: a) Údajová časť: obsahuje samotné dáta uložené v bloku b) Vzťahová časť: obsahuje referenciu na nasledujúci blok v sekvencii
-2.	Referencia na nasledovníka:
-•	Každý blok obsahuje referenciu (ukazovateľ) na nasledujúci blok v sekvencii
-•	Táto referencia umožňuje "zreťazenie" blokov do sekvencie
-3.	Posledný blok:
-•	Posledný blok v sekvencii má referenciu na nasledovníka nastavenú na null (alebo ekvivalentnú hodnotu indikujúcu koniec sekvencie)
-4.	Začiatok sekvencie – uložený prvý prvok sekvencie`
+                answer: `<strong>Pamäťový blok (uzol) explicitnej jednostranne zreťazenej sekvencie:</strong>
+1.  <strong>Štruktúra bloku:</strong> Skladá sa z dvoch hlavných častí:
+    a) <strong>Údajová časť:</strong> Obsahuje samotné dáta uložené v bloku.
+    b) <strong>Vzťahová časť:</strong> Obsahuje referenciu (ukazovateľ) na nasledujúci blok v sekvencii.
+2.  <strong>Referencia na nasledovníka:</strong>
+    • Každý blok (okrem posledného) obsahuje referenciu na nasledujúci blok.
+    • Umožňuje "zreťazenie" blokov.
+3.  <strong>Posledný blok:</strong>
+    • Referencia na nasledovníka je nastavená na NULL (indikuje koniec sekvencie).
+4.  <strong>Začiatok sekvencie:</strong> Uložený je (ukazovateľ na) prvý prvok sekvencie.`
             },
             {
                 question: "Napísať 3 tabuľky s konštantnou zložitosťou a v jednej opísať operáciu vlož:",
-                answer: `1.	Tabuľka s rozptýlenými záznamami (bez riešenia kolízií)
-2.	Tabuľka s rozptýlenými záznamami (riešenie kolízií zreťazovaním)
-3.	Tabuľka s rozptýlenými záznamami (riešenie kolízií preplňovacou oblasťou)
-Opíšem operáciu vlož pre tabuľku s rozptýlenými záznamami (bez riešenia kolízií):
-Operácia vlož:
-1.	Vstup: kľúč K a prvok T, ktorý chceme vložiť do tabuľky.
-2.	Použitie hešovacej funkcie:
-•	Aplikuje sa hešovacia funkcia H na kľúč K.
-•	Výsledok sa použije ako index do implicitnej sekvencie s pevnou kapacitou.
-3.	Výpočet indexu:
-•	index = H(K) mod veľkosť_sekvencie Toto zabezpečí, že index bude v rozsahu sekvencie.
-4.	Vloženie prvku:
-•	Vytvorí sa nový prvok tabuľky obsahujúci kľúč K a údaje T.
-•	Ukazovateľ na tento nový prvok sa zapíše do bloku pamäte sekvencie na vypočítanom indexe.
-5.	Kontrola existencie:
-•	Ak sa na danom indexe už nachádza platný prvok (ukazovateľ nie je NULL), dôjde ku kolízii.
-6.	Aktualizácia počtu prvkov:
-•	Zvýši sa počítadlo prvkov v tabuľke.`
+                answer: `<strong>Tri tabuľky (hašovacie) s priemernou konštantnou zložitosťou O(1):</strong>
+1.  Tabuľka s rozptýlenými záznamami (bez riešenia kolízií - teoretická, alebo ak prepis je OK).
+2.  Tabuľka s rozptýlenými záznamami (riešenie kolízií zreťazovaním).
+3.  Tabuľka s rozptýlenými záznamami (riešenie kolízií preplňovacou oblasťou).
+
+<strong>Operácia VLOŽ pre tabuľku s rozptýlenými záznamami (bez riešenia kolízií):</strong>
+1.  <strong>Vstup:</strong> Kľúč K, prvok T.
+2.  <strong>Hešovacia funkcia:</strong> Aplikuje sa H na kľúč K. Výsledok sa použije ako index do implicitnej sekvencie.
+3.  <strong>Výpočet indexu:</strong> \`index = H(K) mod veľkosť_sekvencie\`.
+4.  <strong>Vloženie prvku:</strong> Vytvorí sa nový prvok (K, T). Ukazovateľ naň sa zapíše do bloku pamäte sekvencie na vypočítanom indexe.
+5.  <strong>Kontrola existencie (kolízia):</strong> Ak na danom indexe už je platný prvok (ukazovateľ nie je NULL), dôjde ku kolízii (ktorá sa v tomto modeli nerieši špeciálne, prvok sa môže prepísať alebo operácia zlyhá).
+6.  <strong>Aktualizácia počtu prvkov:</strong> Zvýši sa počítadlo prvkov.`
             },
             {
                 question: "Rozdiel medzi usporiadanými a neusporiadanými K-cestnými hierarchiami:",
-                answer: `Usporiadané K-cestné hierarchie:
-1.	Synovia tvoria lineárne usporiadanú množinu.
-2.	Synov je možné pomenovať, napríklad: najmladší syn
-3.	Operácie pracujúce so synmi vrcholov typicky presne pomenujú syna, ktorého sa operácia týka.
-4.	Umožňujú implementáciu ako implicitné hierarchie v kompaktnej pamäti.
-Neusporiadané K-cestné hierarchie:
-1.	Synovia netvoria lineárne usporiadanú množinu.
-2.	Nie je možné jednoznačne určiť poradie synov.
-3.	Synovia sú typicky ukladaní v sekvencii bez pevného poradia.
-4.	Operácie pracujú so synmi bez ohľadu na ich poradie.
-Hlavné rozdiely:
-1.	Usporiadanie: Usporiadané hierarchie majú definované poradie synov, neusporiadané nie.
-2.	Prístup k synom: V usporiadaných hierarchiách je možné pristupovať k synom podľa ich pozície, v neusporiadaných nie.
-3.	Implementácia: Usporiadané hierarchie môžu byť implementované ako implicitné alebo explicitné, neusporiadané len ako explicitné..`
+                answer: `<strong>Usporiadané K-cestné hierarchie:</strong>
+• Synovia tvoria lineárne usporiadanú množinu.
+• Synov je možné pomenovať (napr. najmladší syn).
+• Operácie presne pomenujú syna, ktorého sa týkajú.
+• Umožňujú implementáciu ako implicitné hierarchie v kompaktnej pamäti.
+
+<strong>Neusporiadané K-cestné hierarchie:</strong>
+• Synovia netvoria lineárne usporiadanú množinu.
+• Nie je možné jednoznačne určiť poradie synov.
+• Synovia sú typicky ukladaní v sekvencii bez pevného poradia.
+• Operácie pracujú so synmi bez ohľadu na ich poradie.
+
+<strong>Hlavné rozdiely:</strong>
+• <strong>Usporiadanie:</strong> Usporiadané majú definované poradie synov, neusporiadané nie.
+• <strong>Prístup k synom:</strong> V usporiadaných podľa pozície, v neusporiadaných nie.
+• <strong>Implementácia:</strong> Usporiadané môžu byť implicitné/explicitné, neusporiadané len explicitné.`
             },
             {
-                question: "Zoraďte 4 PF od najlepšej po najhoršiu (operácia vyber prvok s najvyššou prioritou):",
-                answer: `1.	Ľavostranná halda:
-•	Zložitosť operácie vyber: O(log n)
-•	Veľmi efektívna implementácia, ktorá vždy udržiava prvok s najvyššou prioritou v koreni.
-2.	Utriedený sekvenčný prioritný front:
-•	Zložitosť operácie vyber: O(1)
-•	Prvok s najvyššou prioritou je vždy na vhodnom konci sekvencie, takže výber je konštantný.
-3.	Neutriedený sekvenčný prioritný front:
-•	Zložitosť operácie vyber: O(n)
-•	Musí prehľadať celú sekvenciu na nájdenie prvku s najvyššou prioritou.
-4.	Dvojzoznam:` // Dokument tu končí pre túto otázku
+                question: "Zoraďte 4 PF od najlepšej po najhoršiu (operácia VYBER prvok s najvyššou prioritou):",
+                answer: `<strong>Zoradenie PF podľa operácie VYBER prvok s najvyššou prioritou (od najlepšej):</strong>
+1.  <strong>Utriedený sekvenčný prioritný front:</strong>
+    • Zložitosť vyber: <strong>O(1)</strong> (prvok je na známom konci).
+2.  <strong>Ľavostranná halda (Binárna halda):</strong>
+    • Zložitosť vyber: <strong>O(log n)</strong> (odstránenie koreňa a obnova haldy).
+3.  <strong>Dvojzoznam:</strong> (Zložitosť závisí od konkrétnej implementácie a stavu, typicky lepšia ako úplne neutriedený, môže byť O(1) alebo O(k) pre krátku časť).
+4.  <strong>Neutriedený sekvenčný prioritný front:</strong>
+    • Zložitosť vyber: <strong>O(n)</strong> (musí prehľadať celú sekvenciu).`
             },
             {
                 question: "Napíš čo je to sAPT(blok siete) a brána:",
-                answer: `sAPT (blok siete):
-•	V sieťových abstraktných pamäťových typoch (sAPT) sa bloky pamäte označujú ako vrcholy.
-•	Každý vrchol siete môže mať potenciálne vzťah s každým iným vrcholom siete.
-•	Vzťahy medzi vrcholmi v sieťových APT sú nelineárne a nehierarchické.
-•	Žiadny vrchol v sieťovom APT nemá výnimočné postavenie (na rozdiel od prvého alebo posledného prvku v sekvencii či koreňa v hierarchii).
-Brána:
-•	Brána je súčasť sieťového APT, ktorá udržiava referencie na všetky bloky pamäte v sieti.
-•	Tieto referencie sú typicky uložené v sekvencii alebo tvoria sekvenciu.
-•	Brána môže byť implementovaná dvoma spôsobmi:` // Dokument tu končí pre túto otázku
+                answer: `<strong>sAPT (blok siete):</strong>
+• V sieťových abstraktných pamäťových typoch (sAPT) sa bloky pamäte označujú ako <strong>vrcholy</strong>.
+• Každý vrchol siete môže mať potenciálne vzťah s každým iným vrcholom.
+• Vzťahy sú nelineárne a nehierarchické.
+• Žiadny vrchol nemá výnimočné postavenie.
+
+<strong>Brána:</strong>
+• Súčasť sieťového APT, ktorá udržiava <strong>referencie na všetky bloky pamäte (vrcholy)</strong> v sieti.
+• Tieto referencie sú typicky uložené v sekvencii.
+• Brána môže byť implementovaná dvoma spôsobmi (implicitná sekvencia pre statické siete, explicitná pre dynamické).`
             },
             {
                 question: "Napíš presné údajové typy, ktoré využívajú sekvenciu:",
-                answer: `1.	Explicitná sekvencia
-•	Jednostranne zreťazená sekvencia
-•	Obojstranne zreťazená sekvencia
-2.	Implicitná sekvencia
-•	Implicitná cyklická sekvencia
-•	Jednostranne zreťazená cyklická sekvencia
-3.	AUS sekvenčný prioritný front
-•	Neutriedený sekvenčný prioritný front
-•	Utriedený sekvenčný prioritný front
-4.	AUMS dvojzoznam - využíva dve sekvencie:
-•	Krátka sekvencia (implicitná sekvencia s pevnou kapacitou)
-•	Dlhá sekvencia (jednostranne zreťazená sekvencia)`
+                answer: `<strong>Údajové typy/štruktúry využívajúce sekvenciu:</strong>
+1.  <strong>Explicitná sekvencia:</strong>
+    • Jednostranne zreťazená sekvencia
+    • Obojstranne zreťazená sekvencia
+2.  <strong>Implicitná sekvencia:</strong>
+    • Implicitná cyklická sekvencia
+    • Jednostranne zreťazená cyklická sekvencia (ak explicitne myslené spojenie konca s prvkom v poli)
+3.  <strong>AUS sekvenčný prioritný front:</strong>
+    • Neutriedený sekvenčný prioritný front
+    • Utriedený sekvenčný prioritný front
+4.  <strong>AUMS dvojzoznam:</strong>
+    • Krátka sekvencia (implicitná sekvencia s pevnou kapacitou)
+    • Dlhá sekvencia (jednostranne zreťazená sekvencia)`
             },
             {
-                question: "neinicializovaný údajový segment, inicializovaný údajový segment, kódový segment) + popísať čo každý robí a ako sa v tej \"štruktúre\" nachádzajú:",
-                answer: `1.	Kódový segment:
-•	Obsahuje postupnosť inštrukcií, ktoré má proces vykonávať (samotný program).
-•	Nachádza sa v spodnej časti pamäťového priestoru procesu.
-2.	Inicializovaný údajový segment:
-•	Obsahuje v kóde explicitne inicializované globálne a statické premenné.
-•	Statické premenné sú definované v rámci funkcie (alebo procedúry/metódy) 
-•	Nachádza sa nad kódovým segmentom v pamäťovom priestore procesu.
-3.	Neinicializovaný údajový segment (bss - block started by symbol):
-•	Obsahuje v kóde explicitne neinicializované globálne a statické premenné.
-•	Nachádza sa nad inicializovaným údajovým segmentom v pamäťovom priestore procesu.
-V pamäťovom priestore procesu sa tieto segmenty nachádzajú v nasledujúcom poradí (od najnižšej adresy):
-1.	Kódový segment
-2.	Inicializovaný údajový segment
-3.	Neinicializovaný údajový segment`
+                question: "Pamäťové segmenty: kódový, inicializovaný dátový, neinicializovaný dátový - popis a umiestnenie:",
+                answer: `<strong>Pamäťové segmenty procesu (typické usporiadanie od najnižších adries):</strong>
+1.  <strong>Kódový segment:</strong>
+    • Obsahuje postupnosť inštrukcií (samotný program).
+    • Nachádza sa v spodnej časti pamäťového priestoru procesu.
+2.  <strong>Inicializovaný údajový segment:</strong>
+    • Obsahuje v kóde explicitne inicializované globálne a statické premenné.
+    • Nachádza sa nad kódovým segmentom.
+3.  <strong>Neinicializovaný údajový segment (bss - block started by symbol):</strong>
+    • Obsahuje v kóde explicitne neinicializované globálne a statické premenné (OS ich inicializuje na 0).
+    • Nachádza sa nad inicializovaným údajovým segmentom.`
             },
             {
                 question: "Napíš 3 riešenia kolízii (popis, výhody, nevýhody):",
-                answer: `1.	Zreťazovanie:
-Popis:
-•	V tabuľke sa na mieste vypočítanej adresy postupne vytvára sekvencia synoným.
-Výhody:
-•	Neobmedzený počet prvkov tabuľky (okrem celkového pamäťového obmedzenia aplikácie).
-•	Možnosť využiť rovnaké algoritmy ako v prípade zreťazenej sekvencie.
-Nevýhody:
-•	V extrémnom prípade, keď by všetky vkladané prvky boli synonymá, by tabuľka zdegenerovala na zreťazenú tabuľku.
-•	Pri využití existujúcej štruktúry je vyššia pamäťová zložitosť.
-2.	Využitie preplňovacej oblasti:
-Popis:
-•	Implicitná sekvencia tabuľky je rozdelená na dve oblasti: primárnu (mapovanú hešovacou funkciou) a preplňovaciu (kde sa tvorí zreťazenie synoným).
-Výhody:
-•	Podobné ako pri zreťazovaní s využitím dodatočného atribútu.
-Nevýhody:
-•	Obmedzenie maximálneho počtu prvkov v tabuľke.
-3.	Otvorená adresácia:
-Popis:
-•	Celá implicitná sekvencia tabuľky je mapovaná hešovacou funkciou.
-•	Ak je adresa vkladaného prvku obsadená, prvok sa vloží na neobsadené miesto určené pomocou sondovania.
-Výhody:
-•	Jednoduchá implementácia.
-Nevýhody:
-•	Nebezpečenstvo tvorby zhlukov, čo zvyšuje šancu, že vypočítaná adresa bude obsadená.
-•	Zvýšená výpočtová zložitosť operácií vlož a nájdi.
-•	Veľmi komplikovaná operácia zruš.`
+                answer: `<strong>Riešenia kolízií v hešovacích tabuľkách:</strong>
+1.  <strong>Zreťazovanie (Chaining):</strong>
+    • <strong>Popis:</strong> Na mieste vypočítanej adresy sa vytvára sekvencia (napr. zreťazený zoznam) synoným.
+    • <strong>Výhody:</strong> Neobmedzený počet prvkov, jednoduché mazanie.
+    • <strong>Nevýhody:</strong> Vyššia pamäťová zložitosť, v extrémnych prípadoch degenerácia na zreťazenú tabuľku.
+2.  <strong>Využitie preplňovacej oblasti (Overflow Area):</strong>
+    • <strong>Popis:</strong> Implicitná sekvencia tabuľky rozdelená na primárnu (mapovanú heš funkciou) a preplňovaciu (kde sa tvorí zreťazenie synoným).
+    • <strong>Výhody:</strong> Podobné ako pri zreťazovaní (ak je dobre spravovaná).
+    • <strong>Nevýhody:</strong> Obmedzenie maximálneho počtu prvkov.
+3.  <strong>Otvorená adresácia (Open Addressing):</strong>
+    • <strong>Popis:</strong> Celá implicitná sekvencia je mapovaná heš funkciou. Ak je adresa obsadená, prvok sa vloží na iné neobsadené miesto určené sondovaním.
+    • <strong>Výhody:</strong> Jednoduchá implementácia (pre niektoré typy sondovania).
+    • <strong>Nevýhody:</strong> Nebezpečenstvo tvorby zhlukov, zvýšená zložitosť operácií, komplikované zrušenie.`
             }
         ];
 
@@ -619,6 +621,17 @@ Nevýhody:
                 [array[i], array[j]] = [array[j], array[i]];
             }
         }
+        
+        function formatAnswerForDisplay(answerText) {
+            // Nahradí • za HTML entitu pre odrážku a pridá odsadenie
+            // Zvýrazní text medzi **
+            let formatted = answerText.replace(/•\s*/g, '• ');
+            formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Jednoduché nahradenie pre číselné zoznamy, ak začínajú číslom a bodkou
+            // Môže byť potrebné rozšíriť pre komplexnejšie prípady
+            formatted = formatted.replace(/^(\d+)\.\s+/gm, '$1. '); 
+            return formatted;
+        }
 
         function displayCurrentCard() {
             flashcardViewport.style.display = 'none';
@@ -636,11 +649,9 @@ Nevýhody:
 
             const cardData = deck[0];
             frontFace.textContent = cardData.question;
-            // Použijeme innerHTML pre odpovede, aby sa zachovali bullet pointy ako HTML
-            // a pre-wrap zabezpečí nové riadky.
-            // Odstránime úvodné a koncové medzery z odpovede pre lepšie formátovanie.
-            const trimmedAnswer = cardData.answer.trim();
-            backFace.innerHTML = trimmedAnswer; 
+            
+            const formattedAnswer = formatAnswerForDisplay(cardData.answer.trim());
+            backFace.innerHTML = formattedAnswer; 
 
             frontFace.scrollTop = 0;
             backFace.scrollTop = 0;
@@ -655,10 +666,7 @@ Nevýhody:
         }
 
         flashcardElement.addEventListener('click', (event) => {
-            // Kontrola, či sa kliklo na kartu alebo na jej vnútorné elementy, ale nie na scrollbar
-            // Jednoduchšia kontrola: ak je cieľom samotný flashcard alebo face, otočíme.
-            // Toto nemusí byť dokonalé pre komplexné interakcie s obsahom (napr. ak by bol vnútri odkaz).
-            if (deck.length === 0) return;
+            if (deck.length === 0) return; 
             
             flashcardElement.classList.toggle('flipped');
             isFlipped = !isFlipped;
