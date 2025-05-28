@@ -16,13 +16,19 @@
             background-color: #f0f0f0;
             padding: 20px;
             box-sizing: border-box;
+            font-size: 16px; /* Základná veľkosť písma */
         }
 
         .flashcard-container {
             perspective: 1000px;
             width: 90%;
-            max-width: 600px;
-            height: 400px;
+            min-width: 320px; /* Minimálna šírka pre menšie obrazovky */
+            max-width: 750px; /* Zväčšená maximálna šírka */
+            
+            height: 65vh; /* Výška ako percento výšky okna */
+            min-height: 400px; /* Minimálna výška karty */
+            max-height: 550px; /* Maximálna výška karty */
+            
             margin-bottom: 20px;
         }
 
@@ -50,39 +56,39 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 25px; /* Trochu zväčšený padding */
             box-sizing: border-box;
             text-align: center;
-            overflow-y: auto;
+            overflow-y: auto; /* Umožní skrolovanie, ak je text dlhší */
             border-radius: 10px;
         }
 
         .flashcard-front {
             background-color: #e0f7fa;
+            font-size: 1.25em; /* Zväčšené písmo pre otázku (16px * 1.25 = 20px) */
         }
 
         .flashcard-back {
             background-color: #fff9c4;
             transform: rotateY(180deg);
-            font-size: 0.9em;
+            font-size: 1em; /* Písmo pre odpoveď (16px * 1 = 16px) */
             white-space: pre-wrap; /* Zachová formátovanie textu vrátane nových riadkov */
         }
         
         .flashcard-back ul, .flashcard-back ol {
             text-align: left;
-            padding-left: 20px; /* Alebo podľa potreby */
+            padding-left: 20px;
             margin-top: 5px;
             margin-bottom: 5px;
         }
         .flashcard-back li {
-            margin-bottom: 5px;
+            margin-bottom: 8px; /* Trochu väčší odstup medzi položkami zoznamu */
         }
 
-
         .controls button {
-            font-size: 24px;
-            padding: 10px 20px;
-            margin: 0 10px;
+            font-size: 28px; /* Zväčšené tlačidlá */
+            padding: 12px 24px; /* Zväčšený padding tlačidiel */
+            margin: 0 12px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
@@ -90,14 +96,14 @@
         }
 
         #correct-btn {
-            background-color: #a5d6a7; /* Light green */
+            background-color: #a5d6a7;
         }
         #correct-btn:hover {
             background-color: #81c784;
         }
 
         #incorrect-btn {
-            background-color: #ef9a9a; /* Light red */
+            background-color: #ef9a9a;
         }
         #incorrect-btn:hover {
             background-color: #e57373;
