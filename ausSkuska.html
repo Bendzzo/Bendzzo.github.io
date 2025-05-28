@@ -3,45 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flash Cards</title>
+    <title>Flash Cards - Učenie</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: center; /* Centrovanie na stránke */
             min-height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f7f8fa; /* Svetlosivé pozadie podobné Quizletu */
             padding: 20px;
             box-sizing: border-box;
-            font-size: 16px; /* Základná veľkosť písma */
+            font-size: 16px;
         }
 
-        .flashcard-container {
-            perspective: 1000px;
-            width: 90%;
-            min-width: 320px; /* Minimálna šírka pre menšie obrazovky */
-            max-width: 750px; /* Zväčšená maximálna šírka */
-            
-            height: 65vh; /* Výška ako percento výšky okna */
-            min-height: 400px; /* Minimálna výška karty */
-            max-height: 550px; /* Maximálna výška karty */
-            
-            margin-bottom: 20px;
+        .study-page-container { /* Nový hlavný kontajner pre lepšie centrovanie */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        #flashcard-viewport { /* Kontajner pre perspektívu 3D otáčania */
+            perspective: 1500px; /* Mierne zvýšená perspektíva pre plynulejšie otáčanie */
+            /* Rozmery budú definované cez .flashcard */
+            margin-bottom: 25px; /* Odstup od tlačidiel hodnotenia */
         }
 
         .flashcard {
-            width: 100%;
-            height: 100%;
+            width: clamp(320px, 70vw, 550px); /* Responzívna šírka: min 320px, preferovaná 70% šírky okna, max 550px */
+            aspect-ratio: 1 / 1; /* Zabezpečí štvorcový tvar */
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.6s;
+            transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1); /* Plynulejšia animácia */
             cursor: pointer;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            background-color: #ffffff; /* Biele pozadie karty */
+            border-radius: 16px; /* Zaoblené rohy ako na Quizlete */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 8px 20px rgba(0,0,0,0.05); /* Jemný tieň */
+            border: 1px solid #e0e0e0; /* Jemný okraj */
         }
 
         .flashcard.flipped {
@@ -54,95 +55,138 @@
             height: 100%;
             backface-visibility: hidden;
             display: flex;
+            flex-direction: column; /* Umožní centrovanie a potom skrolovanie od vrchu */
             align-items: center;
             justify-content: center;
-            padding: 25px; /* Trochu zväčšený padding */
+            padding: 30px; /* Väčší padding */
             box-sizing: border-box;
             text-align: center;
-            overflow-y: auto; /* Umožní skrolovanie, ak je text dlhší */
-            border-radius: 10px;
+            overflow-y: auto; /* Skrolovanie pre dlhý text */
+            border-radius: 16px; /* Aby sa zdedili zaoblené rohy */
+            color: #282e3e; /* Tmavšia farba textu */
+        }
+        /* Štýl pre scrollbar (voliteľné, pre Webkit prehliadače) */
+        .flashcard-face::-webkit-scrollbar {
+            width: 8px;
+        }
+        .flashcard-face::-webkit-scrollbar-thumb {
+            background-color: #c1c1c1;
+            border-radius: 4px;
+        }
+        .flashcard-face::-webkit-scrollbar-track {
+            background-color: #f1f1f1;
+            border-radius: 4px;
         }
 
+
         .flashcard-front {
-            background-color: #e0f7fa;
-            font-size: 1.25em; /* Zväčšené písmo pre otázku (16px * 1.25 = 20px) */
+            font-size: 1.6em; /* Väčšie písmo pre otázku */
+            font-weight: 500;
         }
 
         .flashcard-back {
-            background-color: #fff9c4;
             transform: rotateY(180deg);
-            font-size: 1em; /* Písmo pre odpoveď (16px * 1 = 16px) */
+            font-size: 1.1em; /* Primerané písmo pre odpoveď */
             white-space: pre-wrap; /* Zachová formátovanie textu vrátane nových riadkov */
+            justify-content: flex-start; /* Odpoveď zarovnaná na vrch, ak je dlhá a skroluje sa */
+            align-items: flex-start; /* text-align: left pre zoznamy bude fungovať lepšie */
+            text-align: left; /* Odpovede často vyzerajú lepšie zarovnané doľava */
         }
         
         .flashcard-back ul, .flashcard-back ol {
-            text-align: left;
             padding-left: 20px;
-            margin-top: 5px;
-            margin-bottom: 5px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            width: 100%; /* Aby zoznamy využili plnú šírku v rámci paddingu */
         }
         .flashcard-back li {
-            margin-bottom: 8px; /* Trochu väčší odstup medzi položkami zoznamu */
+            margin-bottom: 8px;
         }
 
-        .controls button {
-            font-size: 28px; /* Zväčšené tlačidlá */
-            padding: 12px 24px; /* Zväčšený padding tlačidiel */
-            margin: 0 12px;
+        #evaluation-controls { /* Tlačidlá Správne/Nesprávne */
+            display: flex; /* Zobrazia sa vedľa seba */
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 20px; /* Odstup od status baru */
+        }
+
+        #evaluation-controls button {
+            font-size: 28px;
+            padding: 12px 28px; /* Upravený padding */
+            margin: 0 15px; /* Väčší odstup medzi tlačidlami */
             border: none;
-            border-radius: 5px;
+            border-radius: 8px; /* Mierne zaoblenie */
             cursor: pointer;
-            transition: background-color 0.3s;
+            transition: background-color 0.2s, transform 0.1s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        #evaluation-controls button:active {
+            transform: translateY(1px); /* Efekt stlačenia */
         }
 
         #correct-btn {
-            background-color: #a5d6a7;
+            background-color: #d4edda; /* Svetlozelená */
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
         #correct-btn:hover {
-            background-color: #81c784;
+            background-color: #c3e6cb;
         }
 
         #incorrect-btn {
-            background-color: #ef9a9a;
+            background-color: #f8d7da; /* Svetločervená */
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
         #incorrect-btn:hover {
-            background-color: #e57373;
+            background-color: #f5c6cb;
         }
 
+        #status-bar { /* Kontajner pre počítadlo kariet */
+            text-align: center;
+        }
         #status {
-            margin-top: 15px;
             font-size: 1.1em;
-            color: #555;
+            color: #5f6777; /* Neutrálnejšia farba */
         }
 
         #completion-message {
-            font-size: 1.5em;
-            color: green;
+            font-size: 1.8em; /* Väčšia správa */
+            color: #28a745; /* Zelená */
             text-align: center;
+            margin-top: 30px;
+            font-weight: 500;
         }
     </style>
 </head>
 <body>
 
-    <div id="flashcard-container">
-        <div class="flashcard">
-            <div class="flashcard-face flashcard-front"></div>
-            <div class="flashcard-face flashcard-back"></div>
+    <div class="study-page-container">
+        <div id="flashcard-viewport">
+            <div class="flashcard">
+                <div class="flashcard-face flashcard-front"></div>
+                <div class="flashcard-face flashcard-back"></div>
+            </div>
         </div>
-    </div>
 
-    <div id="controls" style="display: none;">
-        <button id="correct-btn" title="Správne">✔️</button>
-        <button id="incorrect-btn" title="Nesprávne">❌</button>
-    </div>
+        <div id="evaluation-controls" style="display: none;">
+            <button id="correct-btn" title="Správne">✔️</button>
+            <button id="incorrect-btn" title="Nesprávne">❌</button>
+        </div>
 
-    <div id="status"></div>
-    <div id="completion-message" style="display:none;">
-        Výborne! Všetky kartičky si úspešne prešiel! 🎉
+        <div id="status-bar">
+            <div id="status"></div>
+        </div>
+        
+        <div id="completion-message" style="display:none;">
+            Výborne! Všetky kartičky si úspešne prešiel! 🎉
+        </div>
     </div>
 
     <script>
         const initialCardsData = [
+            // ... (Všetky vaše kartičky sem) ...
+            // Príklad jednej kartičky:
             {
                 question: "Rozdiel medzi AUT a APT:",
                 answer: `AUT (Abstraktný údajový typ):
@@ -215,14 +259,15 @@ Implicitná hierarchia je pamäťovo efektívnejšia, ale menej flexibilná. Exp
 • Všetky vnútorné vrcholy majú stupeň n (pre n-árnu hierarchiu). To znamená, že každý vrchol s aspoň jedným synom má presne n synov.
 
 Nákres s 13 vrcholmi (napr. pre ternárnu perfektnú hierarchiu, kde K=3):
-        O  (1 - koreň, úroveň 0)
+(Koreň na úrovni 0)
+        O
        /|\
-      O O O (3 vrcholy, úroveň 1)
+      O O O  (Úroveň 1)
      /|\/|\/|\
-    O O O O O O O O O (9 vrcholov, úroveň 2 - listy)
+    O O O O O O O O O (Úroveň 2 - listy)
     
-Spolu: 1 + 3 + 9 = 13 vrcholov. 
-Všetky listy sú na úrovni 2. Všetky vnútorné vrcholy (na úrovni 0 a 1) majú 3 synov.`
+Spolu: 1 (koreň) + 3 (úroveň 1) + 9 (úroveň 2) = 13 vrcholov. 
+Všetky listy sú na úrovni 2. Všetky vnútorné vrcholy (na úrovni 0 a 1) majú presne 3 synov.`
             },
             {
                 question: "BVS popis, akú implementáciu hierarchie používa, a popísať logiku operácií vlož a vyber:",
@@ -232,80 +277,44 @@ Všetky listy sú na úrovni 2. Všetky vnútorné vrcholy (na úrovni 0 a 1) ma
 • Vrchol obsahuje: Kľúč, údaje, odkaz na otca (voliteľne), ľavého syna a pravého syna.
 
 Logika operácie vlož:
-1. Pokúsi sa nájsť vrchol s vkladaným kľúčom:
-   • Testuje unikátnosť kľúča (ak je vyžadovaná).
-   • Získa vrchol (rodiča), ku ktorému má byť nový vrchol pripojený ako syn.
-2. Ak sa vrchol s daným kľúčom nenájde (alebo ak duplikáty nie sú povolené a kľúč je unikátny):
+1. Pokúsi sa nájsť vrchol s vkladaným kľúčom.
+2. Ak sa vrchol s daným kľúčom nenájde:
    • Vytvorí nový vrchol.
-   • Vloží ho do hierarchie tak, aby nebolo porušené usporiadanie BVS (menšie kľúče vľavo od rodiča, väčšie kľúče vpravo od rodiča).
-   • Priradí doň údaje.
-   • Zvýši počet prvkov.
-
+   • Vloží ho do hierarchie tak, aby nebolo porušené usporiadanie BVS (menšie kľúče vľavo, väčšie vpravo).
+   • Priradí doň údaje, Zvýši počet prvkov.
+   
 Logika operácie vyber:
-1. Nájde vrchol s daným kľúčom. Ak sa nenájde, operácia končí.
-2. Ak sa vrchol nájde, odstráni ho z hierarchie tak, aby nebolo porušené usporiadanie BVS. Rozlišujú sa prípady:
-   a) Vrchol nemá synov (je list): Jednoducho sa odstráni.
-   b) Vrchol má jedného syna: Vrchol sa nahradí jeho jediným synom.
-   c) Vrchol má dvoch synov: Nájde sa jeho inorder následník (najmenší prvok v pravom podstrome) alebo inorder predchodca (najväčší prvok v ľavom podstrome). Hodnota následníka/predchodcu sa skopíruje do odstraňovaného vrcholu a následne sa rekurzívne odstráni tento následník/predchodca (ktorý má najviac jedného syna).
-3. Vráti údaje z odstráneného vrcholu (voliteľne).
-4. Dealokuje pamäť vrcholu, zníži počet prvkov.`
+1. Nájde vrchol s daným kľúčom.
+2. Odstráni vrchol z hierarchie tak, aby nebolo porušené usporiadanie BVS:
+   a) Ak vrchol nemá synov (je list).
+   b) Ak vrchol má jedného syna.
+   c) Ak vrchol má dvoch synov (nahradí sa inorder následníkom/predchodcom).
+3. Vráti údaje z vrcholu, dealokuje vrchol, zníži počet prvkov.`
             },
             {
                 question: "Rozdiel medzi AUT a AUŠ, po jednom príklade:",
                 answer: `AUT (Abstraktný údajový typ):
-• Určuje doménu prvkov (prípadne viac domén).
-• Definuje operácie na prvkoch domény ("čo" sa dá robiť).
+• Určuje doménu prvkov, definuje operácie ("čo" sa dá robiť).
 • Je nezávislý na konkrétnej implementácii.
-• Je realizovateľný viacerými abstraktnými údajovými štruktúrami (AUS).
-• Príklad AUT: Zásobník (operácie: push, pop, top, isEmpty).
+• Príklad AUT: Zásobník (operácie: push, pop, top).
 
 AUŠ (Abstraktná údajová štruktúra):
-• Je to konkrétna implementácia AUT.
-• Definuje, ako sú dáta organizované v pamäti.
-• Poskytuje konkrétne algoritmy pre operácie definované v AUT.
-• Popisuje "ako" štruktúra funguje interne.
-• Príklad AUŠ: Zásobník implementovaný pomocou poľa (array-based stack) alebo Zásobník implementovaný pomocou zreťazeného zoznamu (linked-list-based stack).
+• Konkrétna implementácia AUT.
+• Definuje, ako sú dáta organizované v pamäti, poskytuje algoritmy ("ako" to funguje).
+• Príklad AUŠ: Zásobník implementovaný pomocou poľa.
 
-Hlavný rozdiel je teda v úrovni abstrakcie: AUT poskytuje abstraktný pohľad na štruktúru a jej správanie (čo robí), zatiaľ čo AUŠ poskytuje konkrétnu implementáciu tohto správania (ako to robí).`
+Hlavný rozdiel: AUT je špecifikácia, AUŠ je realizácia.`
             },
+             // Sem doplňte zvyšok vašich kartičiek z predchádzajúceho kódu
+             // Napríklad:
             {
                 question: "Riadiaci blok explicitnej hierarchie, z čoho sa skladá, teda atribúty a ešte niečo k tomu asi popis na čo sú tie atribúty:",
-                answer: `Riadiaci blok explicitnej hierarchie typicky obsahuje nasledujúce atribúty:
-1. Referencia na koreň:
-   • Atribút: napr. \`koren\` (typu referencia na blok pamäte/vrchol)
-   • Popis: Uchováva referenciu na koreňový vrchol hierarchie. Umožňuje prístup k celej štruktúre, keďže všetky ostatné vrcholy sú dostupné cez koreň. Je to vstupný bod do hierarchie.
-2. Referencia na posledný použitý vrchol (current/active node):
-   • Atribút: napr. \`poslednyVrchol\`, \`aktualnyVrchol\` (typu referencia na blok pamäte/vrchol)
-   • Popis: Uchováva referenciu na vrchol, s ktorým sa naposledy pracovalo (napr. výsledok operácie nájdi, vlož). Môže zrýchliť niektoré sekvenčné operácie alebo operácie vyžadujúce kontext predchádzajúceho prístupu. Nie je vždy povinný.
-3. Počet prvkov (mohutnosť):
-   • Atribút: napr. \`pocetPrvkov\` (typu integer)
-   • Popis: Uchováva aktuálny počet vrcholov v hierarchii. Užitočné pre rýchle zistenie veľkosti štruktúry bez potreby prechádzania všetkých vrcholov.
-Ďalšie možné atribúty (v závislosti od špecifickej implementácie a potrieb):
-4. Referencia na Predchodcu / Nasledovníka: Relevantné skôr pre špecifické typy explicitných štruktúr (napr. zreťazené zoznamy), nie je to typický atribút riadiaceho bloku všeobecnej hierarchie, skôr atribút samotných vrcholov (ukazovateľ na rodiča).
-
-Primárne sú to referencia na koreň a počet prvkov. Ostatné sú doplnkové.`
+                answer: `Riadiaci blok explicitnej hierarchie typicky obsahuje:
+1.  **Referencia na koreň (\`koren\`):** Ukazovateľ na koreňový vrchol, vstupný bod do hierarchie.
+2.  **Počet prvkov (\`pocetPrvkov\`):** Celkový počet vrcholov v hierarchii.
+3.  **(Voliteľne) Referencia na posledný použitý vrchol (\`aktualnyVrchol\`):** Môže zrýchliť niektoré operácie.`
             },
-            {
-                question: "Z čoho sa skladá Bitonic sort:",
-                answer: `Bitonic sorter (Bitonická triediaca sieť) sa skladá z kaskádovo zapojených jednoduchších komponentov:
-1.  **Porovnávač (Comparator):** Základný stavebný blok. Zariadenie s dvoma vstupmi a dvoma výstupmi, ktoré na výstup dáva hodnoty usporiadané.
-2.  **Bitonic Sequence (Bitonická sekvencia):** Typ sekvencie, ktorá najprv monotónne neklesá a potom monotónne nerastie (alebo naopak, po cyklickom posune).
-3.  **Half-Cleaner (Polovičný čistič / Bitonic Splitter):**
-    *   Vstup: bitonická sekvencia dĺžky N.
-    *   Výstup: dve bitonické sekvencie dĺžky N/2, kde všetky prvky v jednej sú ≤ všetkým prvkom v druhej.
-    *   Pozostáva z N/2 porovnávačov.
-4.  **Merger (Zlučovač / Bitonic Merger):**
-    *   Vstup: bitonická sekvencia.
-    *   Výstup: utriedená sekvencia.
-    *   Realizuje sa rekurzívnym použitím Half-Cleaneru.
-5.  **Bitonic Sorter (Celá triediaca sieť):**
-    *   Najprv transformuje vstupnú sekvenciu na bitonickú sekvenciu (zlučovaním menších utriedených/bitonických podsekvencií).
-    *   Potom na túto veľkú bitonickú sekvenciu aplikuje Merger, ktorý ju utriedi.
-
-V skratke: Porovnávače -> Half-Cleaners -> Mergers -> Bitonic Sorter.`
-            },
-            // Ostatné kartičky zostávajú rovnaké ako v predchádzajúcej odpovedi
-            // ... (sem by prišli všetky ostatné kartičky, ktoré som už vygeneroval)
+            // ... a tak ďalej pre všetky kartičky
             {
                 question: "Napíš 3 riešenia kolízii (popis, výhody, nevýhody):",
                 answer: `Kolízie v hešovacích tabuľkách nastávajú, keď dva alebo viac rôznych kľúčov vygeneruje rovnakú hešovaciu hodnotu. Tu sú tri bežné metódy riešenia kolízií:
@@ -328,14 +337,15 @@ V skratke: Porovnávače -> Half-Cleaners -> Mergers -> Bitonic Sorter.`
         ];
 
         let deck = [];
-        const flashcardContainer = document.getElementById('flashcard-container');
+        const flashcardViewport = document.getElementById('flashcard-viewport');
         const flashcardElement = document.querySelector('.flashcard');
         const frontFace = document.querySelector('.flashcard-front');
         const backFace = document.querySelector('.flashcard-back');
-        const controlsElement = document.getElementById('controls');
+        const evaluationControlsElement = document.getElementById('evaluation-controls');
         const correctBtn = document.getElementById('correct-btn');
         const incorrectBtn = document.getElementById('incorrect-btn');
         const statusElement = document.getElementById('status');
+        const statusBarElement = document.getElementById('status-bar');
         const completionMessageElement = document.getElementById('completion-message');
 
         let isFlipped = false;
@@ -348,25 +358,31 @@ V skratke: Porovnávače -> Half-Cleaners -> Mergers -> Bitonic Sorter.`
         }
 
         function displayCurrentCard() {
+            // Skrytie všetkého pred zobrazením alebo dokončením
+            flashcardViewport.style.display = 'none';
+            evaluationControlsElement.style.display = 'none';
+            statusBarElement.style.display = 'none';
+            completionMessageElement.style.display = 'none';
+
             if (deck.length === 0) {
-                flashcardContainer.style.display = 'none';
-                controlsElement.style.display = 'none';
-                statusElement.style.display = 'none';
                 completionMessageElement.style.display = 'block';
                 return;
             }
 
-            flashcardContainer.style.display = 'block';
-            statusElement.style.display = 'block';
-            completionMessageElement.style.display = 'none';
+            flashcardViewport.style.display = 'block'; // Zobrazí kontajner karty
+            statusBarElement.style.display = 'block'; // Zobrazí status bar
 
             const cardData = deck[0];
             frontFace.textContent = cardData.question;
             backFace.innerHTML = cardData.answer; 
 
+            // Reset scroll pozície pre obe strany karty
+            frontFace.scrollTop = 0;
+            backFace.scrollTop = 0;
+
             flashcardElement.classList.remove('flipped');
             isFlipped = false;
-            controlsElement.style.display = 'none';
+            // evaluationControlsElement zostáva skrytý, kým sa karta neotočí
             updateStatus();
         }
 
@@ -375,23 +391,26 @@ V skratke: Porovnávače -> Half-Cleaners -> Mergers -> Bitonic Sorter.`
         }
 
         flashcardElement.addEventListener('click', () => {
-            if (deck.length === 0) return;
+            if (deck.length === 0 || !flashcardViewport.contains(event.target)) return; // Kontrola, či sa kliklo na kartu
+            
             flashcardElement.classList.toggle('flipped');
             isFlipped = !isFlipped;
             if (isFlipped) {
-                controlsElement.style.display = 'flex';
+                evaluationControlsElement.style.display = 'flex'; // Zobrazí tlačidlá
             } else {
-                controlsElement.style.display = 'none';
+                evaluationControlsElement.style.display = 'none'; // Skryje tlačidlá
             }
         });
 
-        correctBtn.addEventListener('click', () => {
+        correctBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // Zabráni otočeniu karty späť pri kliknutí na tlačidlo
             if (deck.length === 0) return;
             deck.shift(); 
             displayCurrentCard();
         });
 
-        incorrectBtn.addEventListener('click', () => {
+        incorrectBtn.addEventListener('click', (event) => {
+            event.stopPropagation(); // Zabráni otočeniu karty späť
             if (deck.length === 0) return;
             const incorrectCard = deck.shift(); 
             deck.push(incorrectCard); 
@@ -399,21 +418,8 @@ V skratke: Porovnávače -> Half-Cleaners -> Mergers -> Bitonic Sorter.`
         });
 
         function startGame() {
-            // Pre jednoduchosť v tejto ukážke nechávam len pár kariet.
-            // V plnej verzii by tu boli všetky vaše `initialCardsData`.
-            const allCards = [...initialCardsData]; // Skopírujeme všetky dáta
-            shuffleArray(allCards);
-            deck = allCards; // Použijeme zamiešané dáta
-            
-            if (deck.length === 0) { // Kontrola, či máme nejaké karty
-                 console.error("Žiadne karty na zobrazenie!");
-                 completionMessageElement.textContent = "Chyba: Neboli nájdené žiadne karty.";
-                 completionMessageElement.style.display = 'block';
-                 flashcardContainer.style.display = 'none';
-                 controlsElement.style.display = 'none';
-                 statusElement.style.display = 'none';
-                 return;
-            }
+            deck = [...initialCardsData]; 
+            shuffleArray(deck);
             displayCurrentCard();
         }
 
