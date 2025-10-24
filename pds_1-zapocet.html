@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prepis Otázok</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .question {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        code, pre {
+            background-color: #eee;
+            border-radius: 4px;
+            padding: 15px;
+            display: block;
+            white-space: pre-wrap;
+            font-family: monospace;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 10px;
+        }
+        label {
+            margin-left: 8px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .xml-code {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background-color: #f9f9f9;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre;
+        }
+        .answer-box {
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            padding: 10px;
+            margin-top: 10px;
+            min-height: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Databázové testovacie otázky</h1>
+
+        <div class="question">
+            <h2>Otázka 1 (Obrázok 1)</h2>
+            <p>Aká hodnota bude vypísaná na obrazovke:</p>
+            <pre><code>declare
+    type t_pole IS VARRAY(10) OF integer;
+    pole t_pole;
+begin
+    pole:=p_pole(10,20,30,40,50,60,70);
+    pole.delete(4);
+    dbms_output.put_line(pole.limit);
+end;</code></pre>
+            <ul>
+                <li><input type="radio" name="q1" id="q1a1"><label for="q1a1">nebude vyvolaná výnimka a vypíše 10</label></li>
+                <li><input type="radio" name="q1" id="q1a2"><label for="q1a2">nebude vyvolaná výnimka a vypíše 7</label></li>
+                <li><input type="radio" name="q1" id="q1a3"><label for="q1a3">nebude vypísané nič, pretože bude vyvolaná výnimka</label></li>
+                <li><input type="radio" name="q1" id="q1a4"><label for="q1a4">nebude vyvolaná výnimka a vypíše 70</label></li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 2 (Obrázok 2)</h2>
+            <p>Vypíšte nasledovnú štatistiku. K jednotlivým mestám Nitrianskeho okresu vypíšte pre obdobie od 16.6.2016 do 19.6.2016 celkovú sumu(eur), ktorá bola zaplatená poberateľom daného kraja.</p>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Mestá</th>
+                            <th>17.6</th>
+                            <th>18.6</th>
+                            <th>19.6</th>
+                            <th>20.6</th>
+                            <th>21.6</th>
+                            <th>22.6</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Nitra</td>
+                            <td>267</td>
+                            <td>876</td>
+                            <td>678</td>
+                            <td>67</td>
+                            <td>45</td>
+                            <td>34</td>
+                        </tr>
+                        <tr>
+                            <td>Šaľa</td>
+                            <td>228</td>
+                            <td>98</td>
+                            <td>45</td>
+                            <td>23</td>
+                            <td>0</td>
+                            <td>56</td>
+                        </tr>
+                        <tr>
+                            <td>Komárno</td>
+                            <td>23</td>
+                            <td>546</td>
+                            <td>65</td>
+                            <td>43</td>
+                            <td>98</td>
+                            <td>43</td>
+                        </tr>
+                        <tr>
+                            <td>Topoľčany</td>
+                            <td>543</td>
+                            <td>34</td>
+                            <td>9</td>
+                            <td>43</td>
+                            <td>78</td>
+                            <td>12</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Odpoveď:</p>
+            <div class="answer-box"></div>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 3 (Obrázok 3)</h2>
+            <p>Na miesto XXXXX napíš vhodný príkaz typu SELECT, pomocou ktorého dôjde k naplneniu vnorenej tabuľky (Nested table).</p>
+            <pre><code>declare
+    type t_lp is TABLE OF p_typ_prispevku.popis%TYPE;
+    p_prispevky_tab t_lp;
+begin
+    XXXXX
+end;</code></pre>
+            <p>Odpoveď:</p>
+            <div class="answer-box">
+                <code>insert into p_prispevky_tab values(select * from p_typ_prispevku);</code>
+            </div>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 4 (Obrázok 4)</h2>
+            <p>Pomocou SQL generujte príkazy na zrušenie linuxového konta všetkých zamestnancov, ktorí ukončili pracovný pomer v posledný mesiac, ak login je osobné číslo zamestnanca a syntax príkazu je:</p>
+            <p><strong>userdel login</strong></p>
+            <p>Odpoveď:</p>
+            <div class="answer-box">
+                <code>select 'userdel ' || rod_cislo from p_zamestnanec where to_char(dat_do, 'MM') = 12;</code>
+            </div>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 5 (Obrázok 5)</h2>
+            <p>Vytvorte XML dokument nasledujúceho formátu - poberatelia, ktorí dostali doteraz celkovo aspoň 1000Eur.</p>
+            <div class="xml-code">
+                &lt;osoby&gt;<br>
+                &nbsp;&nbsp;&lt;clovek&gt;Michal Kvet&lt;/clovek&gt;<br>
+                &nbsp;&nbsp;&lt;clovek&gt;Marek Kvet&lt;/clovek&gt;<br>
+                &lt;/osoby&gt;<br>
+                &lt;/mesto&gt;<br>
+            </div>
+             <p>Odpoveď:</p>
+            <div class="answer-box"></div>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 6 (Obrázok 6)</h2>
+            <p>Aká hodnota bude vypísaná na obrazovke:</p>
+            <pre><code>declare
+    type t_pole IS VARRAY(4) OF integer;
+    pole t_pole;
+begin
+    pole:=t_pole(10,20,30,40,50);
+    pole.delete(4);
+    dbms_output.put_line(pole.count);
+end;</code></pre>
+            <ul>
+                <li><input type="radio" name="q6" id="q6a1"><label for="q6a1">50</label></li>
+                <li><input type="radio" name="q6" id="q6a2"><label for="q6a2">Bude vyvolaná chyba</label></li>
+                <li><input type="radio" name="q6" id="q6a3"><label for="q6a3">40</label></li>
+                <li><input type="radio" name="q6" id="q6a4"><label for="q6a4">4</label></li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 7 (Obrázok 7)</h2>
+            <p>Vypíšte IČO a názov všetkých zamestnávateľov z mesta Žilina. Ak má zamestnávateľ aj zamestnancov, vypíšte ich rodné číslo a dátum nástupu do zamestnania.</p>
+            <p>Odpoveď:</p>
+            <div class="answer-box"></div>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 8 (Obrázok 8)</h2>
+            <p>Nahraďte XXXXX správnou deklaráciou kurzora.</p>
+            <pre><code>declare
+    XXXXX
+begin
+    open cur1(priezv||'%');
+    loop
+        ...
+    end loop;
+end;/</code></pre>
+            <ul>
+                <li><input type="radio" name="q8" id="q8a1"><label for="q8a1">cursor cur1 IS select * from os_udaje where priezvisko like priezv;</label></li>
+                <li><input type="radio" name="q8" id="q8a2"><label for="q8a2">cursor cur1(priezv VARCHAR2(20)) IS select * from os_udaje where priezvisko like priezv;</label></li>
+                <li><input type="radio" name="q8" id="q8a3"><label for="q8a3">cursor cur1(priezv VARCHAR2) IS select * from os_udaje where priezvisko like priezv;</label></li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 9 (Obrázok 9)</h2>
+            <p>Vygenerujte príkazy na drop všetkých FK z tabuľky p_prispevky.</p>
+            <p>USER_CONSTRAINT(#constraint_name, table_name, constraint_type, r_constraint_name(FK))</p>
+            <p>Ak constraint_type je typu CHAR(1) a môže nadobúdať hodnoty s nasledovným významom (P-primary key, R-foreign key, C-check, U-unique,...)</p>
+            <div class="answer-box"></div>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 10 (Obrázok 10)</h2>
+            <p>Ktoré tvrdenie NIE JE pravdivé?</p>
+            <ul>
+                <li><input type="radio" name="q10" id="q10a1"><label for="q10a1">JSON nepoužíva objekty.</label></li>
+                <li><input type="radio" name="q10" id="q10a2"><label for="q10a2">JSON je menej komplexný než XML.</label></li>
+                <li><input type="radio" name="q10" id="q10a3"><label for="q10a3">JSON používa polia.</label></li>
+                <li><input type="radio" name="q10" id="q10a4"><label for="q10a4">JSON je nezávislý na jazyku.</label></li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 11 (Obrázok 11)</h2>
+            <p>Čo platí pre JSON?</p>
+            <ul>
+                <li><input type="radio" name="q11" id="q11a1"><label for="q11a1">Nepoužíva polia.</label></li>
+                <li><input type="radio" name="q11" id="q11a2"><label for="q11a2">Vyhľadávanie sa vykonáva pomocou XPath.</label></li>
+                <li><input type="radio" name="q11" id="q11a3"><label for="q11a3">Nemá definované žiadne dátové typy.</label></li>
+                <li><input type="radio" name="q11" id="q11a4"><label for="q11a4">Je menej komplexný ako XML.</label></li>
+            </ul>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 12 (Obrázok 12)</h2>
+            <p>Pomocou funkcií ORDER a MAP sa:</p>
+            <ul>
+                <li><input type="radio" name="q12" id="q12a1"><label for="q12a1">definujú vlastné funkcie triedenia, ktoré nahrádzajú klauzulu ORDER BY</label></li>
+                <li><input type="radio" name="q12" id="q12a2"><label for="q12a2">sa vykonáva triedenie podľa objektov</label></li>
+                <li><input type="radio" name="q12" id="q12a3"><label for="q12a3">vypisujú hodnoty identifikátora objektu</label></li>
+            </ul>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 13 (Obrázok 13)</h2>
+            <p>Vypíšte nasledovnú štatistiku. K jednotlivým typom postihnutí vypíšte počty žien, ktoré začali k roku 2018 trpieť danou chorobou. Riešenie pripravte pre každý týždeň prvého mesiaca.</p>
+            <div class="table-container">
+                 <table>
+                    <thead>
+                        <tr>
+                            <th>Choroba</th>
+                            <th>1 týždeň</th>
+                            <th>2 týždeň</th>
+                            <th>3 týždeň</th>
+                            <th>4 týždeň</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Duševná porucha</td>
+                            <td>678</td>
+                            <td>768</td>
+                            <td>54</td>
+                            <td>43</td>
+                        </tr>
+                        <tr>
+                            <td>Mentálna porucha</td>
+                            <td>54</td>
+                            <td>67</td>
+                            <td>45</td>
+                            <td>34</td>
+                        </tr>
+                        <tr>
+                            <td>Sociálna porucha</td>
+                            <td>34</td>
+                            <td>45</td>
+                            <td>23</td>
+                            <td>34</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Odpoveď:</p>
+            <div class="answer-box">
+                <code>from p_osoba join p_poistenie using(rod_cislo)<br>join p_odvod_platba using(id_poistenca);</code>
+            </div>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 14 (Obrázok 14)</h2>
+            <p>Ku každej osobe vypíšte meno, priezvisko a celkovú sumu, ktorú zaplatila za minulý kalendárny rok. Ak osoba nezaplatila nič, vypíšte aspoň jej meno.</p>
+            <p>Odpoveď:</p>
+            <div class="answer-box">
+                <code>from p_osoba join p_poistenie using(rod_cislo)<br>join p_odvod_platba using(id_poistenca);</code>
+            </div>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 15 (Obrázok 15)</h2>
+            <p>Pomocou SQL generujte príkazy na zrušenie linuxového konta všetkých zamestnancov, ktorí ukončili pracovný pomer v posledný mesiac, ak login je osobné číslo zamestnanca a syntax príkazu je:</p>
+            <p><strong>userdel login</strong></p>
+            <p>Odpoveď:</p>
+            <div class="answer-box">
+                <code>from p_osoba join p_poistenie using(rod_cislo)<br>join p_odvod_platba using(id_poistenca);</code>
+            </div>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 16 (Obrázok 16)</h2>
+            <p>Vytvorte XML dokument nasledujúceho formátu - element platby vyjadruje počet platieb poistenca za tento rok.</p>
+            <div class="xml-code">
+                &lt;osoba rc="12345"&gt;<br>
+                &nbsp;&nbsp;&lt;meno&gt;Michal&lt;/meno&gt;<br>
+                &nbsp;&nbsp;&lt;priezvisko&gt;Kvet&lt;/priezvisko&gt;<br>
+                &nbsp;&nbsp;&lt;platby&gt;10&lt;/platby&gt;<br>
+                &lt;/osoba&gt;<br>
+            </div>
+            <p>Odpoveď:</p>
+            <div class="answer-box">
+                <code>select xmlelement("osoba", xmlattributes(rod_cislo as "rc"),<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;xmlForrest(meno as "meno", priezvisko as priezvisko, platby as count(id_platby))) as xml<br>
+                from p_osoba join p_poistenie using (rod_cislo)<br>
+                join p_odvod_platba using (id_poistenca);</code>
+            </div>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 17 (Obrázok 17)</h2>
+            <p>Vypíšte názvy miest, v ktorých sa nevyskytujú osoby s postihnutím "mentálna porucha".</p>
+            <p>Odpoveď:</p>
+            <div class="answer-box"></div>
+        </div>
+
+        <div class="question">
+            <h2>Otázka 18 (Obrázok 18, 19, 20, 24)</h2>
+            <p>Majme nasledujúci príklad XML dokumentu.</p>
+            <div class="xml-code">
+                &lt;?xml version="1.0"?&gt;<br>
+                &lt;poberatel id_poberatela='15252'&gt;<br>
+                &nbsp;&nbsp;&lt;meno&gt;Oliver Kratky &lt;/meno&gt;<br>
+                &nbsp;&nbsp;&lt;pob_prispevky&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;prispevok&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;obdobie&gt;01.01.2020&lt;/obdobie&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;typ&gt;200&lt;/typ&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;suma&gt;150&lt;/suma&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;/prispevok&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;prispevok&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;obdobie&gt;01.05.2020&lt;/obdobie&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;typ&gt;201&lt;/typ&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;suma&gt;100&lt;/suma&gt;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;&lt;/prispevok&gt;<br>
+                &nbsp;&nbsp;&lt;/pob_prispevky&gt;<br>
+                &lt;/poberatel&gt;
+            </div>
+            <p>Napíšte vhodný príkaz, pomocou ktorého získate celý podstrom XML dokumentu pre príspevky, ktoré sa nachádzajú na 1. indexe v poli príspevkov z tabuľky XML dokumentov, ktorá má názov xml_tab_prispevky.</p>
+            <p>Odpoveď (z obrázku 24):</p>
+             <div class="answer-box">
+                <code>select extract(value(p), '/poberatel/pob_prispevky[1]') as something from xml_tab_prispevky p</code>
+            </div>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 19 (Obrázok 21, 23)</h2>
+            <p>Aktualizujte v tabuľke p_typ_prispevku historické záznamy z ceny 500 eur na 700 pre typ s ID=12 a popisom="testovanie systemu". (Záznam vkladajte do nested table p_historia).</p>
+            <p>Odpoveď (chybný pokus na obrázku 21):</p>
+            <div class="answer-box">
+                <code>update table<br>
+                (<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;select tp.historia from p_typ_prispevku tp<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;where tp.id_typu = 12<br>
+                ) inner set historia.suma = 700<br>
+                where historia.suma = 500;
+                </code>
+            </div>
+             <p>Odpoveď (prázdne pole na obrázku 23):</p>
+            <div class="answer-box"></div>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 20 (Obrázok 25)</h2>
+            <p>Pomocou SQL príkazov vygenerujte príkazy insert do tabuľky pom_ou dáta o zamestnancoch, ak pom_ou má nasledovnú štruktúru:</p>
+            <p>pom_ou(#id_zamestnanca, id_osoby, meno, priezvisko, pozicia)</p>
+            <p>Odpoveď:</p>
+            <div class="answer-box">
+                <code>select 'insert into pom_ou (id_zamestnanca, id_osoby, meno, priezvisko, pozicia) values (' ||<br>
+                zc.id_zamestnavatela || ',' || o.rod_cislo || ',''' || o.meno || ''',''' || o.priezvisko || ''',''programator'');' from p_zamestnanec zc<br>
+                join p_osoba o on o.rod_cislo = zc.rod_cislo;</code>
+            </div>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 21 (Obrázok 27)</h2>
+            <p>Napíšte príkaz SELECT, pomocou ktorého pristúpite ku všetkým názvom predajní z tabuľky predajna_json, ktoré majú rozlohu väčšiu ako 25 metrov štvorcových (atribúty nazov, rozloha). Jednotlivé predajne sú vo formáte JSON.</p>
+             <p>Odpoveď:</p>
+            <div class="answer-box"></div>
+        </div>
+        
+        <div class="question">
+            <h2>Otázka 22 (Obrázok 28)</h2>
+            <p>Nahraďte XXXXX správnym ukončovacím príkazom, ktorý zabezpečí vypísanie prvých 4 riadkov.</p>
+            <pre><code>declare
+    cursor cur1 is
+        select meno, priezvisko from os_udaje;
+begin
+    for rec in cur1 loop
+        dbms_output.put_line(rec.meno || ' ' || rec.priezvisko);
+        XXXXX
+    end loop;
+end;
+/</code></pre>
+            <p>Odpoveď:</p>
+            <div class="answer-box">
+                <code>exit when cur1%rowcount = 4;</code>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
