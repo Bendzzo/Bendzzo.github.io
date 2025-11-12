@@ -20,12 +20,12 @@
             --code-string: #98c379;
             --code-number: #d19a66;
             --header-color: #343a40;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
-            display: flex;
             background-color: var(--bg-color);
             color: var(--main-text-color);
             line-height: 1.6;
@@ -42,6 +42,9 @@
             padding: 20px;
             overflow-y: auto;
             box-sizing: border-box;
+            transform: translateX(0);
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
         }
 
         #sidebar h2 {
@@ -52,19 +55,9 @@
             margin-top: 0;
         }
 
-        #sidebar ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        
-        #sidebar ul ul {
-            padding-left: 20px;
-        }
-
-        #sidebar li {
-            margin: 8px 0;
-        }
-
+        #sidebar ul { list-style-type: none; padding: 0; }
+        #sidebar ul ul { padding-left: 20px; }
+        #sidebar li { margin: 8px 0; }
         #sidebar a {
             text-decoration: none;
             color: var(--link-color);
@@ -73,16 +66,54 @@
             padding: 4px 0;
             transition: color 0.2s;
         }
-
-        #sidebar a:hover {
-            color: var(--link-hover-color);
-        }
+        #sidebar a:hover { color: var(--link-hover-color); }
 
         #content {
-            margin-left: var(--sidebar-width);
             padding: 30px 40px;
-            width: calc(100% - var(--sidebar-width));
-            box-sizing: border-box;
+            transition: margin-left 0.3s ease-in-out;
+            margin-left: var(--sidebar-width);
+        }
+        
+        #menu-toggle {
+            display: none; /* Skryté na desktope */
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1001;
+            background: var(--sidebar-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+        }
+        
+        #menu-toggle span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background-color: var(--header-color);
+            margin: 4px auto;
+            transition: all 0.3s;
+        }
+        
+        /* Štýly pre responzivitu */
+        @media (max-width: 800px) {
+            #sidebar {
+                transform: translateX(-100%);
+                box-shadow: var(--shadow);
+            }
+            body.sidebar-visible #sidebar {
+                transform: translateX(0);
+            }
+            #content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            #menu-toggle {
+                display: block;
+            }
         }
 
         section {
@@ -90,28 +121,11 @@
             padding-top: 20px;
             border-bottom: 1px solid #e0e0e0;
         }
+        section:last-child { border-bottom: none; }
         
-        section:last-child {
-            border-bottom: none;
-        }
-        
-        h1, h2, h3 {
-            color: var(--header-color);
-        }
-
-        h1 {
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
-        }
-
-        h2 {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-        
-        p {
-            margin-bottom: 15px;
-        }
+        h1, h2, h3 { color: var(--header-color); }
+        h1 { border-bottom: 2px solid var(--border-color); padding-bottom: 15px; }
+        h2 { border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         
         pre {
             background-color: var(--code-bg);
@@ -136,6 +150,12 @@
     </style>
 </head>
 <body>
+
+<button id="menu-toggle">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
 
 <nav id="sidebar">
     <h2>Obsah</h2>
@@ -178,7 +198,7 @@
 </nav>
 
 <main id="content">
-    <h1>MATLAB Ťahák: Dátové Typy, Vektory a Matice</h1>
+    <h1>MATLAB: Dátové Typy, Vektory a Matice</h1>
 
     <section id="zakladne-prikazy">
         <h2>0. Základné Príkazy</h2>
@@ -225,7 +245,6 @@
 <pre><span class="keyword">help</span> plot  <span class="comment">% Rýchla pomoc pre funkciu plot</span>
 <span class="keyword">doc</span> table <span class="comment">% Otvorí plnú dokumentáciu pre table</span>
 </pre>
-
     </section>
 
     <section id="datove-typy">
@@ -341,7 +360,7 @@ index = teploty > <span class="number">16</span>;   <span class="comment">% Vrá
 vysoke_teploty = teploty(index); <span class="comment">% Vráti [17; 20]</span>
 
 <span class="comment">% Priame použitie v jednom kroku pre tabuľky</span>
-nadpriemerne = pocasieTable(pocasieTable.Teplota > <span class="keyword">mean</span>(pocasieTable.Teplota), :);
+nadpriemerne = tabulka(tabulka.Vek > <span class="keyword">mean</span>(tabulka.Vek), :);
 </pre>
     </section>
 
@@ -489,6 +508,37 @@ M = <span class="keyword">cell2mat</span>(C);   <span class="comment">% Cell Arr
     </section>
 
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const menuToggle = document.getElementById('menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        // Funkcia na prepínanie viditeľnosti sidebar
+        function toggleSidebar() {
+            document.body.classList.toggle('sidebar-visible');
+        }
+
+        menuToggle.addEventListener('click', function (event) {
+            event.stopPropagation(); // Zabráni, aby sa kliknutie na tlačidlo hneď zavrelo
+            toggleSidebar();
+        });
+
+        // Zatvorenie sidebar pri kliknutí na link v ňom (na mobiloch)
+        sidebar.addEventListener('click', function (event) {
+            if (event.target.tagName === 'A' && window.innerWidth <= 800) {
+                toggleSidebar();
+            }
+        });
+
+        // Zatvorenie sidebar pri kliknutí mimo neho
+        document.addEventListener('click', function (event) {
+            if (document.body.classList.contains('sidebar-visible') && !sidebar.contains(event.target)) {
+                 toggleSidebar();
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
