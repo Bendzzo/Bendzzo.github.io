@@ -113,11 +113,6 @@
             margin-bottom: 15px;
         }
         
-        code {
-            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
-            font-size: 0.9em;
-        }
-        
         pre {
             background-color: var(--code-bg);
             color: var(--code-text);
@@ -125,12 +120,14 @@
             border-radius: 6px;
             overflow-x: auto;
             white-space: pre;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.9em;
         }
 
-        pre code .comment { color: var(--code-comment); font-style: italic; }
-        pre code .keyword { color: var(--code-keyword); }
-        pre code .string { color: var(--code-string); }
-        pre code .number { color: var(--code-number); }
+        pre .comment { color: var(--code-comment); font-style: italic; }
+        pre .keyword { color: var(--code-keyword); }
+        pre .string { color: var(--code-string); }
+        pre .number { color: var(--code-number); }
         
         dl { margin-top: 15px; }
         dt { font-weight: bold; color: #495057; }
@@ -189,45 +186,45 @@
         
         <h3>Správa Prostredia</h3>
         <dl>
-            <dt><code>clear</code></dt>
+            <dt><strong>clear</strong></dt>
             <dd>Vymaže všetky premenné z pracovného priestoru (Workspace). Zabraňuje tomu, aby staré hodnoty ovplyvnili nový beh skriptu.</dd>
-            <dt><code>clc</code></dt>
+            <dt><strong>clc</strong></dt>
             <dd>Vymaže text z príkazového okna (Command Window). Výstup je potom čistejší a prehľadnejší.</dd>
-            <dt><code>close all</code></dt>
+            <dt><strong>close all</strong></dt>
             <dd>Zatvorí všetky otvorené okná s grafmi (Figures).</dd>
         </dl>
-<pre><code><span class="keyword">clear</span>;     <span class="comment">% Vymaže premenné</span>
+<pre><span class="keyword">clear</span>;     <span class="comment">% Vymaže premenné</span>
 <span class="keyword">clc</span>;       <span class="comment">% Vyčistí okno</span>
 <span class="keyword">close all</span>; <span class="comment">% Zatvorí grafy</span>
-</code></pre>
+</pre>
 
         <h3>Zobrazovanie Výstupu a Komentáre</h3>
         <dl>
-            <dt><code>disp(hodnota)</code></dt>
+            <dt><strong>disp(hodnota)</strong></dt>
             <dd>Zobrazí (display) hodnotu premennej alebo textu bez vypísania názvu premennej.</dd>
-            <dt><code>;</code> (bodkočiarka na konci riadku)</dt>
+            <dt><strong>;</strong> (bodkočiarka na konci riadku)</dt>
             <dd>Potlačí automatický výpis výsledku príkazu do príkazového okna. Kľúčové pre prehľadné skripty.</dd>
-            <dt><code>%</code> (znak percenta)</dt>
-            <dd>Označuje komentár. MATLAB ignoruje všetok text od znaku `%` až po koniec riadku.</dd>
+            <dt><strong>%</strong> (znak percenta)</dt>
+            <dd>Označuje komentár. MATLAB ignoruje všetok text od znaku <strong>%</strong> až po koniec riadku.</dd>
         </dl>
-<pre><code>vek = <span class="number">25</span>; <span class="comment">% Výstup je potlačený bodkočiarkou</span>
+<pre>vek = <span class="number">25</span>; <span class="comment">% Výstup je potlačený bodkočiarkou</span>
 <span class="keyword">disp</span>(<span class="string">'Vek osoby je:'</span>);
 <span class="keyword">disp</span>(vek);
 
 <span class="comment">% Kombinovaný výpis</span>
 <span class="keyword">disp</span>([<span class="string">'Vek: '</span>, <span class="keyword">num2str</span>(vek)]);
-</code></pre>
+</pre>
 
         <h3>Pomoc a Dokumentácia</h3>
         <dl>
-            <dt><code>help nazov_funkcie</code></dt>
+            <dt><strong>help nazov_funkcie</strong></dt>
             <dd>Zobrazí rýchlu nápovedu k funkcii priamo v príkazovom okne.</dd>
-            <dt><code>doc nazov_funkcie</code></dt>
+            <dt><strong>doc nazov_funkcie</strong></dt>
             <dd>Otvorí podrobnú oficiálnu dokumentáciu k funkcii v samostatnom okne.</dd>
         </dl>
-<pre><code><span class="keyword">help</span> plot  <span class="comment">% Rýchla pomoc pre funkciu plot</span>
+<pre><span class="keyword">help</span> plot  <span class="comment">% Rýchla pomoc pre funkciu plot</span>
 <span class="keyword">doc</span> table <span class="comment">% Otvorí plnú dokumentáciu pre table</span>
-</code></pre>
+</pre>
 
     </section>
 
@@ -235,126 +232,126 @@
         <h2>1. Dátové Typy</h2>
         
         <h3 id="matica">1.1 Matica (Matrix)</h3>
-        <p>Základný dátový typ. Všetky prvky musia byť rovnakého typu (napr. `double`, `char`). Používajú sa hranaté zátvorky `[]`.</p>
-<pre><code><span class="comment">% Definícia matice 2x3</span>
-matica = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>];</code></pre>
+        <p>Základný dátový typ. Všetky prvky musia byť rovnakého typu (napr. <strong>double</strong>, <strong>char</strong>). Používajú sa hranaté zátvorky <strong>[]</strong>.</p>
+<pre><span class="comment">% Definícia matice 2x3</span>
+matica = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>];</pre>
 
         <h3 id="cell-array">1.2 Cell Array (Bunkové Pole)</h3>
-        <p>Kontajner pre rôzne typy dát. Každá bunka (cell) môže obsahovať iný dátový typ (číslo, text, maticu...). Používajú sa zložené zátvorky `{}`.</p>
-<pre><code><span class="comment">% Definícia cell array 2x2</span>
-data = {<span class="string">'Názov Filmu'</span>, <span class="number">1994</span>; <span class="string">'Hodnotenie'</span>, <span class="number">9.3</span>};</code></pre>
+        <p>Kontajner pre rôzne typy dát. Každá bunka (cell) môže obsahovať iný dátový typ (číslo, text, maticu...). Používajú sa zložené zátvorky <strong>{}</strong>.</p>
+<pre><span class="comment">% Definícia cell array 2x2</span>
+data = {<span class="string">'Názov Filmu'</span>, <span class="number">1994</span>; <span class="string">'Hodnotenie'</span>, <span class="number">9.3</span>};</pre>
         
         <h3 id="table">1.3 Table (Tabuľka)</h3>
         <p>Štruktúrované dáta podobné databázovej tabuľke. Stĺpce majú názvy. Každý stĺpec má rovnaký typ dát, ale rôzne stĺpce môžu mať rôzne typy.</p>
-<pre><code><span class="comment">% Definícia tabuľky z vektorov</span>
+<pre><span class="comment">% Definícia tabuľky z vektorov</span>
 mena = {<span class="string">'Jano'</span>; <span class="string">'Eva'</span>};
 vek = [<span class="number">25</span>; <span class="number">30</span>];
-tabulka = <span class="keyword">table</span>(mena, vek, <span class="string">'VariableNames'</span>, {<span class="string">'Meno'</span>, <span class="string">'Vek'</span>});</code></pre>
+tabulka = <span class="keyword">table</span>(mena, vek, <span class="string">'VariableNames'</span>, {<span class="string">'Meno'</span>, <span class="string">'Vek'</span>});</pre>
         
         <h3 id="struct">1.4 Struct (Štruktúra)</h3>
         <p>Organizácia dát do pomenovaných polí (fields). Každé pole môže obsahovať ľubovoľný typ dát. Prístup je cez bodkovú notáciu.</p>
-<pre><code><span class="comment">% Definícia štruktúry</span>
+<pre><span class="comment">% Definícia štruktúry</span>
 pacient.meno = <span class="string">'Peter'</span>;
 pacient.vek = <span class="number">51</span>;
-pacient.merania = [<span class="number">120</span>, <span class="number">80</span>];</code></pre>
+pacient.merania = [<span class="number">120</span>, <span class="number">80</span>];</pre>
     </section>
     
     <section id="tvorba-a-indexovanie">
         <h2>2. Tvorba a Indexovanie</h2>
         
         <h3 id="tvorba-matic">2.1 Tvorba Matíc a Vektorov</h3>
-        <p><b>Priame zadanie:</b> Používajú sa hranaté zátvorky `[]`.</p>
+        <p><b>Priame zadanie:</b> Používajú sa hranaté zátvorky <strong>[]</strong>.</p>
         <ul>
             <li>Prvky v riadku sa oddeľujú <b>medzerou</b> alebo <b>čiarkou</b>.</li>
             <li>Riadky sa oddeľujú <b>bodkočiarkou</b>.</li>
         </ul>
-<pre><code><span class="comment">% Riadkový vektor (pole)</span>
+<pre><span class="comment">% Riadkový vektor (pole)</span>
 riadok = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]; <span class="comment">% alebo [1 2 3]</span>
 
 <span class="comment">% Stĺpcový vektor</span>
 stlpec = [<span class="number">1</span>; <span class="number">2</span>; <span class="number">3</span>];
 
 <span class="comment">% Matica 2x3</span>
-matica = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>];</code></pre>
+matica = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>; <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>];</pre>
 
         <p><b>Pomocou funkcií:</b></p>
-<pre><code>A = <span class="keyword">zeros</span>(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">% Matica 2x3 plná núl</span>
+<pre>A = <span class="keyword">zeros</span>(<span class="number">2</span>, <span class="number">3</span>);  <span class="comment">% Matica 2x3 plná núl</span>
 B = <span class="keyword">ones</span>(<span class="number">3</span>, <span class="number">2</span>);   <span class="comment">% Matica 3x2 plná jednotiek</span>
 C = <span class="keyword">rand</span>(<span class="number">4</span>, <span class="number">4</span>);   <span class="comment">% Matica 4x4 s náhodnými číslami (0 až 1)</span>
 D = <span class="keyword">eye</span>(<span class="number">3</span>);     <span class="comment">% Jednotková matica 3x3 (jednotky na diagonále)</span>
-</code></pre>
+</pre>
 
-        <h3 id="generovanie-postupnosti">2.2 Generovanie Postupností (operátor `:`)</h3>
-        <p>Syntax: `start:krok:koniec`. Ak `krok` chýba, je automaticky 1.</p>
-<pre><code>v1 = <span class="number">1</span>:<span class="number">5</span>;         <span class="comment">% Vráti [1, 2, 3, 4, 5]</span>
+        <h3 id="generovanie-postupnosti">2.2 Generovanie Postupností (operátor <strong>:</strong>)</h3>
+        <p>Syntax: <strong>start:krok:koniec</strong>. Ak <strong>krok</strong> chýba, je automaticky 1.</p>
+<pre>v1 = <span class="number">1</span>:<span class="number">5</span>;         <span class="comment">% Vráti [1, 2, 3, 4, 5]</span>
 v2 = <span class="number">0</span>:<span class="number">2</span>:<span class="number">8</span>;       <span class="comment">% Vráti [0, 2, 4, 6, 8]</span>
 v3 = <span class="number">5</span>:-<span class="number">1</span>:<span class="number">1</span>;       <span class="comment">% Vráti [5, 4, 3, 2, 1]</span>
-</code></pre>
+</pre>
 
         <h3 id="pristup-k-prvkom">2.3 Prístup k Prvkom (Indexovanie)</h3>
-        <p>MATLAB indexuje od <b>1</b>. Kľúčové slovo `end` znamená posledný index.</p>
+        <p>MATLAB indexuje od <b>1</b>. Kľúčové slovo <strong>end</strong> znamená posledný index.</p>
         <dl>
-            <dt>Matice `A(riadok, stlpec)`</dt>
-            <dd>Používajú sa okrúhle zátvorky `()`.</dd>
+            <dt>Matice <strong>A(riadok, stlpec)</strong></dt>
+            <dd>Používajú sa okrúhle zátvorky <strong>()</strong>.</dd>
         </dl>
-<pre><code>matica = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>; <span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>];
+<pre>matica = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>; <span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>];
 prvok = matica(<span class="number">2</span>, <span class="number">3</span>);         <span class="comment">% Vráti 6 (druhý riadok, tretí stĺpec)</span>
 cely_riadok = matica(<span class="number">1</span>, :);   <span class="comment">% Vráti [1, 2, 3] (prvý riadok, všetky stĺpce)</span>
 cely_stlpec = matica(:, <span class="number">2</span>);   <span class="comment">% Vráti [2; 5] (všetky riadky, druhý stĺpec)</span>
 posledny = matica(<span class="keyword">end</span>, <span class="keyword">end</span>);  <span class="comment">% Vráti 6</span>
-</code></pre>
+</pre>
 
         <dl>
-            <dt>Cell Array `C{riadok, stlpec}`</dt>
+            <dt>Cell Array <strong>C{riadok, stlpec}</strong></dt>
             <dd>
-                <b>`{}` (zložené zátvorky):</b> Prístup k <b>obsahu</b> bunky.
+                <b><strong>{}</strong> (zložené zátvorky):</b> Prístup k <b>obsahu</b> bunky.
                 <br>
-                <b>`()` (okrúhle zátvorky):</b> Prístup k <b>bunke ako celku</b> (výsledok je cell array).
+                <b><strong>()</strong> (okrúhle zátvorky):</b> Prístup k <b>bunke ako celku</b> (výsledok je cell array).
             </dd>
         </dl>
-<pre><code>C = {<span class="string">'text'</span>, <span class="number">123</span>; <span class="keyword">rand</span>(<span class="number">2</span>), [<span class="number">1</span> <span class="number">2</span>]};
+<pre>C = {<span class="string">'text'</span>, <span class="number">123</span>; <span class="keyword">rand</span>(<span class="number">2</span>), [<span class="number">1</span> <span class="number">2</span>]};
 obsah = C{<span class="number">1</span>, <span class="number">1</span>};  <span class="comment">% Vráti 'text' (typ char)</span>
 bunka = C(<span class="number">1</span>, <span class="number">1</span>);  <span class="comment">% Vráti {'text'} (typ cell)</span>
-</code></pre>
+</pre>
 
         <dl>
-            <dt>Table `T.NazovStlpca` alebo `T{riadky, 'Nazov'}`</dt>
+            <dt>Table <strong>T.NazovStlpca</strong> alebo <strong>T{riadky, 'Nazov'}</strong></dt>
             <dd>
-                <b>Bodková notácia `.Nazov`:</b> Prístup k celému stĺpcu.
+                <b>Bodková notácia <strong>.Nazov</strong>:</b> Prístup k celému stĺpcu.
                 <br>
-                <b>`{}` (zložené zátvorky):</b> Prístup k dátam vo vnútri buniek.
+                <b><strong>{}</strong> (zložené zátvorky):</b> Prístup k dátam vo vnútri buniek.
             </dd>
         </dl>
-<pre><code>vek_stlpec = tabulka.Vek;         <span class="comment">% Celý stĺpec 'Vek'</span>
+<pre>vek_stlpec = tabulka.Vek;         <span class="comment">% Celý stĺpec 'Vek'</span>
 vek_jana = tabulka{<span class="number">1</span>, <span class="string">'Vek'</span>};      <span class="comment">% Konkrétna hodnota</span>
 prvy_riadok = tabulka(<span class="number">1</span>, :);        <span class="comment">% Celý prvý riadok (ako menšia tabuľka)</span>
-</code></pre>
+</pre>
 
         <dl>
-            <dt>Struct `S.nazovPola`</dt>
+            <dt>Struct <strong>S.nazovPola</strong></dt>
             <dd>Používa sa bodková notácia.</dd>
         </dl>
-<pre><code>meno_pacienta = pacient(<span class="number">1</span>).meno; <span class="comment">% Prístup k poľu 'meno' prvého pacienta</span>
-</code></pre>
+<pre>meno_pacienta = pacient(<span class="number">1</span>).meno; <span class="comment">% Prístup k poľu 'meno' prvého pacienta</span>
+</pre>
 
         <h3 id="logicke-indexovanie">2.4 Logické Indexovanie (Filtrovanie)</h3>
-        <p>Vytvorenie logického vektora (`true`/`false`) a jeho použitie na výber dát.</p>
-<pre><code>teploty = [<span class="number">15</span>; <span class="number">17</span>; <span class="number">12</span>; <span class="number">20</span>];
+        <p>Vytvorenie logického vektora (<strong>true</strong>/<strong>false</strong>) a jeho použitie na výber dát.</p>
+<pre>teploty = [<span class="number">15</span>; <span class="number">17</span>; <span class="number">12</span>; <span class="number">20</span>];
 index = teploty > <span class="number">16</span>;   <span class="comment">% Vráti [false; true; false; true]</span>
 vysoke_teploty = teploty(index); <span class="comment">% Vráti [17; 20]</span>
 
 <span class="comment">% Priame použitie v jednom kroku pre tabuľky</span>
 nadpriemerne = pocasieTable(pocasieTable.Teplota > <span class="keyword">mean</span>(pocasieTable.Teplota), :);
-</code></pre>
+</pre>
     </section>
 
     <section id="operacie-a-funkcie">
         <h2>3. Operácie a Funkcie</h2>
         
         <h3 id="aritmeticke-operacie">3.1 Aritmetické Operácie</h3>
-        <p><b>Maticové (Lineárna algebra):</b> `+`, `-`, `*` (maticové násobenie), `/`, `^` (maticová mocnina), `'` (transpozícia).</p>
-        <p><b>Po prvkoch (Element-wise):</b> Používa sa <b>bodka `.`</b> pred operátorom. Vyžaduje matice rovnakých rozmerov.</p>
-<pre><code>A = [<span class="number">1</span> <span class="number">2</span>; <span class="number">3</span> <span class="number">4</span>]; B = [<span class="number">2</span> <span class="number">0</span>; <span class="number">1</span> <span class="number">3</span>];
+        <p><b>Maticové (Lineárna algebra):</b> <strong>+</strong>, <strong>-</strong>, <strong>*</strong> (maticové násobenie), <strong>/</strong>, <strong>^</strong> (maticová mocnina), <strong>'</strong> (transpozícia).</p>
+        <p><b>Po prvkoch (Element-wise):</b> Používa sa <b>bodka <strong>.</strong></b> pred operátorom. Vyžaduje matice rovnakých rozmerov.</p>
+<pre>A = [<span class="number">1</span> <span class="number">2</span>; <span class="number">3</span> <span class="number">4</span>]; B = [<span class="number">2</span> <span class="number">0</span>; <span class="number">1</span> <span class="number">3</span>];
 
 <span class="comment">% Maticové násobenie</span>
 C_mat = A * B; <span class="comment">% Vráti [4 6; 10 12]</span>
@@ -364,42 +361,54 @@ C_elem = A .* B; <span class="comment">% Vráti [2 0; 3 12]</span>
 
 <span class="comment">% Umocnenie po prvkoch</span>
 A_moc = A.^<span class="number">2</span>; <span class="comment">% Vráti [1 4; 9 16]</span>
-</code></pre>
+</pre>
 
         <h3 id="relacne-logicke-operacie">3.2 Relačné a Logické Operácie</h3>
         <p>Používajú sa na porovnávanie a vytváranie logických indexov. Fungujú po prvkoch.</p>
         <ul>
-            <li><b>Relačné:</b> `>` (väčší), `<` (menší), `>=` (väčší alebo rovný), `<=` (menší alebo rovný), `==` (rovná sa), `~=` (nerovná sa).</li>
-            <li><b>Logické:</b> `&` (logické A - AND), `|` (logické ALEBO - OR), `~` (logická negácia - NOT).</li>
+            <li><b>Relačné:</b> <strong>></strong> (väčší), <strong><</strong> (menší), <strong>>=</strong> (väčší alebo rovný), <strong><=</strong> (menší alebo rovný), <strong>==</strong> (rovná sa), <strong>~=</strong> (nerovná sa).</li>
+            <li><b>Logické:</b> <strong>&</strong> (logické A - AND), <strong>|</strong> (logické ALEBO - OR), <strong>~</strong> (logická negácia - NOT).</li>
         </ul>
         
         <h3 id="funkcie-matice">3.3 Funkcie pre Matice</h3>
-<pre><code><span class="keyword">size</span>(A)       <span class="comment">% Vráti rozmery matice (napr. [2 3])</span>
-<span class="keyword">length</span>(v)     <span class="comment">% Vráti dĺžku vektora (najväčší rozmer matice)</span>
-<span class="keyword">sum</span>(v)        <span class="comment">% Súčet prvkov (pre maticu vráti súčty stĺpcov)</span>
-<span class="keyword">mean</span>(v)       <span class="comment">% Priemerná hodnota prvkov</span>
-<span class="keyword">max</span>(v)        <span class="comment">% Maximálna hodnota</span>
-<span class="keyword">min</span>(v)        <span class="comment">% Minimálna hodnota</span>
-<span class="keyword">inv</span>(A)        <span class="comment">% Inverzná matica</span>
-</code></pre>
+<pre>A = [<span class="number">1</span> <span class="number">2</span> <span class="number">3</span>; <span class="number">4</span> <span class="number">5</span> <span class="number">6</span>]; v = [<span class="number">10</span> <span class="number">20</span> <span class="number">30</span>];
+<span class="keyword">size</span>(A)       <span class="comment">% Vráti [2 3]</span>
+<span class="keyword">length</span>(v)     <span class="comment">% Vráti 3</span>
+<span class="keyword">sum</span>(A)        <span class="comment">% Vráti súčty stĺpcov: [5 7 9]</span>
+<span class="keyword">mean</span>(v)       <span class="comment">% Vráti 20</span>
+<span class="keyword">max</span>(A)        <span class="comment">% Vráti maximá stĺpcov: [4 5 6]</span>
+
+B = [<span class="number">1</span> <span class="number">2</span>; <span class="number">0</span> <span class="number">1</span>];
+<span class="keyword">inv</span>(B)        <span class="comment">% Vráti [1 -2; 0 1]</span>
+</pre>
         
         <h3 id="funkcie-cell">3.4 Funkcie pre Cell Array</h3>
-<pre><code><span class="keyword">cellfun</span>(@funkcia, C) <span class="comment">% Aplikuje funkciu na každý prvok cell array</span>
-dlzky = <span class="keyword">cellfun</span>(@<span class="keyword">length</span>, mena);
+<pre>mena = {<span class="string">'Jano'</span>, <span class="string">'Katarina'</span>, <span class="string">'Eva'</span>};
+dlzky = <span class="keyword">cellfun</span>(@<span class="keyword">length</span>, mena); <span class="comment">% Vráti [4 8 3]</span>
 
-<span class="keyword">celldisp</span>(C)            <span class="comment">% Zobrazí obsah všetkých buniek</span>
-</code></pre>
+C = {<span class="number">123</span>; <span class="string">'text'</span>};
+<span class="keyword">celldisp</span>(C) <span class="comment">% Vypíše do konzoly: C{1} = 123, C{2} = 'text'</span>
+</pre>
 
         <h3 id="funkcie-table">3.5 Funkcie pre Table</h3>
-<pre><code><span class="keyword">sortrows</span>(T, 'NazovStlpca') <span class="comment">% Zoradí tabuľku podľa stĺpca</span>
-<span class="keyword">summary</span>(T)                   <span class="comment">% Zobrazí súhrnné informácie o tabuľke</span>
-<span class="keyword">groupsummary</span>(T, 'GrStlpec', 'metoda', 'DataStlpec') <span class="comment">% Vypočíta štatistiky pre skupiny</span>
-</code></pre>
+<pre>mena = {<span class="string">'Eva'</span>; <span class="string">'Jano'</span>}; vek = [<span class="number">30</span>; <span class="number">25</span>];
+T = <span class="keyword">table</span>(mena, vek);
+<span class="keyword">sortrows</span>(T, <span class="string">'vek'</span>) <span class="comment">% Zoradí tabuľku, Jano bude prvý</span>
+
+<span class="keyword">summary</span>(T) <span class="comment">% Vypíše do konzoly štatistiky pre stĺpec 'vek'</span>
+
+triedy={'1A';'1B';'1A'}; skore=[<span class="number">85</span>;<span class="number">90</span>;<span class="number">75</span>];
+studenti = <span class="keyword">table</span>(triedy, skore);
+<span class="keyword">groupsummary</span>(studenti, <span class="string">'triedy'</span>, <span class="string">'mean'</span>, <span class="string">'skore'</span>) <span class="comment">% Vypočíta priemerné skóre pre každú triedu</span>
+</pre>
 
         <h3 id="funkcie-struct">3.6 Funkcie pre Struct</h3>
-<pre><code><span class="keyword">fieldnames</span>(S)            <span class="comment">% Vráti názvy všetkých polí (ako cell array)</span>
-S_nove = <span class="keyword">rmfield</span>(S, 'nazovPola') <span class="comment">% Odstráni pole zo štruktúry</span>
-</code></pre>
+<pre>pacient.meno = <span class="string">'Peter'</span>; pacient.vek = <span class="number">51</span>;
+<span class="keyword">fieldnames</span>(pacient) <span class="comment">% Vráti cell array {'meno'; 'vek'}</span>
+
+pacient_bez_veku = <span class="keyword">rmfield</span>(pacient, <span class="string">'vek'</span>);
+<span class="comment">% 'pacient_bez_veku' bude struct iba s poľom 'meno'</span>
+</pre>
     </section>
 
     <section id="manipulacia-dat">
@@ -407,7 +416,7 @@ S_nove = <span class="keyword">rmfield</span>(S, 'nazovPola') <span class="comme
         
         <h3 id="pridavanie-odstranovanie">4.1 Pridávanie a Odstraňovanie</h3>
         <p><b>Pridanie stĺpca do tabuľky:</b></p>
-<pre><code><span class="comment">% 1. Pôvodná tabuľka</span>
+<pre><span class="comment">% 1. Pôvodná tabuľka</span>
 mena = {<span class="string">'Jano'</span>; <span class="string">'Eva'</span>};
 vek = [<span class="number">25</span>; <span class="number">30</span>];
 tabulka = <span class="keyword">table</span>(mena, vek);
@@ -428,9 +437,9 @@ tabulka.Vyska = [<span class="number">180</span>; <span class="number">165</span
 %     _______    ___    _____
 %     'Jano'     25     180  
 %     'Eva'      30     165  </span>
-</code></pre>
-        <p><b>Odstránenie dát (priradením prázdnej matice `[]`):</b></p>
-<pre><code><span class="comment">% 1. Pôvodná tabuľka (z predošlého kroku)
+</pre>
+        <p><b>Odstránenie dát (priradením prázdnej matice <strong>[]</strong>):</b></p>
+<pre><span class="comment">% 1. Pôvodná tabuľka (z predošlého kroku)
 %
 % tabulka = 
 %     mena      vek    Vyska
@@ -458,25 +467,25 @@ tabulka(tabulka.Vyska < <span class="number">170</span>, :) = [];
 %     mena      Vyska
 %     _______    _____
 %     'Jano'     180  </span>
-</code></pre>
+</pre>
 
         <h3 id="spajanie-dat">4.2 Spájanie Dát</h3>
-        <p>Používajú sa hranaté zátvorky `[]`, rovnako ako pri tvorbe.</p>
-<pre><code>A = [<span class="number">1</span>; <span class="number">2</span>]; B = [<span class="number">3</span>; <span class="number">4</span>];
+        <p>Používajú sa hranaté zátvorky <strong>[]</strong>, rovnako ako pri tvorbe.</p>
+<pre>A = [<span class="number">1</span>; <span class="number">2</span>]; B = [<span class="number">3</span>; <span class="number">4</span>];
 
 <span class="comment">% Horizontálne (vedľa seba)</span>
 H = [A, B]; <span class="comment">% alebo [A B]   --> [1 3; 2 4]</span>
 
 <span class="comment">% Vertikálne (pod seba)</span>
 V = [A; B]; <span class="comment">%               --> [1; 2; 3; 4]</span>
-</code></pre>
+</pre>
 
         <h3 id="konverzie">4.3 Konverzie medzi typmi</h3>
-<pre><code>C = <span class="keyword">table2cell</span>(T); <span class="comment">% Table -> Cell Array</span>
+<pre>C = <span class="keyword">table2cell</span>(T); <span class="comment">% Table -> Cell Array</span>
 T = <span class="keyword">cell2table</span>(C); <span class="comment">% Cell Array -> Table</span>
 S = <span class="keyword">table2struct</span>(T); <span class="comment">% Table -> Struct</span>
 M = <span class="keyword">cell2mat</span>(C);   <span class="comment">% Cell Array (s číslami) -> Matica</span>
-</code></pre>
+</pre>
     </section>
 
 </main>
