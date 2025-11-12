@@ -1,30 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sk">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leavya - Vitajte</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Navigácia Projektu</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #c9d1d9;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 32px;
+            color: #f0f6fc;
+            font-weight: 600;
+        }
+        header p {
+            font-size: 18px;
+            color: #8b949e;
+        }
+        .grid-nav {
+            display: grid;
+            /* Automaticky prispôsobí počet stĺpcov šírke obrazovky */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px; /* Medzery medzi prvkami */
+        }
+        .grid-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 30px;
+            color: #c9d1d9;
+            text-decoration: none;
+            font-size: 18px;
+            font-weight: 500;
+            text-align: center;
+            transition: border-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        }
+        .grid-item:hover {
+            border-color: #58a6ff;
+            transform: translateY(-4px); /* Jemný efekt zdvihnutia */
+        }
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 14px;
+            color: #8b949e;
+        }
+    </style>
 </head>
 <body>
-    <a href="index.html"><img src="Leavya_logo_fullwhite.png" alt="Leavya_logo" style=" float: left;width: 100px; height: 100px; padding-left: 20px; padding-top: 20px; ">
-    </a>
+
+    <div class="container">
         <header>
-        <h1>Leavya</h1>
-        <br>
-    </header>
-    <main>
-        <h2>Vitajte na stránke Leavya!</h2>
-        <p>Prosím, vyberte možnosť prihlásenia:</p>
-        <div class="buttons">
-            <button ><a href="user.html" style="color: white; text-decoration: none;"> Prihlásenie Používateľa </a></button>
-            <button><a href="admin.html" style="color: white; text-decoration: none;"> Prihlásenie Admina </a></button>
-            <button><a href="aus.html" style="color: white; text-decoration: none;">AUS - 1 Zapocet</a></button>
-            <button><a href="aus2.html" style="color: white; text-decoration: none;">AUS - 2 Zapocet</a></button>
-            <button><a href="ausSkuska.html" style="color: white; text-decoration: none;">AUS - Skuska</a></button>
-            <button><a href="anj.html" style="color: white; text-decoration: none;">ANJ BC2 - Zapocet</a></button>
-        </div>
-    </main>
-    <script src="script.js"></script>
+            <h1>Navigácia Projektu</h1>
+            <p>SNBI Zápočet - Bendzzo</p>
+        </header>
+
+        <main>
+            <div class="grid-nav">
+                <a href="SNBI.html" class="grid-item">SNBI Zápočet</a>
+                <a href="admin.html" class="grid-item">Admin</a>
+                <a href="anj.html" class="grid-item">ANJ</a>
+                <a href="aus.html" class="grid-item">AUS</a>
+                <a href="aus2.html" class="grid-item">AUS 2</a>
+                <a href="ausSkuska.html" class="grid-item">AUS Skúška</a>
+                <a href="si.html" class="grid-item">Softverove inzinierstvo - index</a>
+                <a href="pds_1-zapocet.html" class="grid-item">PDS 1 Zápočet</a>
+                <a href="user.html" class="grid-item">User</a>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 - Vytvorené pre projekt</p>
+        </footer>
+    </div>
+
 </body>
 </html>
