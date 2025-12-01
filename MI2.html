@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kvíz: Medicínska Informatika</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .quiz-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 600px; }
+        h1 { text-align: center; color: #333; }
+        .question { font-size: 1.2em; margin-bottom: 20px; font-weight: bold; }
+        .options button { display: block; width: 100%; padding: 12px; margin: 8px 0; background: #e0e0e0; border: none; border-radius: 5px; cursor: pointer; text-align: left; font-size: 1em; transition: 0.3s; }
+        .options button:hover { background: #d0d0d0; }
+        .correct { background-color: #4CAF50 !important; color: white; }
+        .wrong { background-color: #f44336 !important; color: white; }
+        .status { margin-top: 20px; text-align: center; font-weight: bold; }
+        #next-btn { display: none; margin-top: 20px; width: 100%; padding: 15px; background-color: #007bff; color: white; border: none; border-radius: 5px; font-size: 1.1em; cursor: pointer; }
+        #next-btn:hover { background-color: #0056b3; }
+        .result-screen { text-align: center; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz">
+    <h1>Medicínska Informatika</h1>
+    <div id="quiz-content">
+        <p class="status">Otázka <span id="current-q">1</span> z <span id="total-q">30</span></p>
+        <div class="question" id="question-text">Otázka sa načítava...</div>
+        <div class="options" id="options-container"></div>
+        <button id="next-btn" onclick="nextQuestion()">Ďalšia otázka</button>
+    </div>
+    <div class="result-screen" id="result">
+        <h2>Kvíz dokončený!</h2>
+        <p>Tvoje skóre: <span id="score">0</span> z 30</p>
+        <p id="feedback-msg"></p>
+        <button onclick="location.reload()" style="padding:10px 20px; background:#007bff; color:white; border:none; border-radius:5px; cursor:pointer;">Spustiť znova</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        { q: "Čo znamená písmeno „F“ v koncepte „FRIENDLY“ IS?", a: [ "Fast (Rýchlosť)", "Freedom (Voľnosť)", "Format (Formát)" ], c: 1 },
+        { q: "Ktorý štandard je na Slovensku záväzný?", a: [ "SNOMED CT", "HL7", "MKCH-10" ], c: 2 },
+        { q: "Hlavný cieľ HL7?", a: [ "Tvorba HW", "Štandardy pre výmenu dát", "Školenie lekárov" ], c: 1 },
+        { q: "Ktorý komponent HL7 v3 je referenčný model?", a: [ "RIM", "XML", "UMLS" ], c: 0 },
+        { q: "Na čo slúži DICOM?", a: [ "Fakturácia", "Obrazové informácie (RTG, CT)", "Elektronické recepty" ], c: 1 },
+        { q: "Komunikačný protokol DICOM?", a: [ "HTTP", "FTP", "TCP/IP" ], c: 2 },
+        { q: "Čo znamená OTP?", a: [ "One Time Password", "Open Transfer Protocol", "Online Transaction" ], c: 0 },
+        { q: "Na čo sa používa JWT?", a: [ "Kompresia obrázkov", "Bezstavová autentifikácia", "Šifrovanie emailov" ], c: 1 },
+        { q: "Rozdiel medzi terminológiou a bežným jazykom?", a: [ "Terminológia vylučuje polysémiu", "Bežný jazyk je presnejší", "Žiadny rozdiel" ], c: 0 },
+        { q: "Rozdiel zdravotníckej vs. klinickej terminológie?", a: [ "Zdravotnícka je užšia", "Zdravotnícka má širší záber (aj mimo medicíny)", "Klinická sa nepoužíva v nemocnici" ], c: 1 },
+        { q: "Definícia ontológie v informatike?", a: [ "Abecedný zoznam", "Logická štruktúra pojmov a vzťahov", "Pravidlá gramatiky" ], c: 1 },
+        { q: "Úplná sémantická interoperabilita je úroveň:", a: [ "1", "2a", "3" ], c: 2 },
+        { q: "Čo je SNOMED CT?", a: [ "Zastaralý systém", "Štruktúrovaná klinická terminológia", "Liek na srdce" ], c: 1 },
+        { q: "Na čo slúži MeSH?", a: [ "Indexovanie článkov (PubMed)", "Klasifikácia úmrtí", "Evidencia poistencov" ], c: 0 },
+        { q: "Zložky ontológií?", a: [ "Odseky, kapitoly", "Triedy, indivíduá, vzťahy", "Súbory, priečinky" ], c: 1 },
+        { q: "Ktorý systém je metatezaurus?", a: [ "UMLS", "MKCH-10", "OpenGALEN" ], c: 0 },
+        { q: "Definícia EBM?", a: [ "Len intuícia", "Dôkazy + skúsenosti + hodnoty pacienta", "Len lacné lieky" ], c: 1 },
+        { q: "Písmeno „C“ v PICO?", a: [ "Cure", "Comparison", "Cost" ], c: 1 },
+        { q: "Vrchol pyramídy EBM?", a: [ "Originálne štúdie", "Systematické prehľady", "Systémy (integrované IS)" ], c: 2 },
+        { q: "Najnižšie v pyramíde EBM?", a: [ "Systematické prehľady", "Synopsie", "Originálne štúdie" ], c: 2 },
+        { q: "Kritické hodnotenie EBM - 3 aspekty?", a: [ "Dĺžka, autor, jazyk", "Validita, významnosť, relevancia", "Cena, rok, grafika" ], c: 1 },
+        { q: "Prekážka EBM?", a: [ "Málo pacientov", "Information overload a čas", "Prístup k PC" ], c: 1 },
+        { q: "Databáza pre EBM?", a: [ "Facebook", "Cochrane Database", "Wikipedia" ], c: 1 },
+        { q: "Podmienka telemedicíny?", a: [ "Smartfón", "Vzdialenosť je kritický faktor", "Osobný kontakt" ], c: 1 },
+        { q: "Čo je telerádiológia?", a: [ "Rádiové vlny", "Prenos obrazových dát na diaľku", "Oprava rádií" ], c: 1 },
+        { q: "Systém pre archiváciu v telemedicíne?", a: [ "PACS", "SAP", "DOS" ], c: 0 },
+        { q: "Prínos telemedicíny?", a: [ "Viac administratívy", "Zmiernenie izolácie, prístup k expertom", "Koniec osobného kontaktu" ], c: 1 },
+        { q: "Telemonitorovanie zahŕňa?", a: [ "TV v čakárni", "Sledovanie vitálnych funkcií doma", "Dochádzka zamestnancov" ], c: 1 },
+        { q: "Linky dôvery patria pod:", a: [ "Hlasové služby", "Obrazové služby", "Dátové služby" ], c: 0 },
+        { q: "Telekonzultácia je:", a: [ "SMS správy", "Prístup k expertíze špecialistu", "Objednanie liekov" ], c: 1 }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question-text");
+    const optionsEl = document.getElementById("options-container");
+    const nextBtn = document.getElementById("next-btn");
+    const currentQEl = document.getElementById("current-q");
+    const totalQEl = document.getElementById("total-q");
+
+    totalQEl.innerText = questions.length;
+
+    function loadQuestion() {
+        const q = questions[currentQuestion];
+        questionEl.innerText = q.q;
+        optionsEl.innerHTML = "";
+        currentQEl.innerText = currentQuestion + 1;
+        nextBtn.style.display = "none";
+
+        q.a.forEach((option, index) => {
+            const btn = document.createElement("button");
+            btn.innerText = option;
+            btn.onclick = () => checkAnswer(index, q.c, btn);
+            optionsEl.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selected, correct, btn) {
+        const buttons = optionsEl.querySelectorAll("button");
+        buttons.forEach(b => b.disabled = true); // Zablokuje ostatné
+
+        if (selected === correct) {
+            btn.classList.add("correct");
+            score++;
+        } else {
+            btn.classList.add("wrong");
+            buttons[correct].classList.add("correct"); // Ukáže správnu odpoveď
+        }
+        nextBtn.style.display = "block";
+    }
+
+    function nextQuestion() {
+        currentQuestion++;
+        if (currentQuestion < questions.length) {
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        document.getElementById("quiz-content").style.display = "none";
+        document.getElementById("result").style.display = "block";
+        document.getElementById("score").innerText = score;
+        
+        let msg = "";
+        if(score === 30) msg = "Perfektné! Si majster! 🎓";
+        else if(score > 25) msg = "Výborná práca! 🔥";
+        else if(score > 15) msg = "Dobré, ale ešte to chce opakovanie. 📚";
+        else msg = "Skús to znova, určite to zvládneš lepšie! 💪";
+        
+        document.getElementById("feedback-msg").innerText = msg;
+    }
+
+    loadQuestion();
+</script>
+
+</body>
+</html>
