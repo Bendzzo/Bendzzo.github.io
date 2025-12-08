@@ -5,175 +5,237 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Prepisovač SQL -> _sql formát</title>
-  <link rel="stylesheet" href="styles.css">
   <style>
     :root {
+      /* Tvoje pôvodné farby */
       --bg: #f6f8fb;
       --panel: #ffffff;
-      --accent: #2b6cb0
+      --accent: #2b6cb0;
+      --accent-hover: #1e4b7a;
+      --text: #111;
+      --border: #d9e2ef;
+      --header-bg: #34495e; /* Farba hlavičiek panelov (tmavá ako na obrázku) */
+      --header-text: #fff;
     }
 
     * {
       box-sizing: border-box;
-      font-family: Segoe UI, Roboto, Arial, sans-serif
+      font-family: Segoe UI, Roboto, Arial, sans-serif;
     }
 
     body {
       background: var(--bg);
       margin: 0;
-      padding: 24px;
-      color: #111
+      padding: 0;
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    main {
-      max-width: 900px;
-      margin: 0 auto
+    /* Hlavný nadpis stránky */
+    header {
+      background: var(--accent);
+      color: white;
+      padding: 0 20px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      flex-shrink: 0;
     }
 
     h1 {
-      margin: 0 0 8px;
-      font-size: 20px
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
     }
 
-    .panel {
+    /* Hlavný kontajner pre 3-stĺpcové rozloženie */
+    main {
+      flex: 1;
+      display: flex;
+      padding: 10px;
+      gap: 10px;
+      overflow: hidden; /* Aby sa scrollovalo len vnútri editorov */
+    }
+
+    /* Ľavý a Pravý panel (Editor kontajnery) */
+    .editor-panel {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
       background: var(--panel);
-      padding: 12px;
-      border-radius: 8px;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-      margin-top: 12px
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      min-width: 0; /* Pretečenie textu */
     }
 
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-weight: 600
+    /* Hlavička editora (Input SQL / Output) */
+    .panel-header {
+      background: var(--header-bg);
+      color: var(--header-text);
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
+    /* Samotné textarey */
     textarea {
+      flex: 1;
       width: 100%;
       padding: 10px;
       font-family: Consolas, Monaco, monospace;
       font-size: 13px;
-      border: 1px solid #d9e2ef;
-      border-radius: 6px;
-      resize: vertical
+      border: none;
+      resize: none; /* Rozťahovanie rieši flexbox */
+      outline: none;
+    }
+    
+    textarea:focus {
+      background-color: #fcfcfc;
     }
 
-    .controls {
-      margin-top: 8px
+    /* Stredný stĺpec s tlačidlami */
+    .middle-controls {
+      width: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      flex-shrink: 0;
     }
 
-    .controls button {
+    button {
       background: var(--accent);
       color: #fff;
-      border: 0;
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin-right: 8px;
-      cursor: pointer
+      border: 1px solid transparent;
+      padding: 12px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 14px;
+      transition: background 0.2s, transform 0.1s;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
     }
 
-    .controls button:active {
-      transform: translateY(1px)
+    button:hover {
+      background: var(--accent-hover);
     }
 
-    .options {
+    button:active {
+      transform: translateY(1px);
+    }
+
+    button.secondary {
+      background: #fff;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+    }
+    button.secondary:hover {
+      background: #f0f4f8;
+    }
+
+    /* Sekcia nastavení pod vstupom */
+    .options-container {
+      padding: 10px;
+      background: #f1f5f9;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      overflow-y: auto;
+      max-height: 200px;
+    }
+
+    .options-container label {
       display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 8px
+      align-items: center;
+      margin-bottom: 6px;
+      cursor: pointer;
     }
 
-    .options label {
-      font-weight: 400
-    }
-
-    .note {
-      margin-top: 12px;
-      font-size: 13px;
-      color: #333
+    .options-container input {
+      margin-right: 8px;
     }
 
     code {
-      background: #f1f5f9;
-      padding: 2px 6px;
-      border-radius: 4px
+      background: #e2e8f0;
+      padding: 1px 4px;
+      border-radius: 3px;
+      font-family: monospace;
     }
 
-    /* Split layout: input left, output right */
-    .split {
-      display: flex;
-      gap: 12px;
-      align-items: flex-start
-    }
-
-    .split .panel {
-      flex: 1;
-      min-width: 0
-    }
-
-    .split .left textarea,
-    .split .right textarea {
-      height: 320px
-    }
-
-    @media (max-width:900px) {
-      .split {
-        flex-direction: column
+    /* Responzivita pre mobily */
+    @media (max-width: 800px) {
+      main {
+        flex-direction: column;
+        overflow-y: auto;
       }
-
-      .split .left textarea,
-      .split .right textarea {
-        height: 220px
+      .middle-controls {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      button {
+        width: auto;
+        flex: 1;
+      }
+      textarea {
+        min-height: 200px;
       }
     }
   </style>
 </head>
 
 <body>
+  <header>
+    <h1>Prepisovač SQL</h1>
+  </header>
+
   <main>
-    <h1>Prepisovač SQL do _sql formátu</h1>
-    <p>Vložte SQL, stlačte <strong>Prepis</strong> a výsledok skopírujte.</p>
-
-    <div class="split">
-      <section class="panel left">
-        <label for="sqlInput">Vstup (SQL):</label>
-        <textarea id="sqlInput" placeholder="Napíšte alebo vložte SQL sem..." rows="14"></textarea>
-
-        <div class="options">
-          <label><input type="checkbox" id="preserveIndent" checked> Zachovať odsadenie (leading spaces)</label>
-          <label><input type="checkbox" id="preserveTrailing" checked> Pridať medzeru na konci riadku</label>
-          <label><input type="checkbox" id="escapeQuotes" checked> Escape dvoch úvodzoviek (" -> "")</label>
-          <label><input type="checkbox" id="keepInitial" checked> Ponechať úvodný prázdny
-            <code>_sql := ""</code></label>
-          <label><input type="checkbox" id="removeSemicolon" checked> Odstrániť koncové <code>;</code> zo SQL
-            riadkov</label>
-        </div>
-
-        <div class="controls">
-          <button id="convertBtn">Prepis</button>
-          <button id="clearBtn">Vyčistiť</button>
-        </div>
-      </section>
-
-      <section class="panel right">
-        <label for="out">Výstup (_sql formát):</label>
-        <textarea id="out" rows="14" readonly placeholder="Tu sa zobrazí prepis..."></textarea>
-        <div class="controls">
-          <button id="copyBtn">Kopírovať</button>
-          <button id="downloadBtn">Stiahnuť ako súbor</button>
-        </div>
-      </section>
-    </div>
-
-    <section class="note">
-      <strong>Poznámka:</strong> Aplikácia môže pridať úvodný riadok <code>_sql := ""</code> (ak je zaškrtnuté). Pre
-      každý riadok SQL vygeneruje
-      <code>_sql := _sql + "..." + _CRLF</code>. Ak je zaškrtnutá možnosť, koncové bodkočiarky <code>;</code> sa z
-      riadkov odstránia.
+    <!-- ĽAVÝ PANEL: VSTUP -->
+    <section class="editor-panel">
+      <div class="panel-header">
+        <span>Vstup (SQL)</span>
+        <span style="opacity: 0.7; font-weight: normal; font-size: 11px;">Input Code</span>
+      </div>
+      <textarea id="sqlInput" placeholder="Napíšte alebo vložte SQL sem..."></textarea>
+      
+      <!-- Nastavenia presunuté dole do ľavého panelu -->
+      <div class="options-container">
+        <strong>Nastavenia:</strong>
+        <label><input type="checkbox" id="preserveIndent" checked> Zachovať odsadenie</label>
+        <label><input type="checkbox" id="preserveTrailing" checked> Medzera na konci riadku</label>
+        <label><input type="checkbox" id="escapeQuotes" checked> Escape úvodzoviek (" -> "")</label>
+        <label><input type="checkbox" id="keepInitial" checked> Úvodné <code>_sql := ""</code></label>
+        <label><input type="checkbox" id="removeSemicolon" checked> Odstrániť <code>;</code> na konci</label>
+      </div>
     </section>
 
+    <!-- STREDNÝ PANEL: TLAČIDLÁ -->
+    <section class="middle-controls">
+      <button id="convertBtn">Prepísať >></button>
+      <button id="clearBtn" class="secondary">Vyčistiť</button>
+      <div style="height: 20px;"></div> <!-- Medzera -->
+      <button id="copyBtn" class="secondary">Kopírovať</button>
+      <button id="downloadBtn" class="secondary">Stiahnuť</button>
+    </section>
+
+    <!-- PRAVÝ PANEL: VÝSTUP -->
+    <section class="editor-panel">
+      <div class="panel-header">
+        <span>Výstup (_sql)</span>
+        <span style="opacity: 0.7; font-weight: normal; font-size: 11px;">Output Code</span>
+      </div>
+      <textarea id="out" readonly placeholder="Tu sa zobrazí výsledok..."></textarea>
+    </section>
   </main>
+
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const sqlInput = document.getElementById('sqlInput');
@@ -228,19 +290,22 @@
       clearBtn.addEventListener('click', () => {
         sqlInput.value = '';
         out.value = '';
+        sqlInput.focus();
       });
 
       copyBtn.addEventListener('click', async () => {
         try {
           await navigator.clipboard.writeText(out.value);
+          const originalText = copyBtn.textContent;
           copyBtn.textContent = 'Skopírované!';
-          setTimeout(() => copyBtn.textContent = 'Kopírovať', 1500);
+          setTimeout(() => copyBtn.textContent = originalText, 1500);
         } catch (e) {
           alert('Kopírovanie zlyhalo. Skopírujte ručne.');
         }
       });
 
       downloadBtn.addEventListener('click', () => {
+        if (!out.value) return;
         const blob = new Blob([out.value], { type: 'text/plain;charset=utf-8' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
