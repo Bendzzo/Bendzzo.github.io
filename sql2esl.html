@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="sk">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Prepisovač SQL -> _sql formát</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --panel: #ffffff;
+      --accent: #2b6cb0
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: Segoe UI, Roboto, Arial, sans-serif
+    }
+
+    body {
+      background: var(--bg);
+      margin: 0;
+      padding: 24px;
+      color: #111
+    }
+
+    main {
+      max-width: 900px;
+      margin: 0 auto
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 20px
+    }
+
+    .panel {
+      background: var(--panel);
+      padding: 12px;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      margin-top: 12px
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600
+    }
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-family: Consolas, Monaco, monospace;
+      font-size: 13px;
+      border: 1px solid #d9e2ef;
+      border-radius: 6px;
+      resize: vertical
+    }
+
+    .controls {
+      margin-top: 8px
+    }
+
+    .controls button {
+      background: var(--accent);
+      color: #fff;
+      border: 0;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-right: 8px;
+      cursor: pointer
+    }
+
+    .controls button:active {
+      transform: translateY(1px)
+    }
+
+    .options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px
+    }
+
+    .options label {
+      font-weight: 400
+    }
+
+    .note {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #333
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px
+    }
+
+    /* Split layout: input left, output right */
+    .split {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start
+    }
+
+    .split .panel {
+      flex: 1;
+      min-width: 0
+    }
+
+    .split .left textarea,
+    .split .right textarea {
+      height: 320px
+    }
+
+    @media (max-width:900px) {
+      .split {
+        flex-direction: column
+      }
+
+      .split .left textarea,
+      .split .right textarea {
+        height: 220px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>Prepisovač SQL do _sql formátu</h1>
+    <p>Vložte SQL, stlačte <strong>Prepis</strong> a výsledok skopírujte.</p>
+
+    <div class="split">
+      <section class="panel left">
+        <label for="sqlInput">Vstup (SQL):</label>
+        <textarea id="sqlInput" placeholder="Napíšte alebo vložte SQL sem..." rows="14"></textarea>
+
+        <div class="options">
+          <label><input type="checkbox" id="preserveIndent" checked> Zachovať odsadenie (leading spaces)</label>
+          <label><input type="checkbox" id="preserveTrailing" checked> Pridať medzeru na konci riadku</label>
+          <label><input type="checkbox" id="escapeQuotes" checked> Escape dvoch úvodzoviek (" -> "")</label>
+          <label><input type="checkbox" id="keepInitial" checked> Ponechať úvodný prázdny
+            <code>_sql := ""</code></label>
+          <label><input type="checkbox" id="removeSemicolon" checked> Odstrániť koncové <code>;</code> zo SQL
+            riadkov</label>
+        </div>
+
+        <div class="controls">
+          <button id="convertBtn">Prepis</button>
+          <button id="clearBtn">Vyčistiť</button>
+        </div>
+      </section>
+
+      <section class="panel right">
+        <label for="out">Výstup (_sql formát):</label>
+        <textarea id="out" rows="14" readonly placeholder="Tu sa zobrazí prepis..."></textarea>
+        <div class="controls">
+          <button id="copyBtn">Kopírovať</button>
+          <button id="downloadBtn">Stiahnuť ako súbor</button>
+        </div>
+      </section>
+    </div>
+
+    <section class="note">
+      <strong>Poznámka:</strong> Aplikácia môže pridať úvodný riadok <code>_sql := ""</code> (ak je zaškrtnuté). Pre
+      každý riadok SQL vygeneruje
+      <code>_sql := _sql + "..." + _CRLF</code>. Ak je zaškrtnutá možnosť, koncové bodkočiarky <code>;</code> sa z
+      riadkov odstránia.
+    </section>
+
+  </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const sqlInput = document.getElementById('sqlInput');
+      const out = document.getElementById('out');
+      const convertBtn = document.getElementById('convertBtn');
+      const clearBtn = document.getElementById('clearBtn');
+      const copyBtn = document.getElementById('copyBtn');
+      const downloadBtn = document.getElementById('downloadBtn');
+      const preserveIndent = document.getElementById('preserveIndent');
+      const preserveTrailing = document.getElementById('preserveTrailing');
+      const escapeQuotes = document.getElementById('escapeQuotes');
+      const keepInitial = document.getElementById('keepInitial');
+      const removeSemicolon = document.getElementById('removeSemicolon');
+
+      function escapeDoubleQuotes(s) {
+        return s.replace(/"/g, '""');
+      }
+
+      function convert() {
+        const text = sqlInput.value.replace(/\r\n/g, '\n');
+        const lines = text.split('\n');
+        const res = [];
+        if (keepInitial && keepInitial.checked) {
+          res.push('_sql := ""');
+        }
+
+        for (let line of lines) {
+          if (!preserveIndent.checked) {
+            line = line.replace(/^\s+/, '');
+          }
+          // remove trailing CR/linebreaks already handled; optionally trim end
+          if (!preserveTrailing.checked) {
+            line = line.replace(/\s+$/, '');
+          }
+          if (removeSemicolon && removeSemicolon.checked) {
+            line = line.replace(/;\s*$/, '');
+          }
+
+          if (escapeQuotes.checked) {
+            line = escapeDoubleQuotes(line);
+          }
+
+          // if option to add trailing space is set (preserveTrailing checked), keep as-is
+          // always wrap in double quotes; empty line becomes empty string
+          res.push('_sql := _sql + "' + line + '" + _CRLF');
+        }
+
+        out.value = res.join('\r\n');
+      }
+
+      convertBtn.addEventListener('click', convert);
+      clearBtn.addEventListener('click', () => {
+        sqlInput.value = '';
+        out.value = '';
+      });
+
+      copyBtn.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(out.value);
+          copyBtn.textContent = 'Skopírované!';
+          setTimeout(() => copyBtn.textContent = 'Kopírovať', 1500);
+        } catch (e) {
+          alert('Kopírovanie zlyhalo. Skopírujte ručne.');
+        }
+      });
+
+      downloadBtn.addEventListener('click', () => {
+        const blob = new Blob([out.value], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'prepis_sql.txt';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+    });
+  </script>
+</body>
+
+</html>
