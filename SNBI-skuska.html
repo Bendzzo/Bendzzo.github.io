@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MATLAB Ťahák</title>
+    <style>
+        :root {
+            --primary: #0076a8;
+            --header-bg: #fff;
+            --sidebar-bg: #f8f9fa;
+            --text: #333;
+            --code-bg: #f1f1f1;
+            --border: #ddd;
+            --sidebar-width: 260px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+            color: var(--text);
+            background: #fff;
+        }
+
+        /* --- Sidebar Navigation (Desktop) --- */
+        nav {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            top: 0;
+            left: 0;
+            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
+            padding-top: 20px;
+        }
+
+        nav h3 {
+            padding: 0 20px;
+            margin-top: 0;
+            text-transform: uppercase;
+            font-size: 13px;
+            color: #888;
+            letter-spacing: 1px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav li a {
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: #444;
+            font-size: 15px;
+            border-left: 4px solid transparent;
+        }
+
+        nav li a:hover {
+            background: #e9ecef;
+            color: var(--primary);
+        }
+
+        /* --- Main Content --- */
+        main {
+            margin-left: var(--sidebar-width); /* Odsadenie pre desktop */
+            padding: 40px;
+            flex: 1;
+            max-width: 900px;
+        }
+
+        /* Header pre mobil (Hamburger) */
+        header {
+            display: none; /* Na desktope skryté */
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 900;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            align-items: center;
+        }
+
+        .hamburger {
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            margin-right: 15px;
+        }
+
+        .page-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Overlay (pozadie pri otvorenom menu na mobile) */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 950;
+        }
+
+        /* --- Typography & Code --- */
+        h2 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 8px; margin-top: 0; }
+        section { scroll-margin-top: 80px; margin-bottom: 50px; }
+        
+        pre {
+            background: var(--code-bg);
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            font-family: Consolas, 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .kw { color: #0000FF; font-weight: bold; }
+        .str { color: #A020F0; }
+        .com { color: #228B22; font-style: italic; }
+        .fun { color: #D9534F; }
+
+        /* --- RESPONSIVE MOBILE --- */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            
+            header { display: flex; } /* Zobraziť hornú lištu */
+            
+            nav {
+                transform: translateX(-100%); /* Skryť menu doľava */
+                width: 280px;
+                padding-top: 60px; /* Aby nebolo pod headerom */
+            }
+
+            nav.active {
+                transform: translateX(0); /* Vysunúť menu */
+                box-shadow: 2px 0 10px rgba(0,0,0,0.2);
+            }
+
+            .overlay.active { display: block; }
+
+            main {
+                margin-left: 0;
+                padding: 20px;
+                padding-top: 80px; /* Miesto pre fixný header */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header pre mobil -->
+    <header>
+        <button class="hamburger" onclick="toggleMenu()">&#9776;</button>
+        <span class="page-title">MATLAB Ťahák</span>
+    </header>
+
+    <!-- Overlay pre mobil -->
+    <div class="overlay" onclick="closeMenu()"></div>
+
+    <!-- Bočné menu -->
+    <nav id="sidebar">
+        <h3>Obsah</h3>
+        <ul>
+            <li><a href="#oop" onclick="closeMenu()">1. OOP & Dedičnosť</a></li>
+            <li><a href="#gui" onclick="closeMenu()">2. GUI (App Designer)</a></li>
+            <li><a href="#algoritmy" onclick="closeMenu()">3. Algoritmy (Cykly)</a></li>
+            <li><a href="#matice" onclick="closeMenu()">4. Matice a Typy</a></li>
+            <li><a href="#struktury" onclick="closeMenu()">5. Struct, Cell, Table</a></li>
+            <li><a href="#funkcie" onclick="closeMenu()">6. Funkcie</a></li>
+            <li><a href="#subory" onclick="closeMenu()">7. Súbory</a></li>
+            <li><a href="#symbolika" onclick="closeMenu()">8. Symbolika</a></li>
+        </ul>
+    </nav>
+
+    <!-- Hlavný obsah -->
+    <main>
+
+        <section id="oop">
+            <h2>1. OOP - Triedy a Dedičnosť</h2>
+            <p>Každá trieda musí byť v samostatnom súbore <code>NazovTriedy.m</code>.</p>
+
+            <h3>Rodič: Vozidlo.m</h3>
+            <pre>
+<span class="kw">classdef</span> Vozidlo
+    <span class="kw">properties</span>
+        znacka
+        rychlost
+    <span class="kw">end</span>
+    <span class="kw">methods</span>
+        <span class="com">% Konštruktor</span>
+        <span class="kw">function</span> obj = Vozidlo(znacka, rychlost)
+            obj.znacka = znacka;
+            obj.rychlost = rychlost;
+        <span class="kw">end</span>
+        
+        <span class="kw">function</span> vypis(obj)
+            <span class="kw">fprintf</span>(<span class="str">'Vozidlo: %s\n'</span>, obj.znacka);
+        <span class="kw">end</span>
+    <span class="kw">end</span>
+<span class="kw">end</span></pre>
+
+            <h3>Potomok: Auto.m (Dedičnosť)</h3>
+            <pre>
+<span class="kw">classdef</span> Auto <span class="kw">&lt;</span> Vozidlo
+    <span class="kw">properties</span>
+        spz
+    <span class="kw">end</span>
+    <span class="kw">methods</span>
+        <span class="kw">function</span> obj = Auto(znacka, rychlost, spz)
+            <span class="com">% 1. Volanie konštruktora predka (MUST HAVE)</span>
+            obj@Vozidlo(znacka, rychlost);
+            <span class="com">% 2. Vlastné atribúty</span>
+            obj.spz = spz;
+        <span class="kw">end</span>
+
+        <span class="com">% Override (Prekrytie) metódy</span>
+        <span class="kw">function</span> vypis(obj)
+            vypis@Vozidlo(obj); <span class="com">% Zavolá pôvodný výpis</span>
+            <span class="kw">fprintf</span>(<span class="str">'ŠPZ: %s\n'</span>, obj.spz);
+        <span class="kw">end</span>
+    <span class="kw">end</span>
+<span class="kw">end</span></pre>
+
+            <h3>Potomok: Bicykel.m</h3>
+            <pre>
+<span class="kw">classdef</span> Bicykel <span class="kw">&lt;</span> Vozidlo
+    <span class="kw">properties</span>
+        typ
+    <span class="kw">end</span>
+    <span class="kw">methods</span>
+        <span class="kw">function</span> obj = Bicykel(znacka, rychlost, typ)
+            obj@Vozidlo(znacka, rychlost);
+            obj.typ = typ;
+        <span class="kw">end</span>
+    <span class="kw">end</span>
+<span class="kw">end</span></pre>
+        </section>
+
+        <section id="gui">
+            <h2>2. GUI (App Designer)</h2>
+            <p>Všetko je v objekte <code>app</code>. Kód sa píše do <i>Code View</i> (Callbacks).</p>
+
+            <h3>Načítanie hodnôt (Input)</h3>
+            <pre>
+<span class="com">% EditField (Numeric) -> vracia číslo</span>
+cena = app.CenaField.Value;
+
+<span class="com">% EditField (Text) / DropDown -> vracia text</span>
+text = app.DPHDropDown.Value;
+
+<span class="com">% Konverzia Text -> Číslo (KĽÚČOVÉ PRE VÝPOČTY)</span>
+percento = <span class="fun">str2double</span>(text);</pre>
+
+            <h3>Výpis hodnôt (Output)</h3>
+            <pre>
+<span class="com">% Label / Text Field -> musí dostať text</span>
+app.VysledokLabel.Text = <span class="str">'Hotovo'</span>;
+
+<span class="com">% Formátovanie čísla na text</span>
+vysledok = 125.50;
+app.VysledokLabel.Text = <span class="fun">sprintf</span>(<span class="str">'Cena: %.2f EUR'</span>, vysledok);
+
+<span class="com">% Numeric Field -> musí dostať číslo</span>
+app.VysledokField.Value = vysledok;</pre>
+
+            <h3>Vzor Callback funkcie (Tlačidlo)</h3>
+            <pre>
+<span class="kw">function</span> ButtonPushed(app, event)
+    <span class="com">% 1. Načítať</span>
+    vstup = app.VstupField.Value;
+    
+    <span class="com">% 2. Vypočítať</span>
+    vysledok = vstup * 2;
+    
+    <span class="com">% 3. Vypísať</span>
+    app.VystupLabel.Text = <span class="fun">sprintf</span>(<span class="str">'%.2f'</span>, vysledok);
+<span class="kw">end</span></pre>
+        </section>
+
+        <section id="algoritmy">
+            <h2>3. Algoritmy a Riadenie toku</h2>
+            
+            <h3>For cyklus (pevný počet)</h3>
+            <pre>
+<span class="com">% Prechod cez vektor</span>
+vektor = [10 20 30];
+<span class="kw">for</span> i = 1:<span class="fun">length</span>(vektor)
+    prvok = vektor(i);
+<span class="kw">end</span>
+
+<span class="com">% Pevný rozsah</span>
+<span class="kw">for</span> k = 1:10
+    <span class="fun">disp</span>(k);
+<span class="kw">end</span></pre>
+
+            <h3>While cyklus (podmienka)</h3>
+            <pre>
+x = 0;
+<span class="kw">while</span> x < 5
+    x = x + 1;
+    <span class="com">% Beží kým podmienka platí</span>
+<span class="kw">end</span></pre>
+
+            <h3>Podmienky (If-Else)</h3>
+            <pre>
+<span class="kw">if</span> x > 0
+    <span class="fun">disp</span>(<span class="str">'Kladné'</span>);
+<span class="kw">elseif</span> x == 0
+    <span class="fun">disp</span>(<span class="str">'Nula'</span>);
+<span class="kw">else</span>
+    <span class="fun">disp</span>(<span class="str">'Záporné'</span>);
+<span class="kw">end</span></pre>
+        </section>
+
+        <section id="matice">
+            <h2>4. Matice a Typy</h2>
+            <pre>
+A = [1 2; 3 4];       <span class="com">% Riadky oddelené bodkočiarkou</span>
+Z = <span class="fun">zeros</span>(3,3);       <span class="com">% Matica núl</span>
+I = <span class="fun">eye</span>(3);           <span class="com">% Jednotková matica</span>
+R = <span class="fun">randi</span>([10,20],1,5); <span class="com">% Náhodné celé čísla 10-20</span>
+
+<span class="com">% Indexovanie</span>
+prvok = A(2, 1);      <span class="com">% Riadok 2, stĺpec 1</span>
+riadok = A(1, :);     <span class="com">% Celý prvý riadok</span>
+stlpec = A(:, end);   <span class="com">% Celý posledný stĺpec</span></pre>
+        </section>
+
+        <section id="struktury">
+            <h2>5. Struct, Cell, Table</h2>
+            <pre>
+<span class="com">% Cell Array {} (rôzne typy dát)</span>
+C = {1, <span class="str">'text'</span>; [1 2], <span class="fun">magic</span>(3)};
+hodnota = C{1, 2};    <span class="com">% Zložené zátvorky pre obsah</span>
+
+<span class="com">% Struct (položky s názvom)</span>
+student.meno = <span class="str">'Jan'</span>;
+student.vek = 22;
+
+<span class="com">% Table (Tabuľka)</span>
+Mena = {<span class="str">'Jan'</span>; <span class="str">'Eva'</span>};
+Vek = [22; 25];
+T = <span class="fun">table</span>(Mena, Vek);</pre>
+        </section>
+
+        <section id="funkcie">
+            <h2>6. Funkcie</h2>
+            <pre>
+<span class="com">% Súbor vypocet.m</span>
+<span class="kw">function</span> [vystup] = vypocet(a, b)
+    vystup = a + b;
+<span class="kw">end</span>
+
+<span class="com">% Anonymná funkcia (na jeden riadok)</span>
+f = @(x) x.^2 + 1;
+y = f(5);</pre>
+        </section>
+
+        <section id="subory">
+            <h2>7. Súbory</h2>
+            <pre>
+<span class="fun">pwd</span>             <span class="com">% Kde som</span>
+<span class="fun">dir</span>             <span class="com">% Čo tu je</span>
+<span class="fun">mkdir</span>(<span class="str">'zlozka'</span>) <span class="com">% Vytvor priečinok</span>
+<span class="fun">rmdir</span>(<span class="str">'zlozka'</span>) <span class="com">% Zmaž priečinok</span>
+<span class="fun">copyfile</span>(<span class="str">'old.m'</span>, <span class="str">'new.m'</span>)</pre>
+        </section>
+
+        <section id="symbolika">
+            <h2>8. Symbolika</h2>
+            <pre>
+<span class="kw">syms</span> x y
+f = x^2 + 2*x + 1;
+<span class="fun">diff</span>(f, x)      <span class="com">% Derivácia</span>
+<span class="fun">int</span>(f, x)       <span class="com">% Integrál</span>
+<span class="fun">solve</span>(f == 0, x)<span class="com">% Riešenie rovnice</span>
+<span class="fun">subs</span>(f, x, 10)  <span class="com">% Dosadenie čísla</span></pre>
+        </section>
+
+    </main>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.querySelector('.overlay').classList.toggle('active');
+        }
+
+        function closeMenu() {
+            document.getElementById('sidebar').classList.remove('active');
+            document.querySelector('.overlay').classList.remove('active');
+        }
+    </script>
+</body>
+</html>
