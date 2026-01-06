@@ -355,6 +355,62 @@
         .modal-a-text { background: #fdfdfd; padding: 20px; border-left: 5px solid #2ecc71; border-radius: 5px; }
 
         .btn-exam { background-color: #e67e22; }
+
+        /* --- NAVIGATION GRID STYLES --- */
+        .nav-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+            max-width: 950px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #d1d5db;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-color: #3498db;
+        }
+
+        /* Aktuálne vybraná otázka */
+        .nav-item.active {
+            border: 2px solid #2c3e50;
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        /* Stavy odpovedí */
+        .nav-item.correct {
+            background-color: #2ecc71;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .nav-item.incorrect {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
     </style>
 </head>
 <body>
@@ -398,7 +454,10 @@
     <!-- HERNÁ PLOCHA -->
     <div class="game-area" id="game-area">
         <div class="mode-badge" id="mode-indicator"></div>
-
+        <!-- NAVIGAČNÁ MRIEŽKA -->
+        <div class="nav-grid" id="nav-grid">
+            <!-- JavaScript sem vygeneruje štvorčeky -->
+        </div>
         <div class="stats">
             <div class="stat-box">
                 <span class="stat-value remaining" id="count-remaining">0</span>
@@ -693,6 +752,9 @@
         ];
 
         // --- LOGIC ---
+           
+        let sessionData = []; // Pole objektov: { qId: 1, status: null/'correct'/'incorrect' }
+        let currentSessionIndex = 0; // Kde sa nachádzame v poli sessionData
         let queue = [];
         let currentCard = null;
         let correctCount = 0;
@@ -716,6 +778,22 @@
         const btnCor = document.getElementById('btn-correct');
         const btnInc = document.getElementById('btn-incorrect');
 
+        // Pomocná funkcia na inicializáciu session (Spoločná pre Learning, Test, Exam)
+        function initSession(indices, modeName) {
+            currentMode = modeName;
+            
+            // Vytvoríme štruktúru pre sledovanie stavu
+            sessionData = indices.map(qId => ({
+                qIndex: qId, // Index v poli 'questions' (nie DB ID)
+                status: null // null = neatempted, true = correct, false = incorrect
+            }));
+
+            currentSessionIndex = 0;
+            setupGameUI(modeName); // Toto zapne UI
+            renderNavGrid();       // Toto vykreslí štvorčeky
+            loadCard(0);           // Načítame prvú otázku
+        }
+        
         // Funkcia na náhodné premiešanie poľa (Fisher-Yates)
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
@@ -727,30 +805,23 @@
 
         // --- REŽIM 1: UČENIE (Všetko zaradom) ---
         function startLearning() {
-            currentMode = 'learn';
-            // Naplníme rad indexami 0 až počet otázok-1
-            queue = questions.map((_, index) => index);
-            
-            setupGameUI("Režim: Všetky karty (136)");
+            // Všetky otázky (0 až length-1)
+            const indices = questions.map((_, index) => index);
+            initSession(indices, "Režim: Všetky karty");
         }
 
         // --- REŽIM 2: TEST (1 z každého okruhu) ---
         function startTest() {
-            currentMode = 'test';
-            queue = [];
-
-            // Prejdi každú kategóriu a vyber 1 náhodné ID
+            let indices = [];
             testCategories.forEach(cat => {
                 const range = cat.max - cat.min + 1;
                 const randomId = Math.floor(Math.random() * range) + cat.min;
-                // Prevod ID na index poľa (ID-1)
-                queue.push(randomId - 1);
+                // Prevod ID na index poľa questions
+                const qIndex = questions.findIndex(q => q.id === randomId);
+                if(qIndex !== -1) indices.push(qIndex);
             });
-
-            // Premiešaj poradie otázok v teste, nech nejdú podľa tém
-            shuffleArray(queue);
-
-            setupGameUI("Režim: TEST (20 otázok)");
+            shuffleArray(indices);
+            initSession(indices, "Režim: TEST (náhodné otázky)");
         }
 
         // --- POMOCNÁ FUNKCIA PRE GENERÁCIU ROZSAHU ---
@@ -760,46 +831,110 @@
 
         // --- REŽIM 3: SKÚŠKA (50 Otázok: 30 Praktických + 20 Teoretických) ---
         function startExam() {
-            currentMode = 'exam'; // (Môžete si pridať 'exam' do logiky finish() ak chcete iný text na konci)
-            queue = [];
-
-            // 1. Definícia Teoretických ID (podľa obsahu otázok)
-            // Index Theory (24-30), LOB Theory (31-40), LOB Packages Theory (41-49),
-            // General Theory (62-69), Kolekcie Theory (109), Kurzory Theory (113),
-            // Objekty Theory (115), XML Theory (120), Triggre Theory (124-126), Nested Table Delete (136)
             const theoryIds = [
-                ...range(24, 49), 
-                ...range(62, 69),
+                ...range(24, 49), ...range(62, 69),
                 106, 109, 113, 115, 120, 124, 125, 126, 136
             ];
+            
+            // Získame indexy v poli 'questions' pre teoretické otázky
+            const theoryIndices = [];
+            const practicalIndices = [];
 
-            // 2. Definícia Praktických ID (Všetky ostatné)
-            // Celkovo máme 171 otázok. Vytvoríme pole 1..171 a vyfiltrujeme tie, čo nie sú v theoryIds
-            const totalQuestions = 171; // Uistite sa, že toto číslo sedí s počtom otázok v poli questions
-            const allIds = range(1, totalQuestions);
-            const practicalIds = allIds.filter(id => !theoryIds.includes(id));
+            questions.forEach((q, index) => {
+                if (theoryIds.includes(q.id)) {
+                    theoryIndices.push(index);
+                } else {
+                    practicalIndices.push(index);
+                }
+            });
 
-            // 3. Prevod ID na Indexy poľa (ID - 1)
-            // Pretože pole 'questions' je indexované od 0, ale ID začínajú od 1
-            const theoryIndices = theoryIds.map(id => id - 1);
-            const practicalIndices = practicalIds.map(id => id - 1);
-
-            // 4. Zamiešanie oboch balíkov
             shuffleArray(theoryIndices);
             shuffleArray(practicalIndices);
 
-            // 5. Výber otázok (20 Teória + 30 Prax)
-            // Ošetríme, ak by náhodou nebolo dosť otázok (slice vráti max dostupné)
-            const selectedTheory = theoryIndices.slice(0, 20);
-            const selectedPractical = practicalIndices.slice(0, 30);
-
-            // 6. Spojenie do jedného testu a finálne zamiešanie
-            queue = [...selectedTheory, ...selectedPractical];
-            shuffleArray(queue);
-
-            setupGameUI("Režim: SKÚŠKA (30 Prax + 20 Teória)");
+            const selectedIndices = [
+                ...theoryIndices.slice(0, 20),
+                ...practicalIndices.slice(0, 30)
+            ];
+            
+            shuffleArray(selectedIndices);
+            initSession(selectedIndices, "Režim: SKÚŠKA (50 otázok)");
         }
 
+        function renderNavGrid() {
+            const grid = document.getElementById('nav-grid');
+            grid.innerHTML = '';
+
+            sessionData.forEach((item, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'nav-item';
+                btn.textContent = i + 1; // Zobrazujeme poradie 1..N
+                btn.onclick = () => jumpToQuestion(i);
+                btn.id = `nav-item-${i}`;
+                grid.appendChild(btn);
+            });
+            updateNavGridUI();
+        }
+
+        function updateNavGridUI() {
+            sessionData.forEach((item, i) => {
+                const btn = document.getElementById(`nav-item-${i}`);
+                if (!btn) return;
+
+                // Reset tried
+                btn.className = 'nav-item';
+
+                // Farba podľa statusu
+                if (item.status === true) btn.classList.add('correct');
+                if (item.status === false) btn.classList.add('incorrect');
+
+                // Aktívna otázka
+                if (i === currentSessionIndex) btn.classList.add('active');
+            });
+        }
+
+        function jumpToQuestion(index) {
+            if (index < 0 || index >= sessionData.length) return;
+            currentSessionIndex = index;
+            loadCard(index);
+            updateNavGridUI();
+        }
+
+        function loadCard(index) {
+            // Ak sme na konci a nie je čo načítať
+            if (index >= sessionData.length) {
+                // Skontrolujeme, či je všetko hotové
+                const allCorrect = sessionData.every(i => i.status === true);
+                if (allCorrect) {
+                    finish();
+                    return;
+                } else {
+                    // Ak nie je všetko hotové, ale sme na konci poľa,
+                    // nájdeme prvú otázku, ktorá nie je 'correct'
+                    const nextTodo = sessionData.findIndex(i => i.status !== true);
+                    if(nextTodo !== -1) {
+                        jumpToQuestion(nextTodo);
+                        return;
+                    }
+                }
+            }
+        // Nastavenie UI
+            isFlipped = false;
+            cardElement.classList.remove('flipped');
+            btnCor.style.display = 'none';
+            btnInc.style.display = 'none';
+
+            // Načítanie dát
+            const dataItem = sessionData[index];
+            currentCard = questions[dataItem.qIndex];
+
+            qNumEl.textContent = `${currentCard.id} (Otázka ${index + 1} z ${sessionData.length})`;
+            qTextEl.innerHTML = currentCard.q;
+            aTextEl.innerHTML = currentCard.a;
+
+            updateStats();
+            updateNavGridUI();
+        }
+        
         function setupGameUI(modeText) {
             correctCount = 0;
             incorrectCount = 0;
@@ -815,9 +950,14 @@
         }
 
         function updateStats() {
-            countRemEl.textContent = queue.length + (currentCard ? 1 : 0);
-            countCorEl.textContent = correctCount;
-            countIncEl.textContent = incorrectCount;
+            // Spočítame reálne stavy z poľa
+            const done = sessionData.filter(i => i.status !== null).length;
+            const corr = sessionData.filter(i => i.status === true).length;
+            const incorr = sessionData.filter(i => i.status === false).length;
+
+            countRemEl.textContent = sessionData.length - done;
+            countCorEl.textContent = corr;
+            countIncEl.textContent = incorr;
         }
 
         function loadCard() {
@@ -861,19 +1001,44 @@
             }
         });
 
+        // --- UPRAVENÉ HANDLE ANSWER ---
+
         function handleAnswer(isCorrect) {
+            // Uložíme stav
+            sessionData[currentSessionIndex].status = isCorrect;
+
             if (isCorrect) {
                 correctCount++;
+                // Ak bola predtým nesprávna, odčítame z nesprávnych (v stats)
+                // (Toto je voliteľné, závisí ako chcete počítať štatistiku pokusov)
             } else {
                 incorrectCount++;
-                // Ak je nesprávne, vrátime otázku na koniec radu
-                const originalIndex = questions.indexOf(currentCard);
-                queue.push(originalIndex);
             }
+
+            // Aktualizujeme mriežku (farbu)
+            updateNavGridUI();
+
+            // Automatický posun na ďalšiu otázku
+            // Hľadáme ďalšiu otázku v poradí
+            let nextIndex = currentSessionIndex + 1;
             
-            currentCard = null;
-            updateStats();
-            loadCard();
+            // Ak sme na konci, alebo chceme automaticky skočiť na najbližšiu nezodpovedanú/nesprávnu?
+            // Požiadavka bola: "Medzi týmito otázkami sa budem vedieť preklikávať... alebo sa k nej vrátim na konci."
+            // Takže defaultne ideme na index + 1. Ak je index + 1 mimo rozsah, skočíme na prvú nesprávnu.
+            
+            if (nextIndex >= sessionData.length) {
+                // Sme na konci zoznamu. Nájdeme prvú, ktorá nie je zelená (null alebo false)
+                nextIndex = sessionData.findIndex(i => i.status !== true);
+                
+                if (nextIndex === -1) {
+                    // Všetko je zelené!
+                    finish();
+                    return;
+                }
+            }
+
+            jumpToQuestion(nextIndex);
+            updateStats(); // Update textových štatistík
         }
 
         function finish() {
