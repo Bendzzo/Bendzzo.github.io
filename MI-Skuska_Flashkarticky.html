@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicínska informatika - Kartičky</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            user-select: text;
+        }
+
+        /* MENU STYLES */
+        .menu-container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 600px;
+            width: 90%;
+            margin-top: 50px;
+            border-top: 5px solid #f1c40f; /* Žltá farba z prezentácie */
+        }
+        
+        .menu-title {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin: 15px 0;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            font-weight: bold;
+            color: white;
+        }
+
+        .btn-learn { background-color: #3498db; }
+        .btn-test { background-color: #9b59b6; }
+        .btn-exam { background-color: #e67e22; }
+        
+        .menu-btn:hover { transform: translateY(-3px); opacity: 0.9; }
+        .menu-btn:active { transform: scale(0.98); }
+
+        /* GAME STYLES */
+        .game-area {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            background: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-box {
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-label { font-size: 0.8rem; color: #777; font-weight: normal; }
+        .stat-value { font-size: 1.5rem; }
+
+        .remaining { color: #3498db; }
+        .correct { color: #2ecc71; }
+        .incorrect { color: #e74c3c; }
+
+        .card-container {
+            perspective: 1000px;
+            width: 900px;
+            max-width: 95%;
+            height: 500px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 15px;
+            background-color: white;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 40px;
+            box-sizing: border-box;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .card-front {
+            background-color: #fff;
+            color: #2c3e50;
+        }
+
+        .card-back {
+            background-color: #fffef0; /* Jemne žlté pozadie pre odpoveď */
+            color: #2c3e50;
+            transform: rotateY(180deg);
+            border: 2px solid #f1c40f;
+        }
+
+        h3 { color: #555; margin-top: 0; margin-bottom: 15px; width: 100%; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        
+        .answer-text { 
+            text-align: left; 
+            line-height: 1.6; 
+            font-size: 1.1rem;
+            width: 100%;
+        }
+
+        ul { text-align: left; padding-left: 20px; }
+        li { margin-bottom: 8px; }
+
+        .controls {
+            height: 60px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-control {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            display: none; 
+            color: white;
+        }
+        .btn-control:active { transform: scale(0.96); }
+        .btn-correct { background-color: #2ecc71; }
+        .btn-incorrect { background-color: #e74c3c; }
+
+        .btn-menu {
+            display: inline-block; 
+            background: #7f8c8d; 
+            color:white; 
+            margin-top:30px; 
+            padding: 15px 30px; 
+            border:none; 
+            border-radius:8px; 
+            font-size:1.1rem; 
+            cursor:pointer;
+        }
+
+        strong { color: #d35400; }
+
+        .mode-badge {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #e1e1e1;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        /* --- HAMBURGER MENU & SIDEBAR --- */
+        .hamburger-btn {
+            position: fixed;
+            top: 15px;
+            left: 20px;
+            z-index: 2000;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: background 0.3s;
+        }
+        .hamburger-btn:hover { background: #34495e; }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            z-index: 1999;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+            padding-top: 70px;
+            padding-bottom: 30px;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-category {
+            background: #f0f2f5;
+            padding: 10px 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .sidebar-item {
+            display: block;
+            padding: 10px 20px;
+            color: #555;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s, padding-left 0.2s;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .sidebar-item:hover {
+            background: #fff8dc;
+            padding-left: 25px;
+            color: #d35400;
+        }
+
+        .sidebar-item-id {
+            font-weight: bold;
+            color: #999;
+            margin-right: 8px;
+            font-size: 0.8rem;
+        }
+
+        /* --- MODAL WINDOW --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: slideUp 0.3s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #aaa;
+            cursor: pointer;
+            padding: 0 10px;
+            line-height: 1;
+        }
+        .modal-close:hover { color: #e74c3c; }
+
+        .modal-q-text { font-size: 1.1rem; color: #2c3e50; margin-bottom: 20px; font-weight: 500; }
+        .modal-a-text { background: #fffef0; padding: 20px; border-left: 5px solid #f1c40f; border-radius: 5px; }
+
+        /* --- NAVIGATION GRID STYLES --- */
+        .nav-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 20px;
+            max-width: 950px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            width: 35px;
+            height: 35px;
+            border: 1px solid #d1d5db;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-color: #3498db;
+        }
+
+        .nav-item.active {
+            border: 2px solid #2c3e50;
+            transform: scale(1.1);
+            z-index: 10;
+        }
+
+        .nav-item.correct { background-color: #2ecc71; color: white; border-color: #27ae60; }
+        .nav-item.incorrect { background-color: #e74c3c; color: white; border-color: #c0392b; }
+    </style>
+</head>
+<body>
+
+    <!-- HAMBURGER BUTTON -->
+    <button class="hamburger-btn" onclick="toggleSidebar()">☰ Menu</button>
+
+    <!-- SIDEBAR MENU -->
+    <div class="sidebar" id="sidebar">
+        <!-- Javascript sem vygeneruje obsah -->
+    </div>
+
+    <!-- MODAL WINDOW -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 style="margin:0; color:#3498db;">Detail otázky <span id="modal-id"></span></h2>
+                <button class="modal-close" onclick="closeModalDirect()">×</button>
+            </div>
+            <div class="modal-q-text" id="modal-question"></div>
+            <div><strong>Odpoveď:</strong></div>
+            <div class="modal-a-text" id="modal-answer"></div>
+        </div>
+    </div>
+
+    <!-- HLAVNÉ MENU -->
+    <div class="menu-container" id="main-menu">
+        <h1 class="menu-title">Medicínska informatika</h1>
+        <button class="menu-btn btn-learn" onclick="startLearning()">📚 Všetky otázky (Učenie)</button>
+        <button class="menu-btn btn-test" onclick="startTest()">🎲 Náhodný TEST (1 ot. z každého okruhu)</button>
+        <button class="menu-btn btn-exam" onclick="startExam()">🎓 Simulácia SKÚŠKY (20 ot.)</button>
+        
+        <p style="color:#777; margin-top:20px; font-size:0.9rem;">
+            Obsahuje otázky zo všetkých prednášok (IS v zdravotníctve, eHealth, Legislatíva, Bezpečnosť, Štandardy, EBM, Telemedicína).
+        </p>
+    </div>
+
+    <!-- HERNÁ PLOCHA -->
+    <div class="game-area" id="game-area">
+        <div class="mode-badge" id="mode-indicator"></div>
+        <!-- NAVIGAČNÁ MRIEŽKA -->
+        <div class="nav-grid" id="nav-grid"></div>
+        
+        <div class="stats">
+            <div class="stat-box">
+                <span class="stat-value remaining" id="count-remaining">0</span>
+                <span class="stat-label">Zostáva</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-value correct" id="count-correct">0</span>
+                <span class="stat-label">Správne</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-value incorrect" id="count-incorrect">0</span>
+                <span class="stat-label">Nesprávne</span>
+            </div>
+        </div>
+
+        <div class="card-container" id="card-container">
+            <div class="card" id="flashcard">
+                <div class="card-face card-front">
+                    <h3>Otázka <span id="q-num"></span></h3>
+                    <div id="q-text" class="answer-text" style="text-align: center;"></div>
+                </div>
+                <div class="card-face card-back">
+                    <h3>Odpoveď</h3>
+                    <div id="a-text" class="answer-text"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls" id="controls">
+            <button id="btn-incorrect" class="btn-control btn-incorrect" onclick="handleAnswer(false)">Neviem</button>
+            <button id="btn-correct" class="btn-control btn-correct" onclick="handleAnswer(true)">Viem</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA (QUESTIONS FROM LECTURES) ---
+        const questions = [
+            // --- KATEGÓRIA 1: Úvod a IS v zdravotníctve (L1) ---
+            { id: 1, q: "Čo je to <strong>Medicínska informatika</strong>?", a: "Disciplína zaoberajúca sa systematickým spracovaním údajov, informácií a poznatkov v medicíne a zdravotnej starostlivosti." },
+            { id: 2, q: "Aké sú hlavné <strong>úlohy</strong> medicínskej informatiky?", a: "<ul><li>Prispievanie ku skvalitneniu medicíny a zdravia jednotlivca.</li><li>Skvalitnenie medicínskych a zdravotníckych poznatkov.</li><li>Prispievanie k dobre organizovanej zdravotnej starostlivosti.</li></ul>" },
+            { id: 3, q: "Vymenujte hlavné typy <strong>informačných systémov</strong> v zdravotníctve.", a: "<ul><li>NIS (Nemocničné informačné systémy)</li><li>LIS (Laboratórne informačné systémy)</li><li>AIS (Ambulantné informačné systémy)</li><li>RIS/PACS (Rádiologické systémy)</li><li>MIS (Manažérske informačné systémy)</li></ul>" },
+            { id: 4, q: "Čo je úlohou <strong>Nemocničného informačného systému (NIS)</strong>?", a: "Slúži na zber, uchovávanie, spracovanie a prenos informácií v nemocniciach. Reflektuje organizačnú štruktúru, podporuje administratívu, lekársku starostlivosť (chorobopisy), starostlivosť sestier a manažment." },
+            { id: 5, q: "Uveďte príklady konkrétnych <strong>NIS</strong> používaných na Slovensku (podľa prednášky).", a: "Doctus, LCS ELECTRONICS (Komplexný NIS), PCS*CARE, PROMIS, StaproMEDEA." },
+            { id: 6, q: "Čo zabezpečujú <strong>Laboratórne informačné systémy (LIS)</strong>?", a: "Komplexnú správu laboratórií (biochémia, hematológia atď.). Umožňujú priamu komunikáciu s analyzátormi (odstraňujú riziko chýb pri prepise) a prepojenie s NIS." },
+            { id: 7, q: "Čo je to <strong>PACS</strong>?", a: "<strong>Picture Archiving and Communication System</strong> (Obrazový archivačný a komunikačný systém). Slúži na ukladanie, archiváciu a distribúciu digitálnych medicínskych obrazov (RTG, CT, MR) a komunikáciu cez štandard DICOM." },
+            { id: 8, q: "Aký je rozdiel medzi <strong>Monolitickou</strong> a <strong>Klient-Server</strong> architektúrou?", a: "<strong>Monolitická:</strong> Jedna unifikovaná, samostatná aplikácia. Ťažko sa mení, akákoľvek zmena vyžaduje nasadenie celého systému.<br><strong>Klient-Server:</strong> Rozdelenie na klienta (UI, žiada o služby) a server (logika, dáta, odpovedá). Umožňuje lepšiu škálovateľnosť a centralizované riadenie." },
+            { id: 9, q: "Aké sú výhody a nevýhody <strong>Monolitickej architektúry</strong>?", a: "<strong>Výhody:</strong> Jednoduchší vývoj a nasadenie na začiatku, jednoduchšie testovanie.<br><strong>Nevýhody:</strong> Pomalší vývoj pri raste, vysoké prepojenie kódu (nedá sa oddeliť), problémy s výkonom a flexibilitou." },
+            { id: 10, q: "Čo je to <strong>AIS</strong> (Ambulantný informačný systém)?", a: "Systém pre vedenie agendy ambulancie (evidencia pacientov, karty, recepty, výkony pre poisťovne). Môže byť súčasťou NIS alebo samostatný softvér (napr. WinAmbulancia, MediCom)." },
+
+            // --- KATEGÓRIA 2: eHealth (L1 - druhá časť) ---
+            { id: 11, q: "Definujte <strong>eHealth</strong> (Elektronické zdravotníctvo).", a: "Oblasť na priesečníku informatiky, zdravotníctva a obchodu. Znamená používanie IKT na naplnenie potrieb pacientov, zdravotníkov a tvorcov politiky (zlepšenie kvality, efektívnosti, dostupnosti)." },
+            { id: 12, q: "Aké sú hlavné <strong>princípy budovania eHealth</strong>?", a: "Jednoduchosť, Dôveryhodnosť, Flexibilita, Otvorenosť, Bezpečnosť, Zákonnosť." },
+            { id: 13, q: "Čo je to <strong>Národný zdravotný portál (NZP)</strong>?", a: "Jednotná vstupná brána pre služby eHealth. Poskytuje informácie občanom (zdravie, prevencia), pacientom (lieky, výkony), lekárom (legislatíva) a inštitúciám." },
+            { id: 14, q: "Čo je to služba <strong>eAlokácia</strong>?", a: "Služba pre manažment času a zdrojov. Zahŕňa eObjednávanie (šetrí čas v čakárni), eKalendár, eOčkovanie, eČakacia listina." },
+            { id: 15, q: "Aké sú výhody <strong>eMedikácie a ePreskripcie</strong>?", a: "Zníženie rizika chýb (interakcie liekov), odstránenie nečitateľných receptov, kontrola duplicít, prehľad o spotrebe liekov, nemožnosť falšovania receptov." },
+            { id: 16, q: "Čo je to <strong>EZKO</strong> (Elektronická zdravotná knižka občana)?", a: "Súbor zdravotných záznamov občana v elektronickej podobe (očkovania, liečba, laboratórne výsledky, prepúšťacie správy). Umožňuje zdieľanie údajov medzi lekármi (zabránenie duplicitným vyšetreniam)." },
+            { id: 17, q: "Čo je projekt <strong>epSOS</strong>?", a: "European Patients Smart Open Service. Projekt EÚ zameraný na cezhraničnú interoperabilitu (zdieľanie pacientskych sumárov a e-receptov medzi krajinami EÚ)." },
+            { id: 18, q: "Aké sú 3 úrovne interoperability v projekte epSOS?", a: "1. Organizačná (identifikácia), 2. Sémantická (preklad konceptov), 3. Technická (infraštruktúra, bezpečnosť)." },
+            { id: 19, q: "Aké sú základné služby <strong>EZKO</strong>?", a: "Manažment súhlasov, zápis od poskytovateľov (PZS), zápis od poisťovní, poskytovanie informácií pacientovi (pacientsky sumár, medikačná história)." },
+            
+            // --- KATEGÓRIA 3: EHR a Legislatíva (L3) ---
+            { id: 20, q: "Aký je rozdiel medzi <strong>EHR</strong> (Electronic Health Record) a <strong>EPR</strong> (Electronic Patient Record)?", a: "<strong>EHR:</strong> Celoživotný záznam (od narodenia po smrť), prierezový, interoperabilný medzi inštitúciami.<br><strong>EPR:</strong> Záznam z jednej inštitúcie (napr. nemocnice), časovo a miestne špecifický." },
+            { id: 21, q: "Kto môže nahliadať do zdravotnej dokumentácie (podľa zákona)?", a: "Pacient, zákonný zástupca, splnomocnená osoba, revízny lekár poisťovne, Úrad pre dohľad (ÚDZS), súdny znalec, posudkový lekár." },
+            { id: 22, q: "Ako dlho sa musí archivovať zdravotná dokumentácia?", a: "<strong>20 rokov</strong> po smrti pacienta (všeobecný lekár) alebo 20 rokov od posledného poskytnutia starostlivosti (špecialisti)." },
+            { id: 23, q: "Aké sú podmienky pre vedenie dokumentácie <strong>výlučne v elektronickej forme</strong>?", a: "Musí byť podpísaná zaručeným elektronickým podpisom (ZEP), musia sa robiť denné zálohy a ročné archívne kópie (nezmeniteľné)." },
+            { id: 24, q: "Ktorý zákon upravuje vedenie zdravotnej dokumentácie na Slovensku?", a: "Zákon č. 576/2004 Z.z. o zdravotnej starostlivosti." },
+            { id: 25, q: "Môže pacient odmietnuť zápis do zdravotnej dokumentácie?", a: "<strong>Nie.</strong> Údaje sú spracovávané na základe zákona. Pacient však musí byť o spracovaní poučený." },
+            { id: 26, q: "Čo je to <strong>GDPR</strong> v kontexte zdravotníctva?", a: "Nariadenie o ochrane osobných údajov. Zdravotné údaje sú citlivé údaje. Nemocnice musia mať zodpovednú osobu (DPO). Právo na výmaz sa na zdravotnú dokumentáciu nevzťahuje (kvôli zákonnej archivácii)." },
+            { id: 27, q: "Čo obsahuje výpis zo zdravotnej dokumentácie?", a: "Chronologický opis vývoja zdravotného stavu, prehľad o doterajšej liečbe, údaje potrebné na ďalšiu starostlivosť, dátum a identifikáciu lekára." },
+
+            // --- KATEGÓRIA 4: Bezpečnosť a Podpis (L4) ---
+            { id: 28, q: "Aké sú dva hlavné typy šifrovacích algoritmov?", a: "<strong>Symetrické:</strong> Jeden kľúč na šifrovanie aj dešifrovanie (DES, AES). Rýchlejšie.<br><strong>Asymetrické:</strong> Pár kľúčov - verejný (šifrovanie) a súkromný (dešifrovanie). (RSA, DSA). Bezpečnejšia distribúcia kľúčov." },
+            { id: 29, q: "Definujte <strong>Elektronický podpis</strong> a čo zaručuje.", a: "Elektronické identifikačné údaje pripojené k dokumentu. Zaručuje:<br>1. <strong>Autentifikáciu</strong> (totožnosť autora)<br>2. <strong>Integritu</strong> (dokument nebol zmenený)<br>3. <strong>Nepopierateľnosť</strong> (autor nemôže poprieť podpis)." },
+            { id: 30, q: "Čo je to <strong>Zaručený (kvalifikovaný) elektronický podpis</strong>?", a: "Podpis vyhotovený pomocou bezpečného zariadenia a kvalifikovaného certifikátu od certifikačnej autority. Má právnu váhu vlastnoručného podpisu." },
+            { id: 31, q: "Čo je to <strong>PKI</strong> (Public Key Infrastructure)?", a: "Infraštruktúra verejného kľúča. Systém certifikačných autorít (CA), ktorý vydáva a spravuje digitálne certifikáty, čím prepája verejné kľúče s identitou osôb." },
+            { id: 32, q: "Ako funguje <strong>Hash funkcia</strong> pri podpise?", a: "Vytvorí z dokumentu unikátny reťazec fixnej dĺžky (odtlačok). Tento hash sa zašifruje súkromným kľúčom autora (vznikne podpis). Príjemca dešifruje podpis verejným kľúčom a porovná hash." },
+            { id: 33, q: "Vymenujte typy symetrických algoritmov.", a: "DES, 3DES, AES, Blowfish, RC4." },
+            { id: 34, q: "Čo je to <strong>ORM</strong> (Object-Relational Mapping) a jeho výhody?", a: "Technika mapovania databázových tabuliek na objekty v aplikácii. Výhody: Rýchlejší vývoj, bezpečnosť (bráni SQL injection), menej písania kódu." },
+
+            // --- KATEGÓRIA 5: Štandardy (L5) ---
+            { id: 35, q: "Prečo sú potrebné <strong>štandardy</strong> v zdravotníctve?", a: "Na zabezpečenie kompatibility (interoperability) rôznych systémov, výmenu údajov, bezpečnosť a jednotnú interpretáciu dát." },
+            { id: 36, q: "Čo je to <strong>HL7</strong> (Health Level Seven)?", a: "Skupina štandardov pre výmenu, správu a integráciu textových klinických a administratívnych údajov. Verzia 3 využíva RIM (Reference Information Model) a XML." },
+            { id: 37, q: "Čo je to <strong>DICOM</strong>?", a: "Digital Image and Communications in Medicine. Štandard pre snímanie, ukladanie a prenos medicínskych obrazov (RTG, CT). Definuje formát súboru (hlavička s dátami + obraz) a komunikačný protokol." },
+            { id: 38, q: "Aké sú typy štandardov v medicínskej informatike?", a: "Dátové prvky, Číselníky (MKCH), Registre, Výmena informácií (HL7, DICOM), Bezpečnosť, Riadenie životného cyklu." },
+            { id: 39, q: "Vysvetlite <strong>OTP</strong> (One Time Password).", a: "Jednorazové heslo platné len pre jedno prihlásenie alebo krátky čas. Zvyšuje bezpečnosť (odolné voči odpozorovaniu)." },
+            { id: 40, q: "Čo je to <strong>JWT</strong> (JSON Web Token)?", a: "Kompaktný spôsob prenosu informácií medzi stranami ako JSON objekt. Často sa používa na autentifikáciu v moderných webových aplikáciách (token-based auth)." },
+
+            // --- KATEGÓRIA 6: Terminológia a Ontológie (L6) ---
+            { id: 41, q: "Aký je rozdiel medzi <strong>Terminológiou</strong> a <strong>Ontológiou</strong>?", a: "<strong>Terminológia:</strong> Súbor termínov (slov), definície sú v ľudskej reči, voľnejšie vzťahy.<br><strong>Ontológia:</strong> Formálna reprezentácia pojmov a vzťahov, založená na logike, strojovo spracovateľná, definuje axiómy a obmedzenia." },
+            { id: 42, q: "Čo je to <strong>SNOMED CT</strong>?", a: "Systematized Nomenclature of Medicine - Clinical Terms. Najkomplexnejšia klinická terminológia na svete. Hierarchická, multiaxiálna, umožňuje presné kódovanie klinických informácií." },
+            { id: 43, q: "Čo je to <strong>MKCH</strong> (ICD)?", a: "Medzinárodná klasifikácia chorôb. Štandardný diagnostický nástroj pre epidemiológiu a manažment zdravia (kódy diagnóz, napr. J00-J99)." },
+            { id: 44, q: "Čo je to <strong>MeSH</strong>?", a: "Medical Subject Headings. Tezaurus (riadený slovník) používaný na indexovanie a vyhľadávanie v biomedicínskej literatúre (napr. v databáze MEDLINE/PubMed)." },
+            { id: 45, q: "Čo je to <strong>UMLS</strong>?", a: "Unified Medical Language System. Metatezaurus, ktorý prepája rôzne biomedicínske slovníky a klasifikácie (SNOMED, MKCH, MeSH) a umožňuje preklad medzi nimi." },
+            { id: 46, q: "Čo je to <strong>Sémantická interoperabilita</strong>?", a: "Schopnosť systémov vymieňať si informácie tak, aby príjemca správne pochopil ich <strong>význam</strong> (nielen syntax). Vyžaduje spoločné terminológie a ontológie." },
+            { id: 47, q: "Aké sú úrovne interoperability?", a: "0: Žiadna<br>1: Technická (káble, protokoly)<br>2: Syntaktická (formát XML, HL7)<br>3: Sémantická (význam, kontext)." },
+
+            // --- KATEGÓRIA 7: EBM - Medicína založená na dôkazoch (L7) ---
+            { id: 48, q: "Čo je to <strong>EBM</strong> (Evidence Based Medicine)?", a: "Systematický prístup k rozhodovaniu o liečbe, ktorý integruje:<br>1. Najlepšie vedecké dôkazy<br>2. Klinické skúsenosti lekára<br>3. Hodnoty a preferencie pacienta." },
+            { id: 49, q: "Aké sú kroky procesu EBM?", a: "1. Formulácia otázky (PICO)<br>2. Vyhľadanie dôkazov<br>3. Kritické hodnotenie dôkazov (validita, význam)<br>4. Aplikácia (integrácia) v praxi<br>5. Vyhodnotenie účinnosti." },
+            { id: 50, q: "Vysvetlite metódu <strong>PICO</strong> pre tvorbu otázky.", a: "<strong>P</strong> (Patient) - Kto je pacient?<br><strong>I</strong> (Intervention) - Aká liečba/test?<br><strong>C</strong> (Comparison) - S čím porovnávame?<br><strong>O</strong> (Outcome) - Aký výsledok očakávame?" },
+            { id: 51, q: "Popíšte <strong>hierarchiu dôkazov</strong> (pyramídu).", a: "Najvyššia kvalita: <strong>Systematické prehľady a Metaanalýzy</strong>.<br>Stred: Randomizované kontrolované štúdie (RCT), Kohortové štúdie.<br>Najnižšia: Kazuistiky, Názory expertov, Laboratórny výskum." },
+            { id: 52, q: "Čo sa hodnotí pri <strong>kritickom hodnotení</strong> štúdie?", a: "<strong>Validita:</strong> Bola štúdia vykonaná správne? (Metodika)<br><strong>Zmysluplnosť:</strong> Sú výsledky klinicky významné? (Veľkosť účinku)<br><strong>Relevancia:</strong> Dá sa to aplikovať na môjho pacienta?" },
+
+            // --- KATEGÓRIA 8: Telemedicína (L8) ---
+            { id: 53, q: "Čo je to <strong>Telemedicína</strong>?", a: "Poskytovanie zdravotníckych služieb na diaľku pomocou IKT, keď je vzdialenosť kritickým faktorom. Zahŕňa diagnostiku, liečbu, prevenciu aj vzdelávanie." },
+            { id: 54, q: "Aké sú 3 základné princípy služieb telemedicíny?", a: "<strong>Hlasové:</strong> Konzultácie cez telefón, linky dôvery.<br><strong>Obrazové:</strong> Prenos snímok (Telerádiológia, Telepatológia).<br><strong>Dátové:</strong> Telemetria (monitoring funkcií), prístup k EHR." },
+            { id: 55, q: "Čo je to <strong>Telerádiológia</strong>?", a: "Prenos rádiologických snímok (RTG, CT) z miesta vzniku k špecialistovi na popis a diagnózu. Využíva štandard DICOM a systémy PACS." },
+            { id: 56, q: "Čo je to <strong>Telemonitorovanie</strong> (Homecare)?", a: "Sledovanie fyziologických funkcií pacienta (tlak, EKG, cukor) v domácom prostredí pomocou senzorov. Údaje sa posielajú lekárovi na vyhodnotenie." },
+            { id: 57, q: "Vymenujte <strong>prínosy telemedicíny</strong>.", a: "Dostupnosť špecialistov aj v odľahlých oblastiach, rýchlejšia diagnóza (konzultácie), zníženie nákladov na cestovanie, skrátenie hospitalizácie (domáce monitorovanie), lepšia edukácia." }
+        ];
+
+        const testCategories = [
+            { id: 1, name: "Úvod & IS v zdravotníctve", min: 1, max: 10 },
+            { id: 2, name: "eHealth", min: 11, max: 19 },
+            { id: 3, name: "EHR & Legislatíva", min: 20, max: 27 },
+            { id: 4, name: "Bezpečnosť & Podpis", min: 28, max: 34 },
+            { id: 5, name: "Štandardy (HL7, DICOM)", min: 35, max: 40 },
+            { id: 6, name: "Terminológia & Ontológie", min: 41, max: 47 },
+            { id: 7, name: "EBM (Evidence Based Medicine)", min: 48, max: 52 },
+            { id: 8, name: "Telemedicína", min: 53, max: 57 }
+        ];
+
+        // --- LOGIC ---
+           
+        let sessionData = [];
+        let currentSessionIndex = 0;
+        let currentCard = null;
+        let correctCount = 0;
+        let incorrectCount = 0;
+        let isFlipped = false;
+        let currentMode = 'learn'; 
+
+        // UI Elementy
+        const mainMenu = document.getElementById('main-menu');
+        const gameArea = document.getElementById('game-area');
+        const cardElement = document.getElementById('flashcard');
+        const qNumEl = document.getElementById('q-num');
+        const qTextEl = document.getElementById('q-text');
+        const aTextEl = document.getElementById('a-text');
+        
+        const countRemEl = document.getElementById('count-remaining');
+        const countCorEl = document.getElementById('count-correct');
+        const countIncEl = document.getElementById('count-incorrect');
+        const modeIndicator = document.getElementById('mode-indicator');
+
+        const btnCor = document.getElementById('btn-correct');
+        const btnInc = document.getElementById('btn-incorrect');
+
+        // Funkcia na náhodné premiešanie poľa
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // --- INITIALIZATION ---
+
+        function initSession(indices, modeName) {
+            currentMode = modeName;
+            correctCount = 0;
+            incorrectCount = 0;
+            
+            sessionData = indices.map(qId => ({
+                qIndex: qId, // Index v poli 'questions'
+                status: null 
+            }));
+
+            currentSessionIndex = 0;
+            setupGameUI(modeName); 
+            renderNavGrid();       
+            loadCard(0);           
+        }
+
+        // --- START FUNCTIONS ---
+
+        function startLearning() {
+            // Všetky otázky (0 až length-1)
+            const indices = questions.map((_, index) => index);
+            initSession(indices, "Režim: Všetky karty");
+        }
+
+        function startTest() {
+            let indices = [];
+            // Z každej kategórie vyberieme 1 náhodnú otázku
+            testCategories.forEach(cat => {
+                const range = cat.max - cat.min + 1;
+                const randomId = Math.floor(Math.random() * range) + cat.min;
+                // Prevod ID na index poľa questions (ID-1, lebo pole je 0-based a ID sú 1-based a idú zaradom)
+                const qIndex = questions.findIndex(q => q.id === randomId);
+                if(qIndex !== -1) indices.push(qIndex);
+            });
+            shuffleArray(indices);
+            initSession(indices, "Režim: TEST (náhodné otázky)");
+        }
+
+        function startExam() {
+            // Simulácia skúšky: 20 náhodných otázok z celého balíka
+            const allIndices = questions.map((_, index) => index);
+            shuffleArray(allIndices);
+            const examIndices = allIndices.slice(0, 20);
+            
+            initSession(examIndices, "Režim: SKÚŠKA (20 otázok)");
+        }
+
+        // --- UI & GAMEPLAY ---
+
+        function setupGameUI(modeText) {
+            modeIndicator.textContent = modeText;
+            
+            mainMenu.style.display = 'none';
+            gameArea.style.display = 'flex';
+            document.querySelector('.card-container').style.display = 'block'; 
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('nav-grid').style.display = 'flex';
+
+            // Reset kontajnera ak bol prepísaný finish()
+            const container = document.querySelector('.card-container');
+            if (!container.querySelector('.card')) {
+                 location.reload();
+            }
+        }
+
+        function renderNavGrid() {
+            const grid = document.getElementById('nav-grid');
+            grid.innerHTML = '';
+
+            sessionData.forEach((item, i) => {
+                const btn = document.createElement('div');
+                btn.className = 'nav-item';
+                btn.textContent = i + 1; 
+                btn.onclick = () => jumpToQuestion(i);
+                btn.id = `nav-item-${i}`;
+                grid.appendChild(btn);
+            });
+            updateNavGridUI();
+        }
+
+        function updateNavGridUI() {
+            sessionData.forEach((item, i) => {
+                const btn = document.getElementById(`nav-item-${i}`);
+                if (!btn) return;
+
+                btn.className = 'nav-item'; // Reset
+
+                if (item.status === true) btn.classList.add('correct');
+                if (item.status === false) btn.classList.add('incorrect');
+                if (i === currentSessionIndex) btn.classList.add('active');
+            });
+        }
+
+        function jumpToQuestion(index) {
+            if (index < 0 || index >= sessionData.length) return;
+            currentSessionIndex = index;
+            loadCard(index);
+        }
+
+        function loadCard(index) {
+            // Kontrola konca
+            if (index >= sessionData.length) {
+                const allCorrect = sessionData.every(i => i.status === true);
+                if (allCorrect) {
+                    finish();
+                    return;
+                } else {
+                    // Ak nie je všetko hotové, nájdi prvú nevyriešenú
+                    const nextTodo = sessionData.findIndex(i => i.status !== true);
+                    if(nextTodo !== -1) {
+                        jumpToQuestion(nextTodo);
+                        return;
+                    } else {
+                        finish(); 
+                        return;
+                    }
+                }
+            }
+
+            isFlipped = false;
+            cardElement.classList.remove('flipped');
+            btnCor.style.display = 'none';
+            btnInc.style.display = 'none';
+
+            const dataItem = sessionData[index];
+            currentCard = questions[dataItem.qIndex];
+
+            qNumEl.textContent = `${currentCard.id} (Poradie: ${index + 1} / ${sessionData.length})`;
+            qTextEl.innerHTML = currentCard.q;
+            aTextEl.innerHTML = currentCard.a;
+
+            updateStats();
+            updateNavGridUI();
+        }
+
+        function updateStats() {
+            const done = sessionData.filter(i => i.status !== null).length;
+            const corr = sessionData.filter(i => i.status === true).length;
+            const incorr = sessionData.filter(i => i.status === false).length;
+
+            countRemEl.textContent = sessionData.length - done;
+            countCorEl.textContent = corr;
+            countIncEl.textContent = incorr;
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            cardElement.classList.toggle('flipped');
+
+            if (isFlipped) {
+                btnCor.style.display = 'inline-block';
+                btnInc.style.display = 'inline-block';
+            } else {
+                btnCor.style.display = 'none';
+                btnInc.style.display = 'none';
+            }
+        }
+
+        cardElement.addEventListener('click', (e) => {
+            if (window.getSelection().toString().length === 0) {
+                 flipCard();
+            }
+        });
+
+        function handleAnswer(isCorrect) {
+            sessionData[currentSessionIndex].status = isCorrect;
+
+            if (isCorrect) correctCount++;
+            else incorrectCount++;
+
+            updateNavGridUI();
+
+            let nextIndex = currentSessionIndex + 1;
+            
+            if (nextIndex >= sessionData.length) {
+                // Skús nájsť prvú, ktorá nie je zelená
+                nextIndex = sessionData.findIndex(i => i.status !== true);
+                if (nextIndex === -1) {
+                    finish();
+                    return;
+                }
+            }
+            jumpToQuestion(nextIndex);
+        }
+
+        function finish() {
+            let finishText = 'Všetky karty prejdené.';
+            if (currentMode.includes('TEST')) finishText = 'Test dokončený.';
+            if (currentMode.includes('SKÚŠKA')) finishText = 'Skúška ukončená.';
+
+            document.getElementById('nav-grid').style.display = 'none'; 
+
+            const container = document.querySelector('.card-container');
+            container.innerHTML = `
+                <div style="text-align:center; padding: 50px;">
+                    <h1 style="color:#2ecc71; font-size: 3rem;">Hotovo!</h1>
+                    <p style="font-size:1.2rem;">${finishText}</p>
+                    <div style="margin-top: 20px; font-size: 1.1rem;">
+                        Celkovo kliknutí: ${correctCount + incorrectCount}
+                    </div>
+                    <button class="btn-menu" onclick="location.reload()">Návrat do menu</button>
+                </div>
+            `;
+            
+            document.getElementById('controls').style.display = 'none';
+            countRemEl.textContent = 0;
+        }
+
+        // --- SIDEBAR & MODAL LOGIC ---
+
+        function initSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            let htmlContent = '';
+
+            testCategories.forEach((cat) => {
+                htmlContent += `<div class="sidebar-category">${cat.name}</div>`;
+
+                for (let i = cat.min; i <= cat.max; i++) {
+                    const q = questions.find(q => q.id === i);
+                    if (q) {
+                        // Odstránenie HTML tagov pre preview v menu
+                        const plainText = q.q.replace(/<[^>]*>?/gm, '');
+                        const shortText = plainText.length > 40 ? plainText.substring(0, 40) + '...' : plainText;
+
+                        htmlContent += `
+                            <div class="sidebar-item" onclick="openModal(${q.id})">
+                                <span class="sidebar-item-id">#${q.id}</span>
+                                ${shortText}
+                            </div>
+                        `;
+                    }
+                }
+            });
+            sidebar.innerHTML = htmlContent;
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        }
+
+        function openModal(id) {
+            const q = questions.find(q => q.id === id);
+            if (!q) return;
+
+            document.getElementById('modal-id').textContent = q.id;
+            document.getElementById('modal-question').innerHTML = q.q;
+            document.getElementById('modal-answer').innerHTML = q.a;
+
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function closeModal(event) {
+            if (event.target.id === 'modal-overlay') {
+                document.getElementById('modal-overlay').style.display = 'none';
+            }
+        }
+
+        function closeModalDirect() {
+            document.getElementById('modal-overlay').style.display = 'none';
+        }
+
+        // Inicializácia
+        initSidebar();
+    </script>
+</body>
+</html>
