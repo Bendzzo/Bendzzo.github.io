@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatómia - Full Verzia s Navigáciou</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            user-select: text;
+        }
+
+        /* --- HLAVNÉ MENU --- */
+        .menu-container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 700px;
+            width: 95%;
+            margin-top: 30px;
+        }
+        
+        .menu-title { color: #2c3e50; margin-bottom: 10px; font-size: 2rem; }
+        .menu-subtitle { color: #7f8c8d; margin-bottom: 30px; font-size: 1rem; }
+
+        .btn-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .menu-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, background 0.2s;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+        }
+
+        .btn-lat-sk { background-color: #3498db; }
+        .btn-sk-lat { background-color: #9b59b6; }
+        .btn-def { background-color: #e67e22; }
+        .btn-exam { 
+            background-color: #c0392b; 
+            grid-column: span 2; 
+            font-size: 1.3rem;
+            padding: 20px;
+            border-bottom: 4px solid #a93226;
+        }
+        
+        .menu-btn:hover { transform: translateY(-3px); opacity: 0.9; }
+        .menu-btn:active { transform: scale(0.98); }
+
+        /* --- HERNÁ PLOCHA --- */
+        .game-area {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .mode-badge {
+            margin-bottom: 15px;
+            background: #e1e1e1;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        /* --- NAVIGAČNÁ MRIEŽKA (GRID) --- */
+        .nav-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            justify-content: center;
+            margin-bottom: 20px;
+            max-width: 800px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #d1d5db;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #555;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            transform: translateY(-2px);
+            border-color: #3498db;
+        }
+
+        /* Aktívna otázka (práve zobrazená) */
+        .nav-item.active {
+            border: 2px solid #2c3e50;
+            transform: scale(1.15);
+            z-index: 10;
+            box-shadow: 0 0 5px rgba(0,0,0,0.3);
+        }
+
+        /* Stavy */
+        .nav-item.correct {
+            background-color: #2ecc71;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .nav-item.incorrect {
+            background-color: #e74c3c;
+            color: white;
+            border-color: #c0392b;
+        }
+
+        /* --- ŠTATISTIKY --- */
+        .stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            background: white;
+            padding: 10px 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .stat-box { display: flex; flex-direction: column; align-items: center; font-weight: bold; }
+        .stat-label { font-size: 0.8rem; color: #777; font-weight: normal; }
+        .remaining { color: #3498db; }
+        .correct { color: #2ecc71; }
+        .incorrect { color: #e74c3c; }
+
+        /* --- KARTA --- */
+        .card-container {
+            perspective: 1000px;
+            width: 700px;
+            max-width: 95%;
+            height: 450px;
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.5s;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 15px;
+            background-color: white;
+        }
+
+        .card.flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            box-sizing: border-box;
+            text-align: center;
+            overflow-y: auto;
+        }
+
+        .card-front { background-color: #fff; color: #2c3e50; }
+        .card-back { background-color: #fdfdfd; color: #2c3e50; transform: rotateY(180deg); border: 2px solid #e0e0e0; }
+
+        h3 { color: #95a5a6; margin-top: 0; margin-bottom: 20px; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px;}
+        
+        .card-content { font-size: 1.8rem; font-weight: bold; line-height: 1.4; }
+        .card-sub { font-size: 1rem; color: #7f8c8d; margin-top: 10px; font-weight: normal; }
+        
+        .def-text {
+            font-size: 1.3rem;
+            font-weight: normal;
+            font-style: italic;
+            color: #444;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .btn-control {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            color: white;
+            display: none; /* Skryté kým sa karta neotočí */
+        }
+        .btn-control:active { transform: scale(0.96); }
+        .btn-correct { background-color: #2ecc71; }
+        .btn-incorrect { background-color: #e74c3c; }
+
+        .btn-menu {
+            display: inline-block; 
+            background: #7f8c8d; 
+            color:white; 
+            margin-top:30px; 
+            padding: 15px 30px; 
+            border:none; 
+            border-radius:8px; 
+            font-size:1.1rem; 
+            cursor:pointer;
+        }
+
+        /* --- SIDEBAR (ZOZNAM) --- */
+        .hamburger-btn {
+            position: fixed;
+            top: 15px;
+            left: 20px;
+            z-index: 2000;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            transition: background 0.3s;
+        }
+        .hamburger-btn:hover { background: #34495e; }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 320px;
+            height: 100vh;
+            background: white;
+            z-index: 1999;
+            box-shadow: 2px 0 15px rgba(0,0,0,0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            overflow-y: auto;
+            padding-top: 70px; 
+            padding-bottom: 30px;
+        }
+
+        .sidebar.active { transform: translateX(0); }
+
+        .sidebar-category {
+            background: #f0f2f5;
+            padding: 10px 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            border-bottom: 1px solid #ddd;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        .sidebar-item {
+            display: block;
+            padding: 10px 20px;
+            color: #555;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: background 0.2s, padding-left 0.2s;
+        }
+
+        .sidebar-item:hover {
+            background: #eef2f7;
+            padding-left: 25px;
+            color: #3498db;
+        }
+        
+        .sidebar-latin { font-weight: bold; display: block; }
+        .sidebar-def { font-size: 0.8rem; color: #e67e22; display: block; margin-top: 2px; font-style: italic;}
+
+        /* --- MODAL WINDOW --- */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 3000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 15px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: left;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #aaa;
+            cursor: pointer;
+        }
+        .modal-close:hover { color: #e74c3c; }
+
+        .modal-row { margin-bottom: 20px; }
+        .modal-label { font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; margin-bottom: 5px;}
+        .modal-text { font-size: 1.2rem; font-weight: bold; color: #2c3e50; }
+        .modal-def { font-style: italic; color: #555; background: #f9f9f9; padding: 10px; border-left: 4px solid #3498db;}
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <button class="hamburger-btn" onclick="toggleSidebar()">☰ Zoznam</button>
+    <div class="sidebar" id="sidebar"></div>
+
+    <!-- MODAL -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="closeModalDirect()">×</button>
+            <h2 style="margin-top:0; color:#3498db;">Detail pojmu</h2>
+            <div class="modal-row">
+                <div class="modal-label">Latinsky</div>
+                <div class="modal-text" id="modal-lat"></div>
+            </div>
+            <div class="modal-row">
+                <div class="modal-label">Slovensky</div>
+                <div class="modal-text" id="modal-sk"></div>
+            </div>
+            <div class="modal-row" id="modal-def-row">
+                <div class="modal-label">Definícia</div>
+                <div class="modal-text modal-def" id="modal-def"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MENU -->
+    <div class="menu-container" id="main-menu">
+        <h1 class="menu-title">Anatómia</h1>
+        <div class="menu-subtitle">Základy teoretickej medicíny (ZS 2025/2026)</div>
+        
+        <div class="btn-group">
+            <button class="menu-btn btn-lat-sk" onclick="startGame('LAT_SK')">
+                🇮🇹 ➡️ 🇸🇰 Lat -> Slo
+            </button>
+            <button class="menu-btn btn-sk-lat" onclick="startGame('SK_LAT')">
+                🇸🇰 ➡️ 🇮🇹 Slo -> Lat
+            </button>
+            <button class="menu-btn btn-def" onclick="startGame('DEF_SK')">
+                📖 ➡️ 🇸🇰 Definuj: [Slovenské slovo]
+            </button>
+            <button class="menu-btn btn-def" onclick="startGame('LAT_DEF')">
+                📖 ➡️ 🇮🇹 Definuj: [Latinské slovo]
+            </button>
+        </div>
+        
+        <button class="menu-btn btn-exam" onclick="startGame('EXAM')">
+            🎓 SKÚŠKA (40 náhodných)<br>
+            <span style="font-size:0.8rem; font-weight:normal;">Vidíš definíciu ➡️ Uhádni latinský názov</span>
+        </button>
+    </div>
+
+    <!-- HRA -->
+    <div class="game-area" id="game-area">
+        <div class="mode-badge" id="mode-indicator"></div>
+        
+        <!-- TU JE TÁ VRÁTENÁ MRIEŽKA -->
+        <div class="nav-grid" id="nav-grid"></div>
+
+        <div class="stats">
+            <div class="stat-box">
+                <span class="stat-value remaining" id="count-remaining">0</span>
+                <span class="stat-label">Spolu</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-value correct" id="count-correct">0</span>
+                <span class="stat-label">Správne</span>
+            </div>
+            <div class="stat-box">
+                <span class="stat-value incorrect" id="count-incorrect">0</span>
+                <span class="stat-label">Chyby</span>
+            </div>
+        </div>
+
+        <div class="card-container" id="card-container">
+            <div class="card" id="flashcard">
+                <div class="card-face card-front">
+                    <h3 id="lbl-question">Otázka</h3>
+                    <div id="q-content"></div>
+                </div>
+                <div class="card-face card-back">
+                    <h3 id="lbl-answer">Odpoveď</h3>
+                    <div id="a-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls" id="controls">
+            <button id="btn-incorrect" class="btn-control btn-incorrect" onclick="handleAnswer(false)">Nesprávne</button>
+            <button id="btn-correct" class="btn-control btn-correct" onclick="handleAnswer(true)">Správne</button>
+        </div>
+    </div>
+
+    <script>
+        // --- DATA ---
+        const dictionary = [
+            // Základné pojmy
+            { lat: "anatómia", sk: "anatómia", def: "Je vedecký odbor, ktorý patrí do veľkej skupiny morfologických vied... Študuje stavbu, štruktúru a tvar živých organizmov." },
+            { lat: "cellula", sk: "bunka", def: "Je najmenší živý útvar, ktorý je schopný samostatnej existencie." },
+            { lat: "textus", sk: "tkanivo", def: "je súbor tvarovo podobných, ale funkčne diferencovaných buniek" },
+            // Bunka a organely
+            { lat: "mitochondria", sk: "mitochondria", def: "organely nevyhnutné pre život eukaryotických buniek, predstavujú energetické centrum bunky." },
+            { lat: "ribosóm", sk: "ribozóm", def: "najmenšie bunkové organely nevyhnutné na tvorbu bielkovín." },
+            { lat: "nucleus", sk: "jadro", def: "jadro oddelené od cytoplazmy jadrovou membránou" },
+            { lat: "lysosoma", sk: "lyzozóm", def: "jednomembránové organely, v ktorých prebieha tzv. bunkové trávenie." },
+            { lat: "centriolum", sk: "centriola", def: "štruktúra nachádzajúca sa v blízkosti jadra; miesto vyrastania a tvorby mikrotubulov v cytoplazme." },
+            // Tkanivá
+            { lat: "epithelium", sk: "epitel", def: "tvoria ho veľmi podobné bunky usporiadané tesne vedľa seba a medzi nimi je len veľmi málo medzibunkovej hmoty" },
+            { lat: "tela fibrosa", sk: "väzivo", def: "podporný typ tkaniva... zväčša mäkké a poddajné tkanivo, tvorí výplň medzi orgánmi a podkožným tukom" },
+            { lat: "cartilago", sk: "chrupka", def: "bezcievne podporné spojivové tkanivo odolné proti tlaku, je pružné, tuhé a pevné" },
+            { lat: "os", sk: "kosť", def: "Tvorí je podporné spojivové tkanivo – kostné tkanivo" },
+            // Kostrová sústava
+            { lat: "periosteum", sk: "okostnica", def: "je pevná väzivová blana." },
+            { lat: "medulla ossium", sk: "kostná dreň", def: "vypĺňa dutiny kostí." },
+            { lat: "articulatio", sk: "kĺb", def: "je pohyblivé spojenie dvoch alebo viacerých kostí, ktoré sa dotýkajú kĺbovými plochami pokrytými chrupkou." },
+            { lat: "columna vertebralis", sk: "chrbtica", def: "Základnú os trupu tvorí CHRBTICA" },
+            { lat: "vertebra", sk: "stavec", def: "Chrbtica = 33 až 34 stavcov" },
+            { lat: "thorax", sk: "hrudník", def: "ohraničuje hrudníkovú dutinu, v ktorej je uložené srdce, pľúca a veľké cievy" },
+            { lat: "costa", sk: "rebro", def: "sú dlhé, ploché a oblúkovité ohnuté kosti" },
+            // Svalová sústava
+            { lat: "musculus", sk: "sval", def: "Je štruktúra, v ktorej v dôsledku šírenia vzruchu z nervového tkaniva vzniká... mechanická odpoveď vo forme svalovej kontrakcie" },
+            { lat: "tendo", sk: "šľacha", def: "priame, alebo nepriame pripojenie svalu ku kosti, na chrupku, alebo do kože" },
+            { lat: "diaphragma", sk: "bránica", def: "hlavný a najdôležitejší dýchací sval; plochý sval. Oddeľuje hrudníkovú a brušnú dutinu." },
+            // Nervová sústava
+            { lat: "neurón", sk: "nervová bunka", def: "Základná funkčná a vykonávacia jednotka NS je nervová bunka" },
+            { lat: "dendrit", sk: "dendrit", def: "krátke, bohato sa vetviace nervové výbežky, špecializované na príjem signálov" },
+            { lat: "axón", sk: "neurit", def: "zvyčajne najdlhší výbežok neurónu, dlhé osové vlákno, ktorým sa prenáša impulzy do iných buniek alebo tkanív" },
+            { lat: "synapsia", sk: "synapsia", def: "Nervové spojenie medzi jednotlivými neurónmi alebo neurónmi a efektorovými bunkami" },
+            { lat: "encephalon", sk: "mozog", def: "štruktúra centrálneho nervového systému (CNS) uložená v lebečnej dutine, ktorá ho ochraňuje" },
+            { lat: "medulla spinalis", sk: "miecha", def: "je 45 cm dlhá štruktúra, hrubá 1 až 1,5 cm s hmotnosťou asi 35 g, ktorá slúži ako spojovací článok medzi mozgom a ostatnými orgánmi v tele človeka" },
+            { lat: "meninges", sk: "mozgové pleny", def: "Centrálny nervový systém je uzavretý systém, ktorý má na svojom povrchu 3 súvislé vrstvy väzivových obalov, ktoré sa nazývajú pleny" },
+            { lat: "mesencephalon", sk: "stredný mozog", def: "Je najmenším oddielom mozgu" },
+            { lat: "cerebellum", sk: "mozoček", def: "Je štruktúra uložená nad predĺženou miechou a Varolovým mostom." },
+            { lat: "diencephalon", sk: "medzimozog", def: "Je tvorený štruktúrami, ktoré sa nachádzajú v okolí III. mozgovej komory." },
+            { lat: "thalamus", sk: "lôžko", def: "Je párová asi 4 cm dlhá oválna vyvýšenina vajcovitého tvaru." },
+            { lat: "hypothalamus", sk: "podlôžko", def: "Je štruktúra tvorená prednou stenou medzimozgu a nachádza na spodine III. mozgovej komory." },
+            { lat: "telencephalon", sk: "koncový mozog", def: "je najobjemnejšou časťou mozgu a nazýva sa niekedy aj veľký mozog." },
+            // Zmysly
+            { lat: "organum visus", sk: "zrakový orgán - oči", def: "predstavujú orgán, ktorý prijíma svetelné stimuly z vonkajších zdrojov a pretvára ich na nervové signály" },
+            { lat: "cornea", sk: "očná rohovka", def: "tvorí ju priezračný disk, cez ktorý prechádzajú svetelné lúče dovnútra očnej gule" },
+            { lat: "sclera", sk: "očné bielko", def: "silný, nepriesvitný vonkajší mliečne sfarbený kryt očnej gule" },
+            { lat: "iris", sk: "dúhovka", def: "je pigmentový disk s otvorom v strede" },
+            { lat: "retina", sk: "sietnica", def: "nachádzajú sa v nej bunky citlivé na svetlo (fotoreceptory), ktoré zodpovedajú za premenu svetelných impulzov na nervové" },
+            { lat: "lens", sk: "šošovka", def: "je priezračný, elastický, konvexný útvar, ktorý sústreďuje svetelné lúče na sietnicu" },
+            { lat: "corpus vitreum", sk: "sklovec", def: "je rôsolovitá priezračná hmota, ktorá vypĺňa väčšinu priestoru očnej gule a tak jej umožňuje udržať svoj tvar" },
+            { lat: "auris externa", sk: "vonkajšie ucho", def: "sa skladá z ušnice a vonkajšieho zvukovodu, ktorý je zakončený ušným bubienkom." },
+            { lat: "auris media", sk: "stredné ucho", def: "je uložené v dutine spánkovej kosti nazvanej bubienková dutina" },
+            // Srdce a cievy
+            { lat: "cor", sk: "srdce", def: "je nepárový dutý svalový orgán červenohnedej farby" },
+            { lat: "pericardium", sk: "osrdcovník", def: "Je pevný väzivový vak, v ktorom je uložené srdce" },
+            { lat: "epicardium", sk: "osrdie", def: "Je tenká hladká a mokvavá blana, ktorá pokrýva povrch srdca." },
+            { lat: "myocardium", sk: "srdcový sval - myokard", def: "Je špeciálny typ priečne pruhovaného svalu tvoriaci vzrušivý a prevodový srdcový orgán." },
+            { lat: "endocardium", sk: "vnútorné osrdie - endokard", def: "Je hladká, lesklá a priesvitná blana tvoriaca vnútornú stenu srdca a vystielajúca srdcové dutiny." },
+            { lat: "vasa sanguinea", sk: "krvné cievy", def: "predstavujú systém trubíc, v ktorých prúdi krv v celom tele" },
+            { lat: "arteria", sk: "tepna", def: "sú všetky cievy, ktoré transportujú okysličenú krv zo srdca do tkanív a orgánov." },
+            { lat: "vena", sk: "žila", def: "sú všetky cievy, ktoré transportujú odkysličenú krv z tkanív a orgánov do srdca s výnimkou pľúcnej žily" },
+            { lat: "capillare", sk: "vlásočnica", def: "sú tenkostenné a jemné cievy, ktoré tvoria zložité siete, ktorých úlohou je výmena krvných plynov a iných látok medzi krvou a tkanivami." },
+            { lat: "aorta", sk: "srdcovnica", def: "Najmohutnejšou tepnou celého obehového systému je srdcovnica" },
+            { lat: "sanguis", sk: "krv", def: "je rôznorodá, životne dôležitá nepriehľadná, extracelulárna tekutina cirkulujúca v krvných cievach" },
+            { lat: "erytrocyt", sk: "červená krvinka", def: "sú diskovité, vysoko diferencované krvné elementy, ktoré počas vývoja v priebehu dozrievania strácajú bunkové jadro" },
+            { lat: "leukocyt", sk: "biela krvinka", def: "sú bezfarebné bunky s jadrom, ktoré vznikajú v kostnej dreni, slezine a lymfoidnom tkanive, mandliach a týmuse" },
+            { lat: "trombocyt", sk: "krvná doštička", def: "sú najmenšie telieska, bezfarebné a bezjadrové úlomky cytoplazmy veľkých buniek" },
+            // Dýchacia sústava
+            { lat: "nasus", sk: "nos", def: "Má tvar trojstrannej pyramídy, ktorá končí koreňom nosa v najvyššom bode" },
+            { lat: "pharynx", sk: "hltan", def: "je lievikovito rozšírená svalová časť tráviacej rúry, ktorá je dlhá asi 12 – 14 cm." },
+            { lat: "larynx", sk: "hrtan", def: "Je začiatočný orgán dolných dýchacích ciest uložený v prednej časti krku pred hltanom, a zároveň je to orgán hlasu" },
+            { lat: "trachea", sk: "priedušnica", def: "je ohybná trubica nadväzujúca na prstienkovitú chrupavku hrtana, ktorá je uložená pred pažerákom" },
+            { lat: "bronchi", sk: "priedušky", def: "sú priamym pokračovaním priedušnice, ktorá sa rozvetvuje na dve priedušky" },
+            { lat: "pulmo", sk: "pľúca", def: "sú párový orgán kužeľovitého tvaru, ktorý je uložený v hrudnom koši a vypĺňa prevažnú časť hrudníkovej dutiny" },
+            { lat: "alveolus", sk: "pľúcny mechúrik", def: "sú najjemnejšie mechúrikovité zakončenia priedušiek v pľúcach, tvorené komôrkami, steny ktorých sú pretkané sieťou krvných vlásočníc – kapilár" },
+            // Močová sústava
+            { lat: "renes", sk: "obličky", def: "sú párový hnedočervený orgán zložený s pravej a ľavej obličky" },
+            { lat: "nefrón", sk: "nefrón", def: "Je základná stavebná a funkčná jednotka obličky, ktorá má od 3 do 10 cm a skladá sa z dvoch častí: telieska a kanálikov" },
+            { lat: "ureter", sk: "močovod", def: "Je párová 20 až 30 cm dlhá trubica z hladkej svaloviny s priemerom 5 až 7 mm a pokrytá väzivovým obalom" },
+            { lat: "vesica urinaria", sk: "močový mechúr", def: "Je dutý, roztiahnuteľný svalový orgán o objeme približne 500 ml, ktorý je uložený za lonovou sponou a slúži ako rezervoár moču" },
+            { lat: "urethra", sk: "močová rúra", def: "je trubica, ktorá vystupuje z dna močového mechúra." },
+            // Tráviaca sústava
+            { lat: "oesophagus", sk: "pažerák", def: "je okolo 25 cm dlhá a asi s 1,5 cm v priemere svalová trubica... Je to prvá časť vlastnej tráviacej rúry, ktorá spája hltan so žalúdkom." },
+            { lat: "gaster", sk: "žalúdok", def: "Je dutý svalový orgán v tvare zahnutého vaku s objemom okolo 1,5 litra, ležiaci v hornej časti brušnej dutiny pod bráničnou klenbou." },
+            { lat: "intestinum tenue", sk: "tenké črevo", def: "Je 4 až 5 m dlhá a 3 až 3,5 cm široká svalová trubica... ktorá je mnohonásobne poprehýbaná a stočená svalová rúra spájajúca žalúdok s hrubým črevom." },
+            { lat: "duodenum", sk: "dvanástnik", def: "je približne 30 cm dlhá, málo pohyblivá časť v tvare podkovy, ktorá je uložená pod žalúdkom" },
+            { lat: "jejunum", sk: "lačník", def: "Je asi 120 cm dlhá časť čreva, ktorej názov je odvodený od toho, že pri pitve býva prázdny" },
+            { lat: "ileum", sk: "bedrovník", def: "je najkratšou časťou tenkého čreva, ktorá vyúsťuje v pravej bedrovej jame do hrubého čreva" },
+            { lat: "intestinum crassum", sk: "hrubé črevo", def: "Je 150 cm a 5 až 8 cm dlhá časť čreva, ktorá sa začína v pravej bedrovej jame vakovitou slepou, rozšírenou časťou - slepým črevom" },
+            { lat: "caecum", sk: "slepé črevo", def: "Je asi 7 cm dlhá časť hrubého čreva, do ktorej z bedrovníka sklzne natrávená potrava." },
+            { lat: "rectum", sk: "konečník", def: "pokračuje do malej panvy ako esovitá kľučka... končí análnym otvorom" },
+            { lat: "hepar", sk: "pečeň", def: "Je hnedočervený hladký, pevný, pružný a zároveň krehký (parenchymatický) orgán... Je najväčšou žľazou ľudského tela." },
+            { lat: "vesica biliaris", sk: "žlčník", def: "Je svalový vakovitý orgán hruškovitého tvaru... Je zásobárňou žlče" },
+            { lat: "pancreas", sk: "podžalúdková žľaza", def: "Je orgán uložený na ľavej strane, pod žalúdkom a čiastočne za ním, priečne od ohybu dvanástnika po slezinu." },
+            // Endokrinný systém
+            { lat: "hypophysis", sk: "podmozgová žľaza", def: "je malá žľaza fazuľovitého tvaru veľkosti 1 cm, umiestnená je v spodine lebečnej a je spojená s hypotalamom stopkou." },
+            { lat: "glandula pinealis", sk: "šuškovité teliesko - epifýza", def: "Je asi 1 cm dlhý výrastok medzimozgu." },
+            { lat: "glandula thyroidea", sk: "štítna žľaza", def: "Je žľaza zložená z dvoch lalokov spojených mostíkom, uložená na prednej strane priedušnice pod štítnou chrupkou." },
+            { lat: "glandulae parathyroideae", sk: "prištítne žľazy", def: "Sú to dva páry žľazových (epitelových) teliesok v tvare hrášku umiestnených na zadnej strane štítnej žľazy." },
+            { lat: "glandulae suprarenales", sk: "nadobličky", def: "sú párové endokrinné žľazy, uložené na horných póloch oboch obličiek." },
+            { lat: "placenta", sk: "placenta", def: "Je plodový koláč s hmotnosťou cca 0,5 kg a slúži zároveň ako endokrinná žľaza" },
+            // Lymfatický systém
+            { lat: "systema lymphaticum", sk: "miazgová sústava", def: "Je systém skladajúci sa z lymfatických ciev (miazgovody) a špecializovaných lymfoidných orgánov a tkanív" },
+            { lat: "lymfa", sk: "miazga", def: "Je bezfarebný produkt tkanivového moku, ktorý vzniká odoberaním metabolitov vznikajúcich v bunkách" },
+            { lat: "nodi lymphatici", sk: "lymfatické uzliny", def: "malé útvaru v tvare fazule, ktoré sa vyskytujú jednotlivo alebo v skupinách. Vznikajú v nich lymfocyty slúžiace ako filter" },
+            { lat: "lien", sk: "slezina", def: "orgán brušnej dutiny, uložený pod ľavou bránicou... svojou funkciou patrí k cievnemu a lymfatickému systému" },
+            { lat: "thymus", sk: "detská žľaza", def: "Je párovým lymfatickým orgánom, dobre vyvinutým u novorodencov. Uložená je v hrudníku vpredu za hrudnou kosťou" },
+            // Koža
+            { lat: "cutis", sk: "koža", def: "Je najväčší plošný orgán ľudského tela o ploche 1,5 až 1,8 m2 a hmotnosti asi 4,5 kg" },
+            { lat: "epidermis", sk: "pokožka", def: "je vrchná vrstva kože, ktorá je hrubá od 0,07 do 0,4 mm." },
+            { lat: "corium", sk: "zamša", def: "je stredná vrstva kože ležiaca pod pokožkou, ktorú vyživuje a nazýva sa aj škára." },
+            { lat: "subcutis", sk: "podkožné väzivo", def: "Je to najhlbšia časť kože, ktorú tvorí riedke väzivo s tukovými bunkami" },
+            { lat: "capillus", sk: "vlas", def: "tenké, dlhé, zrohovatené valcovité útvary, ktoré prerastajú nad povrch kože" },
+            { lat: "unguis", sk: "necht", def: "je zrohovatená vypuklá platnička na konci článkov prstov na ruke a nohe." },
+            // Doplňujúce pojmy
+            { lat: "abdomen", sk: "brucho" },
+            { lat: "abduccia", sk: "odtiahnutie" },
+            { lat: "adduccia", sk: "pritiahnutie" },
+            { lat: "antebrachium", sk: "predlaktie" },
+            { lat: "anus", sk: "análny otvor" },
+            { lat: "apex", sk: "hrot" },
+            { lat: "caput", sk: "hlava" },
+            { lat: "cervix", sk: "krk" },
+            { lat: "clavicula", sk: "kľúčna kosť" },
+            { lat: "coccyx", sk: "kostrč" },
+            { lat: "collum", sk: "krk" },
+            { lat: "cranium", sk: "lebka" },
+            { lat: "cubitus", sk: "lakeť" },
+            { lat: "digitus", sk: "prst" },
+            { lat: "dorsum", sk: "chrbát" },
+            { lat: "femur", sk: "stehno" },
+            { lat: "fibula", sk: "ihlica" },
+            { lat: "flexia", sk: "ohnutie" },
+            { lat: "genu", sk: "koleno" },
+            { lat: "humerus", sk: "ramenná kosť" },
+            { lat: "manus", sk: "ruka" },
+            { lat: "maxilla", sk: "čelusť" },
+            { lat: "mandibula", sk: "sánka" },
+            { lat: "mentum", sk: "brada" },
+            { lat: "nasale", sk: "nosný" },
+            { lat: "occipitalis", sk: "záhlavný" },
+            { lat: "orbita", sk: "očnica" },
+            { lat: "ovaria", sk: "vaječníky" },
+            { lat: "palatum", sk: "podnebie" },
+            { lat: "patella", sk: "jabĺčko" },
+            { lat: "pelvis", sk: "panva" },
+            { lat: "pes", sk: "noha" },
+            { lat: "radius", sk: "vretenná kosť" },
+            { lat: "scapula", sk: "lopatka" },
+            { lat: "tarsus", sk: "priehlavok" },
+            { lat: "tibia", sk: "píšťala" },
+            { lat: "thorax", sk: "hrudník" },
+            { lat: "ulna", sk: "lakťová kosť" },
+            { lat: "venter", sk: "brucho" },
+            { lat: "vomer", sk: "čerieslo" }
+        ];
+
+        // --- GAME STATE ---
+        // deck obsahuje indexy do poľa dictionary
+        let deck = []; 
+        let currentMode = ''; 
+        let currentDeckIndex = 0; // Kde sa nachádzame v decku
+        
+        // Uchovávame stav každej karty v session: 'todo', 'correct', 'incorrect'
+        let sessionState = [];
+
+        let isFlipped = false;
+        
+        const cardElement = document.getElementById('flashcard');
+        const qContentEl = document.getElementById('q-content');
+        const aContentEl = document.getElementById('a-content');
+        const lblQuestion = document.getElementById('lbl-question');
+        const lblAnswer = document.getElementById('lbl-answer');
+        const btnCor = document.getElementById('btn-correct');
+        const btnInc = document.getElementById('btn-incorrect');
+        const gridContainer = document.getElementById('nav-grid');
+        
+        // --- HELPERS ---
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // --- SIDEBAR LOGIC ---
+        function initSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            let html = '';
+            
+            const sortedDict = [...dictionary].sort((a, b) => a.lat.localeCompare(b.lat));
+            let currentLetter = '';
+            
+            sortedDict.forEach((item) => {
+                const firstChar = item.lat.charAt(0).toUpperCase();
+                if (firstChar !== currentLetter) {
+                    currentLetter = firstChar;
+                    html += `<div class="sidebar-category">${currentLetter}</div>`;
+                }
+                const originalIndex = dictionary.indexOf(item);
+                html += `
+                    <div class="sidebar-item" onclick="openModal(${originalIndex})">
+                        <span class="sidebar-latin">${item.lat}</span>
+                        ${item.def ? '<span class="sidebar-def">Obsahuje definíciu</span>' : ''}
+                    </div>
+                `;
+            });
+            sidebar.innerHTML = html;
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+        
+        function openModal(index) {
+            const item = dictionary[index];
+            document.getElementById('modal-lat').textContent = item.lat;
+            document.getElementById('modal-sk').textContent = item.sk;
+            const defRow = document.getElementById('modal-def-row');
+            if (item.def) {
+                document.getElementById('modal-def').textContent = item.def;
+                defRow.style.display = 'block';
+            } else {
+                defRow.style.display = 'none';
+            }
+            document.getElementById('modal-overlay').style.display = 'flex';
+        }
+
+        function closeModal(e) { if(e.target.id === 'modal-overlay') document.getElementById('modal-overlay').style.display = 'none'; }
+        function closeModalDirect() { document.getElementById('modal-overlay').style.display = 'none'; }
+
+        // --- GAME FUNCTIONS ---
+
+        function startGame(mode) {
+            currentMode = mode;
+            currentDeckIndex = 0;
+            
+            let sourceIndices = [];
+            
+            // Filtrovanie
+            if (mode === 'EXAM') {
+                const defIndices = dictionary.map((item, i) => item.def ? i : -1).filter(i => i !== -1);
+                shuffle(defIndices);
+                sourceIndices = defIndices.slice(0, 40);
+            } else if (mode === 'DEF_SK' || mode === 'LAT_DEF') {
+                sourceIndices = dictionary.map((item, i) => item.def ? i : -1).filter(i => i !== -1);
+                shuffle(sourceIndices);
+            } else {
+                sourceIndices = dictionary.map((_, i) => i);
+                shuffle(sourceIndices);
+            }
+
+            deck = sourceIndices;
+            
+            // Inicializácia stavov pre mriežku
+            sessionState = deck.map(() => 'todo');
+
+            // UI
+            document.getElementById('main-menu').style.display = 'none';
+            document.getElementById('game-area').style.display = 'flex';
+            document.getElementById('nav-grid').style.display = 'flex'; // Zobraziť mriežku
+            
+            // Update nadpis
+            let modeText = "";
+            switch(mode) {
+                case 'LAT_SK': modeText = "Latinsko ⮕ Slovenský"; break;
+                case 'SK_LAT': modeText = "Slovensko ⮕ Latinský"; break;
+                case 'DEF_SK': modeText = "Definícia: Čo je [Slovensky]?"; break;
+                case 'LAT_DEF': modeText = "Latinsko ⮕ Definícia"; break;
+                case 'EXAM': modeText = "SKÚŠKA: Definícia ⮕ Latinsky"; break;
+            }
+            document.getElementById('mode-indicator').textContent = modeText;
+
+            renderGrid();
+            loadCard(0);
+        }
+
+        function renderGrid() {
+            gridContainer.innerHTML = '';
+            deck.forEach((_, index) => {
+                const btn = document.createElement('div');
+                btn.className = 'nav-item';
+                btn.textContent = index + 1;
+                btn.onclick = () => jumpToQuestion(index);
+                btn.id = `nav-item-${index}`;
+                gridContainer.appendChild(btn);
+            });
+            updateGrid();
+        }
+
+        function updateGrid() {
+            sessionState.forEach((state, i) => {
+                const btn = document.getElementById(`nav-item-${i}`);
+                if (state === 'correct') {
+                    btn.classList.add('correct');
+                    btn.classList.remove('incorrect');
+                } else if (state === 'incorrect') {
+                    btn.classList.add('incorrect');
+                    btn.classList.remove('correct');
+                } else {
+                    btn.classList.remove('correct', 'incorrect');
+                }
+                
+                if (i === currentDeckIndex) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        function jumpToQuestion(index) {
+            loadCard(index);
+        }
+
+        function loadCard(index) {
+            currentDeckIndex = index;
+            const dictIndex = deck[currentDeckIndex];
+            const item = dictionary[dictIndex];
+
+            // Reset UI karty
+            isFlipped = false;
+            cardElement.classList.remove('flipped');
+            btnCor.style.display = 'none';
+            btnInc.style.display = 'none';
+
+            // Naplnenie textu
+            if (currentMode === 'LAT_SK') {
+                lblQuestion.textContent = "Latinsky";
+                qContentEl.innerHTML = `<div class="card-content">${item.lat}</div>`;
+                lblAnswer.textContent = "Slovensky";
+                aContentEl.innerHTML = `<div class="card-content">${item.sk}</div>` + (item.def ? `<div class="def-text" style="font-size:1rem; margin-top:15px;">${item.def}</div>` : '');
+            } else if (currentMode === 'SK_LAT') {
+                lblQuestion.textContent = "Slovensky";
+                qContentEl.innerHTML = `<div class="card-content">${item.sk}</div>`;
+                lblAnswer.textContent = "Latinsky";
+                aContentEl.innerHTML = `<div class="card-content">${item.lat}</div>`;
+            } else if (currentMode === 'DEF_SK') {
+                lblQuestion.textContent = "Definuj pojem:";
+                qContentEl.innerHTML = `<div class="card-content">${item.sk}</div>`;
+                lblAnswer.textContent = "Definícia";
+                aContentEl.innerHTML = `<div class="def-text">${item.def}</div>`;
+            } else if (currentMode === 'LAT_DEF') {
+                lblQuestion.textContent = "Latinsky";
+                qContentEl.innerHTML = `<div class="card-content">${item.lat}</div>`;
+                lblAnswer.textContent = "Definícia";
+                aContentEl.innerHTML = `<div class="def-text">${item.def}</div><div class="card-sub">(${item.sk})</div>`;
+            } else if (currentMode === 'EXAM') {
+                lblQuestion.textContent = "Čo je to? (Doplň latinský názov)";
+                qContentEl.innerHTML = `<div class="def-text">${item.def}</div>`;
+                lblAnswer.textContent = "Latinsky";
+                aContentEl.innerHTML = `<div class="card-content">${item.lat}</div><div class="card-sub">${item.sk}</div>`;
+            }
+
+            updateGrid();
+            updateStats();
+        }
+
+        function updateStats() {
+            const correct = sessionState.filter(s => s === 'correct').length;
+            const incorrect = sessionState.filter(s => s === 'incorrect').length;
+            
+            document.getElementById('count-remaining').textContent = deck.length;
+            document.getElementById('count-correct').textContent = correct;
+            document.getElementById('count-incorrect').textContent = incorrect;
+        }
+
+        function flipCard() {
+            isFlipped = !isFlipped;
+            cardElement.classList.toggle('flipped');
+            if (isFlipped) {
+                btnCor.style.display = 'inline-block';
+                btnInc.style.display = 'inline-block';
+            } else {
+                btnCor.style.display = 'none';
+                btnInc.style.display = 'none';
+            }
+        }
+
+        cardElement.addEventListener('click', (e) => {
+            if (window.getSelection().toString().length === 0) flipCard();
+        });
+
+        function handleAnswer(isCorrect) {
+            // Uloženie stavu
+            sessionState[currentDeckIndex] = isCorrect ? 'correct' : 'incorrect';
+            updateGrid();
+            updateStats();
+
+            // Logika posunu: Nájsť najbližšiu ďalšiu otázku, ktorá NIE JE "correct"
+            // Najprv skúsime od aktuálneho indexu + 1 po koniec
+            let nextIndex = -1;
+            
+            // 1. Hľadáme dopredu
+            for (let i = currentDeckIndex + 1; i < deck.length; i++) {
+                if (sessionState[i] !== 'correct') {
+                    nextIndex = i;
+                    break;
+                }
+            }
+
+            // 2. Ak sme nenašli, hľadáme od začiatku (wrap around)
+            if (nextIndex === -1) {
+                for (let i = 0; i < currentDeckIndex; i++) {
+                    if (sessionState[i] !== 'correct') {
+                        nextIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            // Ak stále -1, znamená to, že všetko je correct okrem práve zodpovedanej (ak bola incorrect, ostane current)
+            // Ak bola táto correct a nenašli sme inú, tak je koniec.
+            
+            if (sessionState.every(s => s === 'correct')) {
+                finishGame();
+            } else {
+                if (nextIndex !== -1) {
+                    loadCard(nextIndex);
+                } else {
+                    // Sme na poslednej zlej otázke, ostaň tu (refreshne sa cez loadCard pre vizuál)
+                    loadCard(currentDeckIndex); 
+                }
+            }
+        }
+
+        function finishGame() {
+            let msg = "Všetky slovíčka úspešne prejdené.";
+            if (currentMode === 'EXAM') msg = "Skúška dokončená.";
+
+            document.getElementById('card-container').innerHTML = `
+                <div style="text-align:center; padding: 50px; background:white; border-radius:15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                    <h1 style="color:#2ecc71; font-size: 3rem; margin-bottom:10px;">Hotovo!</h1>
+                    <p style="font-size:1.2rem;">${msg}</p>
+                    <button class="btn-menu" onclick="location.reload()">Späť do menu</button>
+                </div>
+            `;
+            document.getElementById('controls').style.display = 'none';
+            document.getElementById('nav-grid').style.display = 'none';
+        }
+
+        // Init
+        initSidebar();
+
+    </script>
+</body>
+</html>
