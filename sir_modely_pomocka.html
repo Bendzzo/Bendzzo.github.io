@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EPIDEMIO // TAHAK</title>
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #000000;
+            --border: 3px solid #000000;
+            --shadow: 6px 6px 0px #000000;
+            --s-color: #ffde59; /* Žltá */
+            --i-color: #ff5757; /* Červená */
+            --r-color: #7ed957; /* Zelená */
+            --v-color: #cb6ce6; /* Fialová */
+            --d-color: #8c8c8c; /* Sivá */
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Courier New', Courier, monospace; /* Kóderský font */
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-transform: uppercase;
+            border-bottom: var(--border);
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            background-color: #000;
+            color: #fff;
+            display: inline-block;
+            padding: 5px 15px;
+            margin-top: 40px;
+            text-transform: uppercase;
+        }
+
+        /* Zlaté pravidlo */
+        .golden-rule {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            font-size: 1.2rem;
+            border: var(--border);
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        /* Kartičky */
+        .card {
+            background-color: #fff;
+            border: var(--border);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: transform 0.1s;
+        }
+
+        .card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000000;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            border-bottom: 2px dashed #000;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .formula {
+            background-color: #f0f0f0;
+            border: 2px solid #000;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border: 2px solid #000;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* Farby pre vizuálne odlíšenie */
+        .bg-s { background-color: var(--s-color); }
+        .bg-i { background-color: var(--i-color); color: #fff; text-shadow: 1px 1px 0 #000;}
+        .bg-r { background-color: var(--r-color); }
+        .bg-v { background-color: var(--v-color); color: #fff;}
+        .bg-d { background-color: var(--d-color); color: #fff;}
+
+        /* Rovnice v modeloch */
+        .eq-block {
+            margin: 10px 0;
+            padding-left: 10px;
+            border-left: 4px solid #000;
+        }
+        
+        .eq-line {
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 5px 0;
+        }
+
+        .flow {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 2px;
+            margin: 15px 0;
+            background: #fff;
+            border: 2px solid #000;
+            padding: 5px;
+        }
+
+        .params-box ul {
+            list-style-type: square;
+            font-size: 1.1rem;
+        }
+
+        .params-box li { margin-bottom: 10px; font-weight: bold; }
+        .highlight { background-color: var(--s-color); padding: 0 5px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🦠 Epidemio // Tahák</h1>
+
+        <div class="golden-rule">
+            ZÁKON ZACHOVANIA ĽUDÍ:<br>
+            Súčet všetkých plusov a mínusov v jednom modeli musí byť vždy NULA!<br>
+            [ N(t+1) = S(t) + I(t) + R(t) ... = konštanta ]
+        </div>
+
+        <h2>[1] Štyri stavebné kocky (Toky)</h2>
+        <div class="grid">
+            <div class="card">
+                <div class="card-title">1. Nákaza (Infekcia)</div>
+                <div class="formula">&beta; * S * I / N</div>
+                <div><span class="tag bg-s"> - S</span> <span class="tag bg-i"> + I</span></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">2. Uzdravenie (Recovery)</div>
+                <div class="formula">&gamma; * I</div>
+                <div><span class="tag bg-i"> - I</span> <span class="tag bg-r"> + R</span> <small>(alebo do S ak SIS)</small></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">3. Smrť (Death)</div>
+                <div class="formula">&gamma;D * I</div>
+                <div><span class="tag bg-i"> - I</span> <span class="tag bg-d"> + D</span></div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">4. Očkovanie (Vaccine)</div>
+                <div class="formula">v * S</div>
+                <div><span class="tag bg-s"> - S</span> <span class="tag bg-v"> + V</span></div>
+            </div>
+        </div>
+
+        <h2>[2] Modely (LEGO skladačka)</h2>
+        <div class="grid">
+            
+            <!-- SIR -->
+            <div class="card">
+                <div class="card-title">Model SIR (Klasika)</div>
+                <div class="flow">S &rarr; I &rarr; R</div>
+                <div class="eq-block">
+                    <div class="eq-line">S = S - (&beta;*S*I/N)</div>
+                    <div class="eq-line">I = I + (&beta;*S*I/N) - (&gamma;*I)</div>
+                    <div class="eq-line">R = R + (&gamma;*I)</div>
+                </div>
+            </div>
+
+            <!-- SIS -->
+            <div class="card">
+                <div class="card-title">Model SIS (Bez imunity)</div>
+                <div class="flow">S &rightleftarrows; I</div>
+                <div class="eq-block">
+                    <div class="eq-line">S = S - (&beta;*S*I/N) <span class="highlight">+ (&gamma;*I)</span></div>
+                    <div class="eq-line">I = I + (&beta;*S*I/N) - (&gamma;*I)</div>
+                </div>
+            </div>
+
+            <!-- SIRD -->
+            <div class="card">
+                <div class="card-title">Model SIRD (S úmrtiami)</div>
+                <div class="flow">S &rarr; I &rarr; R | I &rarr; D</div>
+                <div class="eq-block">
+                    <div class="eq-line">S = S - (&beta;*S*I/N)</div>
+                    <div class="eq-line">I = I + (&beta;*S*I/N) - (&gamma;R*I) - (&gamma;D*I)</div>
+                    <div class="eq-line">R = R + (&gamma;R*I)</div>
+                    <div class="eq-line">D = D + (&gamma;D*I)</div>
+                </div>
+            </div>
+
+            <!-- SISV -->
+            <div class="card">
+                <div class="card-title">Model SISV (S očkovaním)</div>
+                <div class="flow">V &larr; S &rightleftarrows; I</div>
+                <div class="eq-block">
+                    <div class="eq-line">S = S - (&beta;*S*I/N) + (&gamma;*I) - (v*S)</div>
+                    <div class="eq-line">I = I + (&beta;*S*I/N) - (&gamma;*I)</div>
+                    <div class="eq-line">V = V + (v*S)</div>
+                </div>
+            </div>
+
+        </div>
+
+        <h2>[3] Výpočty Parametrov</h2>
+        <div class="card params-box">
+            <ul>
+                <li>Miera uzdravenia: <span class="highlight">Gama (&gamma;) = 1 / dĺžka_choroby_v_dňoch</span></li>
+                <li>Miera nákazy: <span class="highlight">Beta (&beta;) = R0 * &gamma;</span></li>
+                <li>Miera očkovania (v) = <span class="highlight">Tempo * Účinnosť * (1 - Tí_čo_nechcú)</span> <br><em>(Napr: 0.015 * 0.90 * 0.70)</em></li>
+                <li>Rozdelenie Gamy pre SIRD:<br>
+                    <span class="highlight">&gamma;D (Smrť) = &gamma; * úmrtnosť_v_percentách</span> (napr. * 0.20)<br>
+                    <span class="highlight">&gamma;R (Uzdravenie) = &gamma; * prežitie_v_percentách</span> (napr. * 0.80)
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>
