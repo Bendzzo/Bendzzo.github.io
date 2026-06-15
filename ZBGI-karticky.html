@@ -198,18 +198,6 @@
         .answer-text { text-align: left; line-height: 1.6; }
         strong { color: #2c3e50; }
 
-        .ai-generated {
-            background-color: #fff3cd;
-            color: #856404;
-            border: 1px solid #ffeeba;
-            padding: 8px 12px;
-            border-radius: 5px;
-            font-size: 0.85rem;
-            margin-bottom: 15px;
-            display: inline-block;
-            font-weight: bold;
-        }
-
         .mode-badge {
             position: absolute;
             top: 20px;
@@ -442,12 +430,12 @@
         <button class="menu-btn btn-learn" onclick="startLearning()">📚 Všetky karty (Učenie)</button>
         <button class="menu-btn btn-test" onclick="startTest()">🎲 Spustiť ZÁPOČET (7 ot.)</button>
         <!-- NOVÉ TLAČIDLO -->
-        <button class="menu-btn btn-exam" onclick="startExam()">🎓 Spustiť SKÚŠKU (20 ot.)</button>
+        <button class="menu-btn btn-exam" onclick="startExam()">🎓 Spustiť SKÚŠKU (30 ot.)</button>
         
         <p style="color:#777; margin-top:20px; font-size:0.9rem;">
-            <strong>Učenie:</strong> Prechádzajte všetkých 32 otázok rad za radom.<br>
+            <strong>Učenie:</strong> Prechádzajte všetkých 54 otázok rad za radom.<br>
             <strong>Zápočet:</strong> Dostanete 1 náhodnú otázku z každého zo 7 okruhov.<br>
-            <strong>Skúška:</strong> Mix 20 náhodných otázok zo všetkých tém.
+            <strong>Skúška:</strong> Mix 30 náhodných otázok zo všetkých tém.
         </p>
     </div>
 
@@ -493,7 +481,7 @@
     </div>
 
     <script>
-        // --- DATA (32 UNIQUE BIOLOGY QUESTIONS) ---
+        // --- DATA (54 UNIQUE BIOLOGY QUESTIONS WITH FULL CONTEXT) ---
         const questions = [
             {
                 id: 1,
@@ -503,178 +491,288 @@
             {
                 id: 2,
                 q: "Uveďte, čo sú sacharidy, a vymenujte, aké majú funkcie v organizme človeka.",
-                a: "<div class='answer-text'><strong>Definícia:</strong> Sú to významné a základné organické zlúčeniny zložené z uhlíka, vodíka a kyslíka, ktoré sú primárnym a najrýchlejším zdrojom energie.<br><br><strong>Funkcie:</strong><br>1. <strong>Energetická funkcia:</strong> primárny zdroj energie.<br>2. <strong>Zásobná funkcia:</strong> ukladajú sa ako glykogén v pečeni a svaloch.<br>3. <strong>Stavebná funkcia:</strong> súčasť štruktúr buniek, enzýmov a DNA/RNA.</div>"
+                a: "<div class='answer-text'><strong>Definícia:</strong> Sú to významné a základné organické zlúčeniny zložené z uhlíka, vodíka a kyslíka, ktoré sú primárnym a najrýchlejším zdrojom energie.<br><br><strong>Funkcie:</strong><br>1. <strong>Energetická funkcia (primárny zdroj energie):</strong> zdroj energie pre bunky.<br>2. <strong>Zásobná funkcia:</strong> ukladajú sa ako glykogén v pečeni a svaloch.<br>3. <strong>Stavebná funkcia:</strong> súčasť štruktúr buniek, enzýmov a DNA/RNA.</div>"
             },
             {
                 id: 3,
-                q: "Vysvetlite, čo je replikácia DNA, uveďte jej fázy (aj so stručným popisom) a názov kľúčového enzýmu pre tento proces.",
-                a: "<div class='answer-text'><strong>Definícia:</strong> Je to proces tvorby nového vlákna DNA prebiehajúci v jadre bunky, pri ktorom dochádza k rozpletaniu dvojzávitnice a vzniká nová identická kópia DNA.<br><br><strong>Fázy:</strong><br>1. <strong>Iniciácia:</strong> začína sa tvorbou replikačnej vidlice.<br>2. <strong>Elongácia:</strong> pridávanie nukleotidov a postup replikačnej vidlice.<br>3. <strong>Terminácia:</strong> ukončenie syntézy DNA po vyviazaní DNA-polymerázy.<br><br><strong>Kľúčový enzým:</strong> DNA-polymeráza.</div>"
+                q: "Definujte nukleové kyseliny (NK), uveďte zložky, z ktorých sa skladajú, charakterizujte ich a uveďte typy ich štruktúry.",
+                a: "<div class='answer-text'><strong>Definícia a charakteristika:</strong> Sú to makromolekuly bunkového jadra (polynukleotidové reťazce), v ktorých je uložená genetická informácia o chemickom zložení štruktúr každej bunky.<br><br><strong>Zložky (Nukleotidy):</strong> Skladajú sa zo sacharidovej zložky (ribóza/deoxyribóza), dusíkatej bázy (A, G, C, T, U) a fosfátovej zložky (zvyšok kyseliny trihydrogénfosforečnej).<br><br><strong>Typy štruktúry:</strong><br>1. <strong>Primárna štruktúra:</strong> poradie nukleotidov.<br>2. <strong>Sekundárna štruktúra:</strong> dvojzávitnica spojená vodíkovými väzbami medzi bázami, antiparalelné vlákna.<br>3. <strong>Terciárna štruktúra:</strong> priestorové usporiadanie – stočenie do tzv. superhelixu / superšpiralizovaná DNA.</div>"
             },
             {
                 id: 4,
-                q: "Definujte, čo je RNA, a uveďte jej základné typy aj so stručným popisom ich významu.",
-                a: "<div class='answer-text'><strong>Definícia:</strong> Ribonukleová kyselina, ktorú tvoria 4 nukleotidy (CMP, GMP, AMP, UMP). Proces jej vzniku sa volá transkripcia a tvorí sa spravidla na jednom z dvoch vlákien DNA.<br><br><strong>Základné typy:</strong><br>• <strong>mRNA (mediátorová/informačná):</strong> Tvorí sa v jadre a slúži ako matrica pre tvorbu bielkovín.<br>• <strong>tRNA (transferová):</strong> Krátka RNA, ktorá prenáša jednotlivé aminokyseliny na miesto tvorby proteínov na ribozómoch.<br>• <strong>rRNA (ribozomálna):</strong> Nekódujúca RNA, ktorá sa tvorí v jadierku a spolu so špecifickými bielkovinami vytvára štruktúru ribozómov.</div>"
+                q: "Definujte, čo sú nukleové kyseliny, a uveďte základné rozdiely medzi DNA a RNA.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Sú to biomakromolekuly bunkového jadra tvorené polynukleotidovými reťazcami, v ktorých je uložená genetická informácia o chemickom zložení štruktúr každej bunky.<br><br><strong>Rozdiely:</strong> DNA (deoxyribonukleová kyselina) obsahuje cukor deoxyribózu, bázu tymín (T) a tvorí pravotočivú dvojzávitnicu. RNA (ribonukleová kyselina) obsahuje cukor ribózu, namiesto tymínu má uracil (U) a vzniká (syntetizuje sa) spravidla na jednom vlákne DNA.</div>"
             },
             {
                 id: 5,
-                q: "Definujte nukleové kyseliny (NK), uveďte zložky, z ktorých sa skladajú, charakterizujte ich a uveďte typy ich štruktúry.",
-                a: "<div class='answer-text'><strong>Definícia a charakteristika:</strong> Sú to makromolekuly bunkového jadra (polynukleotidové reťazce), v ktorých je uložená genetická informácia o chemickom zložení štruktúr každej bunky.<br><br><strong>Zložky:</strong> Skladajú sa zo sacharidovej zložky (ribóza/deoxyribóza), dusíkatej bázy (A, G, C, T, U) a fosfátovej zložky (zvyšok kyseliny trihydrogénfosforečnej).<br><br><strong>Typy štruktúry:</strong><br>1. <strong>Primárna štruktúra:</strong> poradie nukleotidov.<br>2. <strong>Sekundárna štruktúra:</strong> dvojzávitnica spojená vodíkovými väzbami medzi bázami, antiparalelné vlákna.<br>3. <strong>Terciárna štruktúra:</strong> priestorové usporiadanie – stočenie do tzv. superhelixu / superšpiralizovaná DNA.</div>"
+                q: "Vysvetlite, čo je replikácia DNA, a uveďte fázy (aj so stručným popisom), v ktorých prebieha, a uveďte názov enzýmu, ktorý je pre tento proces kľúčový.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Je to proces tvorby nového vlákna DNA prebiehajúci v jadre bunky, pri ktorom vzniká identická kópia (z jedného rodičovského a jedného nového vlákna).<br><br><strong>Fázy:</strong><br>1. <strong>Iniciácia</strong> – začína sa tvorbou replikačnej vidlice.<br>2. <strong>Elongácia</strong> – pridávanie nukleotidov a postup replikačnej vidlice.<br>3. <strong>Terminácia</strong> – ukončenie syntézy DNA po vyviazaní DNA-polymerázy.<br><br><strong>Kľúčový enzým:</strong> DNA-polymeráza.</div>"
             },
             {
                 id: 6,
-                q: "Vysvetlite génovú expresiu a čo predstavuje expresia génu.",
-                a: "<div class='answer-text'><strong>Génová expresia:</strong> Predstavuje vyjadrenie genetickej informácie (úseku DNA) do podoby finálneho produktu, ktorým môže byť bielkovina (enzým) alebo funkčná RNA.<br><br><strong>Expresia génu:</strong> Je samotný proces, ktorý zahŕňa prepis genetickej informácie z génu v DNA do mRNA (transkripcia) a následný preklad z mRNA do štruktúry bielkoviny (translácia).</div>"
+                q: "Definujte, čo je RNA, uveďte jej základné typy aj so stručným popisom ich významu.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Ribonukleová kyselina, ktorú tvoria 4 nukleotidy (CMP, GMP, AMP, UMP). Process jej vzniku sa volá transkripcia a tvorí sa na jednom z dvoch vlákien DNA.<br><br><strong>Základné typy:</strong><br>• <strong>mRNA (mediátorová/informačná):</strong> Tvorí sa v jadre a slúži ako matrica pre tvorbu bielkovín.<br>• <strong>tRNA (transferová):</strong> Krátka RNA, ktorá prenáša jednotlivé aminokyseliny na miesto tvorby proteínov na ribozómoch.<br>• <strong>rRNA (ribozomálna):</strong> Nekódujúca RNA, ktorá sa tvorí v jadierku a spolu so špecifickými bielkovinami vytvára štruktúru ribozómov.</div>"
             },
             {
                 id: 7,
-                q: "Vysvetlite, čo znamená prepis genetickej informácie a uveďte charakteristiku procesov, ktoré zahŕňa.",
-                a: "<div class='answer-text'><strong>Vysvetlenie:</strong> Je to proces prepisu genetickej informácie do funkčných molekúl bielkovín, ktorý umožňuje vznik presne definovanej a plne funkčnej formy živej hmoty.<br><br><strong>Procesy:</strong> Prebieha na troch úrovniach:<br>1. <strong>Replikácia:</strong> syntéza DNA (vznik identickej kópie DNA).<br>2. <strong>Transkripcia:</strong> prepis poradia nukleotidov z DNA do mRNA.<br>3. <strong>Translácia:</strong> preklad genetickej informácie v mRNA do poradia aminokyselín v bielkovine.</div>"
+                q: "Vysvetlite génovú expresiu a čo je expresia génu.",
+                a: "<div class='answer-text'><strong>Génová expresia:</strong> Predstavuje vyjadrenie genetickej informácie (úseku DNA) do podoby finálneho produktu, ktorým môže byť bielkovina (enzým) alebo funkčná RNA.<br><br><strong>Expresia génu:</strong> Je samotný proces, ktorý zahŕňa prepis genetickej informácie z génu v DNA do mRNA (transkripcia) a následný preklad z mRNA do štruktúry bielkoviny (translácia).</div>"
             },
             {
                 id: 8,
-                q: "Definujte štruktúrny gén eukaryotov, uveďte jeho štruktúru a funkcie jednotlivých častí.",
-                a: "<div class='answer-text'><strong>Definícia:</strong> Je to úsek DNA, ktorý obsahuje genetickú informáciu o primárnej štruktúre proteínu (enzýmu).<br><br><strong>Štruktúra a funkcie:</strong> Skladá sa z 2 častí:<br>1. <strong>Regulačná časť:</strong> (TATA box a CAAT box) slúži na naviazanie transkripčných faktorov regulujúcich prepis.<br>2. <strong>Kódujúca časť:</strong> obsahuje neprekladané oblasti (UTR na 5' a 3' konci) pre napojenie mRNA na ribozóm/ukončenie transkripcie, ako aj funkčné kódujúce exóny a nekódujúce intróny.</div>"
+                q: "Vysvetlite, čo znamená prepis genetickej informácie a uveďte, aké procesy zahŕňa.",
+                a: "<div class='answer-text'><strong>Vysvetlenie:</strong> Je to proces prepisu genetickej informácie do funkčných molekúl bielkovín, ktorý umožňuje vznik presne definovanej a plne funkčnej formy živej hmoty.<br><br><strong>Procesy:</strong> Prebieha na troch úrovniach:<br>1. <strong>Replikácia</strong> (syntéza identickej kópie DNA).<br>2. <strong>Transkripcia</strong> (prepis poradia nukleotidov z DNA do mRNA).<br>3. <strong>Translácia</strong> (preklad informácie z mRNA do poradia aminokyselín v bielkovine).</div>"
             },
             {
                 id: 9,
-                q: "Vysvetlite, čo je operón, a uveďte podstatu pozitívnej a negatívnej regulácie operónu.",
-                a: "<div class='answer-text'><strong>Operón:</strong> Je to úsek DNA a základná transkripčná jednotka u prokaryotickej bunky, ktorá je riadená spoločne promótorom, operátorom a terminátorom.<br><br><strong>Pozitívna regulácia:</strong> Produktom regulátorového génu je 'aktivátor'. Ten sa naviaže na operátor, čím umožní väzbu RNA-polymerázy na promótor a transkripcia génov môže prebiehať.<br><br><strong>Negatívna regulácia:</strong> Produktom regulátorového génu je 'represor'. Ten sa naviaže na operátor, čím zabraňuje pohybu a väzbe RNA-polymerázy, takže transkripcia neprebieha.</div>"
+                q: "Vysvetlite, aký je rozdiel medzi génom a genetickým kódom, definujte, čo je kodón, a vysvetlite jeho úlohu pri prepise genetickej informácie.",
+                a: "<div class='answer-text'><strong>Rozdiel:</strong> Gén je samotný úsek DNA (základná jednotka) so sekvenciou nukleotidov pre tvorbu bielkoviny. Genetický kód je súbor pravidiel, podľa ktorých sa táto sekvencia v bunkách prekladá do štruktúry bielkovín.<br><br><strong>Kodón:</strong> Je to základná jednotka genetického kódu, t.j. poradie troch nukleotidov (triplet) v mRNA pre jednu aminokyselinu.<br><br><strong>Úloha pri prepise:</strong> Pri translácii sa na kodón pripojí 'antikodón' nachádzajúci sa na tRNA, čím sa zabezpečí pripojenie tej správnej aminokyseliny k tvoriacemu sa peptidovému reťazcu.</div>"
             },
             {
                 id: 10,
-                q: "Definujte, čo sú mitóza a meióza, a stručne vysvetlite, aký je medzi nimi podstatný rozdiel.",
-                a: "<div class='answer-text'>• <strong>Mitóza:</strong> Základný spôsob delenia jadra somatickej bunky. Výsledkom sú 2 dcérske bunky, ktoré majú rovnakú genetickú výbavu (diploidnú - 2n) ako materská bunka.<br><br>• <strong>Meióza:</strong> Osobitný typ bunkového delenia pohlavných buniek. Výsledkom sú 4 haploidné bunky (n), z ktorých každá má polovičný počet chromozómov ako materská diploidná (2n) bunka. Prebieha v nej crossing-over (rekombinácia).</div>"
+                q: "Vysvetlite, čo je genetický kód a uveďte, podľa akých jeho vlastností ho môžeme charakterizovať.",
+                a: "<div class='answer-text'><strong>Genetický kód:</strong> Je to súbor pravidiel, ktoré sa v bunkách uplatňujú pri prepise genetickej informácie z DNA do štruktúry bielkovín.<br><br><strong>Vlastnosti:</strong><br>• <strong>Tripletový:</strong> 1 triplet kóduje iba 1 aminokyselinu.<br>• <strong>Univerzálny:</strong> pri všetkých organizmoch majú kodóny rovnaký kódovací zmysel.<br>• <strong>Neprekrývajúci sa:</strong> posledné písmeno tripletu nemôže byť prvým písmenom nasledujúceho.<br>• <strong>Degenerovaný:</strong> väčšina aminokyselín je kódovaná viacerými tripletmi (existuje 64 variácií pre 20 aminokyselín).</div>"
             },
             {
                 id: 11,
-                q: "Vysvetlite, čo je podstatou dedičnosti viazanej na pohlavie a dedičnosti viazanej na X chromozóm.",
-                a: "<div class='answer-text'>• <strong>Viazaná na pohlavie:</strong> Podstatou je, že nehomologické úseky na pohlavných chromozómoch (X a Y) sú rozdielne, čo znamená, že niektoré gény na X chromozóme nemajú párovú alelu na Y chromozóme.<br><br>• <strong>Viazaná na X chromozóm:</strong> Choroba (napr. hemofília) sa dedí mutáciou génu na X chromozóme. Muži (XY) majú iba jeden X chromozóm zdedený od matky, takže recesívna mutácia tohto génu sa u nich prejaví vždy ako ochorenie (nemajú ho čím kompenzovať). Ženy (XX) sú väčšinou iba zdravé prenášačky, lebo zdravý X chromozóm vadu 'zamaskuje'.</div>"
+                q: "Vysvetlite rozdiel medzi transláciou a proteosyntézou.",
+                a: "<div class='answer-text'>• <strong>Proteosyntéza:</strong> Je komplexný a širší proces tvorby bielkovín, ktorý sa skladá z dvoch krokov: transkripcie (v jadre) a translácie (v cytoplazme).<br><br>• <strong>Translácia:</strong> Je teda iba samotný druhý a konečný krok proteosyntézy, kedy na ribozómoch fyzicky dochádza k prekladu štruktúry mRNA do poradia aminokyselín za účasti tRNA.</div>"
             },
             {
                 id: 12,
-                q: "Stručne popíšte, čo je mimojadrová a mitochondriálna dedičnosť.",
-                a: "<div class='answer-text'>• <strong>Mimojadrová dedičnosť:</strong> Špeciálny typ dedičnosti, ktorý je podmienený genetickým materiálom nachádzajúcim sa mimo jadra (kruhové 2-vláknové DNA v mitochondriách, chloroplastoch alebo plazmidoch).<br><br>• <strong>Mitochondriálna dedičnosť:</strong> Je kódovaná priamo na mtDNA v mitochondrii. Dedená je výlučne od matky, pretože otcovské mitochondrie zo spermie sú pri oplodnení zničené.</div>"
+                q: "Definujte aktivitu génu.",
+                a: "<div class='answer-text'>Je to frekvencia, resp. miera, s akou (a či vôbec) dochádza k transkripcii génu a vzniku funkčného proteínu. (Čím je vyššia, tým viac proteínu v bunke vzniká).</div>"
             },
             {
                 id: 13,
-                q: "Doplňte nasledovné definície (Alela, Genotyp, Diploidný stav, Činnosť recesívnej alely).",
-                a: "<div class='answer-text'>• <strong>Alela:</strong> Je dedičný základ znaku, variant génu; je to jedna z viacerých alternatívnych foriem génu.<br>• <strong>Genotyp:</strong> Predstavuje súbor alel, ktoré sa vyskytujú v určitom organizme.<br>• <strong>Diploidný stav:</strong> Znamená, že chromozómy sa nachádzajú v páre, pričom jeden pár pochádza od matky a druhý od otca.<br>• <strong>Činnosť recesívnej alely:</strong> Môže sa prejaviť iba pri homozygotne recesívnom genotype.</div>"
+                q: "Definujte štruktúrny gén (eukaryotov), uveďte jeho štruktúru (na aké časti sa rozdeľuje) a stručne popíšte význam týchto častí.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Je to úsek DNA, ktorý obsahuje genetickú informáciu o primárnej štruktúre proteínu (enzýmu).<br><br><strong>Štruktúra a funkcie:</strong> Skladá sa z 2 častí:<br>1. <strong>Regulačná časť:</strong> (napr. TATA box a CAAT box) slúži na naviazanie transkripčných faktorov regulujúcich prepis.<br>2. <strong>Kódujúca časť:</strong> obsahuje neprekladané oblasti (UTR na 5' a 3' konci) pre napojenie mRNA na ribozóm/ukončenie transkripcie a ďalej funkčné kódujúce exóny a nekódujúce intróny.</div>"
             },
             {
                 id: 14,
-                q: "Definujte, čo je mutácia, a vysvetlite, čo môže nastať v bunke ako dôsledok jej vzniku.",
-                a: "<div class='answer-text'><strong>Definícia:</strong> Je to zmena v genetickej infromácii bunky (zmena v nukleotidovej sekvencii DNA), ktorá nie je podmienená rekombináciou.<br><br><strong>Dôsledok v bunke:</strong> V závislosti od rozsahu poškodenia môže nastať:<br>1. Oprava poškodeného miesta.<br>2. Transformácia bunky na nádorovú bunku.<br>3. Smrť bunky (apoptóza).<br>4. Bunka sa rozmnožuje a vzniká klon mutovaných buniek.</div>"
+                q: "Vysvetlite, čo je operón, a uveďte, z akých častí sa skladá aj so stručným popisom ich významu.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Je to úsek DNA a základná transkripčná jednotka u prokaryotickej bunky, ktorá je riadená spoločne.<br><br><strong>Skladá sa z:</strong><br>• <strong>Promótor:</strong> časť reťazca DNA, na ktorý sa viaže enzým RNA-polymeráza.<br>• <strong>Operátor:</strong> sekvencia DNA, na ktorú sa viaže regulačný proteín.<br>• <strong>Štruktúrne gény:</strong> kódujú bielkoviny (enzýmy) potrebné pre zabezpečenie funkcií bunky.<br>• <strong>Terminátor:</strong> sekvencia na konci, ktorá kóduje ukončenie transkripcie.</div>"
             },
             {
                 id: 15,
+                q: "Vysvetlite, čo je operón, a uveďte podstatu pozitívnej a negatívnej regulácie operónu.",
+                a: "<div class='answer-text'>• <strong>Operón:</strong> Je to úsek DNA a základná transkripčná jednotka u prokaryotickej bunky, ktorá je riadená spoločne promótorom, operátorom a terminátorom.<br><br>• <strong>Pozitívna regulácia:</strong> Produktom regulátorového génu je 'aktivátor'. Ten sa naviaže na operátor, čím umožní väzbu RNA-polymerázy na promótor a transkripcia génov môže prebiehať.<br><br>• <strong>Negatívna regulácia:</strong> Produktom regulátorového génu je 'represor'. Ten sa naviaže na operátor, čím zabraňuje pohybu a väzbe RNA-polymerázy, takže transkripcia neprebieha.</div>"
+            },
+            {
+                id: 16,
+                q: "Definujte, čo sú transkripčné faktory, a vysvetlite, ako pôsobia.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Sú to bielkoviny (proteíny) nevyhnutné pre reguláciu génovej expresie, ktoré sa spolupodieľajú na iniciácii transkripcie génov.<br><br><strong>Ako pôsobia:</strong> Obsahujú vo svojom reťazci sekvenciu zvanú 'rozpoznávacie miesto', pomocou ktorého sa priamo viažu na promótor alebo zosilňovač (enhancer) na DNA, a tak zapínajú alebo regulujú prepis génov.</div>"
+            },
+            {
+                id: 17,
+                q: "Vysvetlite, čo je alternatívny zostrih mRNA a aký má význam.",
+                a: "<div class='answer-text'><strong>Čo to je:</strong> Proces v eukaryotoch, pri ktorom sa z jedného primárneho transkriptu pre-mRNA vytvárajú rôzne funkčné molekuly mRNA. Pri vystrihovaní intrónov môže byť odstránený aj niektorý z exónov, čím vznikajú rôzne kombinácie produktov.<br><br><strong>Význam:</strong> Šetrí množstvo genetickej informácie uloženej v jadre, keďže jeden gén vďaka tomu dokáže kódovať funkčne úplne iný proteín v bunkách rôznych tkanív (napr. gén pre kalcitonín).</div>"
+            },
+            {
+                id: 18,
+                q: "Vymenujte, aké regulačné bielkoviny ovplyvňujú aktivitu RNA-polymerázy a popíšte ich účinok.",
+                a: "<div class='answer-text'>Sú to regulačné bielkoviny (regulátory), ktoré ovplyvňujú naviazanie RNA-polymerázy na DNA:<br><br>1. <strong>Pozitívny regulátor (Aktivátor):</strong> Jeho naviazanie na DNA transkripciu umožňuje a zapína.<br>2. <strong>Negatívny regulátor (Represor):</strong> Jeho naviazanie na DNA blokuje proces transkripcie génov.<br>3. <strong>Efektor:</strong> Je to látka, ktorá modifikuje účinok regulačného proteínu (zmenou jeho konformácie), čím umožní alebo zabráni jeho väzbe na regulačné miesto na DNA.</div>"
+            },
+            {
+                id: 19,
+                q: "Definujte bunkový cyklus, vymenujte jeho fázy aj so stručným popisom.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Predstavuje obdobie života bunky od jej vzniku delením materskej bunky až po jej opätovné rozdelenie na dve dcérske bunky (cyklický sled procesov).<br><br><strong>Fázy:</strong><br>1. <strong>Interfáza:</strong> (delí sa na: G0 - pokojová, G1 - prvá rastová, S - syntetická, G2 - druhá rastová fáza).<br>2. <strong>M-Fáza:</strong> (mitotická fáza = delenie).</div>"
+            },
+            {
+                id: 20,
+                q: "Definujte, čo sú mitóza a meióza, a stručne vysvetlite, aký je medzi nimi podstatný rozdiel.",
+                a: "<div class='answer-text'>• <strong>Mitóza:</strong> Je základný spôsob delenia jadra (karyokinéza) eukaryotickej somatickej bunky. Výsledkom sú dve dcérske bunky, ktoré majú rovnakú genetickú výbavu (2n) ako materská bunka.<br><br>• <strong>Meióza:</strong> Je osobitný typ redukčného delenia pohlavných buniek. Výsledkom z jednej diploidnej materskej bunky (2n) sú štyri haploidné dcérske bunky (n) s polovičným počtom chromozómov. Prebieha v nej crossing-over.</div>"
+            },
+            {
+                id: 21,
+                q: "<b>[Obrázok: Schéma mitotického chromozómu s očíslovanými prvkami 1 až 4]</b><br><br>Uveďte, čo je zobrazené na schéme, a detailne popíšte jednotlivé označené časti 1, 2, 3 a 4.",
+                a: "<div class='answer-text'>Na obrázku je: <strong>Chromozóm (mitotický)</strong>.<br><br><strong>Jednotlivé časti:</strong><br>1 - <strong>Teloméra</strong> (koncový úsek chromozómu)<br>2 - <strong>Centroméra</strong> (miesto spojenia chromatíd)<br>3 - <strong>Dlhé ramienko</strong><br>4 - <strong>Krátke ramienko</strong> (prípadne celá jedna vertikálna polovica sa nazýva chromatída).</div>"
+            },
+            {
+                id: 22,
+                q: "Doplňte nasledovné definície: alela, genotyp, diploidný stav, činnosť recesívnej alely.",
+                a: "<div class='answer-text'>• <strong>Alela:</strong> je dedičný základ znaku, variant génu; je to jedna z viacerých alternatívnych foriem génu.<br>• <strong>Genotyp:</strong> predstavuje súbor alel, ktoré sa vyskytujú v určitom organizme.<br>• <strong>Diploidný stav:</strong> znamená, že chromozómy sa nachádzajú v páre, pričom jeden pár pochádza od matky a druhý od otca.<br>• <strong>Činnosť recesívnej alely:</strong> môže sa prejaviť iba pri homozygotne recesívnom genotype.</div>"
+            },
+            {
+                id: 23,
+                q: "Uveďte, o čom hovorí III. Mendelov zákon.",
+                a: "<div class='answer-text'>Je to <strong>zákon o voľnej kombinovateľnosti alel pri tvorbe gamét</strong>. Hovorí, že pri sledovaní viacerých znakov (dihybridizmus a pod.) sa alely na rôznych chromozómoch správajú nezávisle a kombinujú sa princípom každý s každým, čo vedie k vzniku nových kombinačných typov.</div>"
+            },
+            {
+                id: 24,
+                q: "Vysvetlite, čo je karyotyp a uveďte jeho význam.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Je to súbor všetkých chromozómov (ich počet, veľkosť a tvar), ktoré sa nachádzajú v jadre somatickej bunky.<br><br><strong>Význam:</strong> Je to charakteristický znak určitého druhu organizmu a informuje o presnej genetickej výbave a tvare chromozómov bunky na úrovni mikroskopu.</div>"
+            },
+            {
+                id: 25,
+                q: "<b>[Obrázky: Ľavá schéma zobrazuje kompletnú sadu chromozómov človeka (karyotyp, 2n=46, XY), pravá schéma ukazuje zjednodušenú pruhovanú lineárnu formu usporiadanú podľa veľkosti (idiogram)]</b><br><br>Popíšte, čo presne tieto dva obrázky predstavujú, a uveďte ich základnú charakteristiku.",
+                a: "<div class='answer-text'>• <strong>Ľavý obrázok: Karyotyp</strong> (špecificky karyotyp somatickej bunky človeka 2n=46, zobrazený chromozóm XY ukazuje, že ide o muža). <i>Charakteristika:</i> Je to charakteristický znak druhu organizmu, ktorý informuje o počte, veľkosti a tvare chromozómov.<br><br>• <strong>Pravý obrázok: Idiogram</strong>. <i>Charakteristika:</i> Je to zjednodušené schematické znázornenie karyotypu usporiadané podľa veľkosti a pruhovania chromozómov.</div>"
+            },
+            {
+                id: 26,
+                q: "Vysvetlite podstatu dedičnosti viazanej na pohlavie a dedičnosti viazanej na X chromozóm.",
+                a: "<div class='answer-text'>• <strong>Podstata viazaná na pohlavie:</strong> Homologické úseky na pohlavných chromozómoch (X a Y) sú rovnaké, no nachádzajú sa na nich aj nehomologické úseky (špecifické iba pre X alebo iba pre Y). Preto sa dedičnosť takýchto znakov viaže na konkrétne pohlavie.<br><br>• <strong>Viazaná na X chromozóm:</strong> Choroba (napr. hemofília) vzniká mutáciou génu na X chromozóme. Ženy (XX) majú kompenzáciu zdravým X chromozómom (sú prenášačky bez príznakov), kým muži (XY) túto kompenzáciu nemajú, preto sa u nich recesívna mutácia na ich jedinom X chromozóme prejaví vždy ako ochorenie.</div>"
+            },
+            {
+                id: 27,
+                q: "Definujte genetickú chorobu viazanú na X chromozóm a vysvetlite, čo znamená, keď je táto choroba dedená dominantne a aký je rozdiel pri jej dedení medzi ženským a mužským pohlavím.",
+                a: "<div class='answer-text'>• <strong>Definícia:</strong> Je to choroba spôsobená mutáciou génu umiestneného na X chromozóme.<br><br>• <strong>Dominantné dedenie:</strong> Znamená, že na to, aby sa choroba prejavila, stačí zdediť iba jednu zmenenú kópiu génu (dominantnú mutovanú alelu).<br><br>• <strong>Rozdiel pri dedení:</strong> Postihnutá žena odovzdáva túto chorobu s 50 % rizikom rovnako synom aj dcéram. Postihnutý muž (má len 1 chromozóm X) prenesie chorobu na všetky svoje dcéry (zdedením jeho X), ale všetci jeho synovia budú zdraví (pretože od neho zdedia len zdravý Y chromozóm).</div>"
+            },
+            {
+                id: 28,
+                q: "Stručne popíšte, čo je mimojadrová a mitochondriálna dedičnosť.",
+                a: "<div class='answer-text'>• <strong>Mimojadrová dedičnosť:</strong> Špeciálny typ dedičnosti, ktorý je podmienený mimojadrovým genetickým materiálom (nachádza sa v eukaryotických bunkách v mitochondriách alebo chloroplastoch, u prokaryotov v plazmidoch, vo forme kruhovej 2-vláknovej DNA).<br><br>• <strong>Mitochondriálna dedičnosť:</strong> Je kódovaná priamo na mtDNA v mitochondrii. Je dedená výlučne od matky (otcovské mitochondrie zo spermie sú pri oplodnení zničené).</div>"
+            },
+            {
+                id: 29,
+                q: "Definujte genóm bunky a vymenujte zložky, ktoré ho môžu tvoriť.",
+                a: "<div class='answer-text'>• <strong>Definícia:</strong> Je to súbor všetkých jej génov.<br><br>• <strong>Zložky:</strong> U eukaryotov je tvorený: 1. jadrovou DNA v jadre, 2. mitochondriálnou DNA (v mitochondriách) a 3. chloroplastovou DNA (v rastlinách). U prokaryotov ho tvorí kruhová DNA (nukleoid) a plazmidy.</div>"
+            },
+            {
+                id: 30,
+                q: "Definujte, čo je mutácia, a vysvetlite, čo môže nastať v bunke ako dôsledok jej vzniku (zmena čoho v bunke sa môže týkať).",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Mutácia je (náhla a trvalá) zmena v genetickej informácii bunky, ktorá nie je podmienená rekombináciou DNA. Základom sú zmeny v nukleotidovej sekvencii.<br><br><strong>Čoho sa týka:</strong> Zmena sa môže týkať buď jedného génu (génové mutácie), štruktúry chromozómu a jeho častí (chromozómové mutácie), alebo celého genómu / počtu chromozómov (genómové mutácie).</div>"
+            },
+            {
+                id: 31,
+                q: "Vymenujte a popíšte typy mutácií z hľadiska ich vplyvu na prežitie organizmu a tie, ktoré postihujú bunky a ich časti.",
+                a: "<div class='answer-text'>• <strong>Z hľadiska prežitia (vplyvu na život):</strong><br>1. <strong>Vitálne mutácie:</strong> neovplyvňujú prežívanie jedinca.<br>2. <strong>Letálne mutácie:</strong> výsledný mutovaný genotyp neumožňuje mutantovi prežiť.<br><br>• <strong>Podľa zasiahnutej bunky:</strong><br>1. <strong>Gametické:</strong> vznikajú v pohlavných bunkách a prenášajú sa dedične do ďalšej generácie.<br>2. <strong>Somatické:</strong> vznikajú v somatických (telových) bunkách, neprenášajú sa na ďalšiu generáciu, ale môžu byť príčinou rakoviny.</div>"
+            },
+            {
+                id: 32,
+                q: "Definujte „čítací rámec kodónu“ a vysvetlite, k akým typom mutácií došlo v dvoch zobrazených prípadoch vzhľadom na zmenu čítacieho rámca:<br><br><b>Prípad A (šípka dole):</b> Bodová mutácia (substitúcia), ktorá zmenila pôvodný kodón na terminačný (STOP) kodón.<br><b>Prípad B (šípka doprava):</b> Došlo k delécii (vypadnutiu) jedného nukleotidu.",
+                a: "<div class='answer-text'>• <strong>Čítací rámec:</strong> Je to spôsob, ktorým sa dá rozdeliť sekvencia nukleotidov v nukleovej kyseline (od 5' do 3' konca) na sadu po sebe idúcich, neprekrývajúcich sa trojíc (tripletov).<br><br>• <strong>Bodová mutácia (substitúcia) / Prípad A:</strong> Ak sa substitúciou zmení kodón na terminačný (STOP kodón), ide o tzv. nezmyselnú mutáciu. Čítací rámec zostáva zachovaný, ale proteín sa nedokončí.<br><br>• <strong>Delécia / Prípad B:</strong> Spôsobí tzv. posunovú mutáciu. Táto mutácia mení čítací rámec, celá sekvencia 'stratí svoj význam' (číta sa inak).</div>"
+            },
+            {
+                id: 33,
+                q: "Uveďte enzýmy, ktoré sa podieľajú na reparácii poškodenej DNA.",
+                a: "<div class='answer-text'>Sú to:<br>• <strong>Helikáza</strong><br>• <strong>DNA-glykozyláza</strong><br>• <strong>Nukleázy</strong> (endonukleáza a exonukleáza)<br>• <strong>DNA-polymeráza</strong><br>• <strong>Ligáza</strong></div>"
+            },
+            {
+                id: 34,
                 q: "Vysvetlite rozdiel v efekte medzi mutáciou a rekombináciou.",
                 a: "<div class='answer-text'>• <strong>Mutácia:</strong> Spôsobuje iba malé zmeny v genóme (zmena v nukleotidovej sekvencii) a sama o sebe nemá výrazný vplyv na evolúciu.<br><br>• <strong>Rekombinácia:</strong> Spôsobuje rozsiahle zmeny a prestavby v genóme organizmov (preusporiadanie častí chromozómu) a považuje sa za hlavnú hnaciu silu evolúcie.</div>"
             },
             {
-                id: 16,
-                q: "Uveďte a popíšte mutácie postihujúce genetickú informáciu bunky.",
-                a: "<div class='answer-text'>Patria sem tri základné kategórie:<br><br>1. <strong>Génové (bodové) mutácie:</strong> vedú k zmene jedného nukleotidu alebo páru (sú obmedzené na 1 štruktúrny gén).<br><br>2. <strong>Chromozómové mutácie (aberácie):</strong> poškodzujú DNA na úrovri štruktúry chromozómov a ich častí (napr. delécia, inverzia, translokácia).<br><br>3. <strong>Genómové mutácie:</strong> vedú k zmene celkového počtu chromozómov alebo celých chromozómových súborov (napr. aneuploidia, euploidia).</div>"
+                id: 35,
+                q: "Uveďte a popíšte mutácie, ktoré postihujú genetickú informáciu bunky (génové, chromozómové, genómové).",
+                a: "<div class='answer-text'>Patria sem 3 základné kategórie:<br><br>1. <strong>Génové (bodové) mutácie:</strong> vedú k zmene jedného nukleotidu alebo páru (obmedzené na 1 gén).<br><br>2. <strong>Chromozómové mutácie (aberácie):</strong> poškodzujú DNA na úrovni štruktúry chromozómov a ich častí (napr. delécia, inverzia, translokácia).<br><br>3. <strong>Genómové mutácie:</strong> vedú k zmene celkového počtu chromozómov alebo celých chromozómových súborov (aneuploidia, euploidia).</div>"
             },
             {
-                id: 17,
-                q: "Definujte indukované mutácie, uveďte ich typy a charakterizujte ich.",
-                a: "<div class='answer-text'><strong>Definícia:</strong> Sú to mutácie, ktoré vznikajú v dôsledku pôsobenia vonkajších mutagénnych faktorov (mutagénov).<br><br><strong>Typy (podľa pôvodu):</strong><br>1. <strong>Fyzikálne:</strong> rôzne druhy ionizačného (RTG, rádioaktívne žiarenie rozbíjajúce väzby DNA) a neionizačného žiarenia (UV žiarenie tvoriace diméry).<br>2. <strong>Chemické:</strong> chemické zlúčeniny, ktoré menia alebo napodobňujú štruktúru nukleotidových báz (analógy báz), prípadne sa včleňujú do DNA a spôsobujú zmeny v čítacom rámci (interkalačné činidlá).<br>3. <strong>Biologické:</strong> onkogénne vírusy, ktorých podstatou účinku je vloženie vírusovej sekvencie do genómu hostiteľskej bunky.</div>"
+                id: 36,
+                q: "Definujte, čo je euploidia.",
+                a: "<div class='answer-text'>Je to stav (genómová mutácia), kedy sa v bunke nachádza taký počet chromozómov, ktorý je celým násobkom základného stavu. To znamená, že každý chromozóm z celého chromozómového súboru je rovnako zmnožený, príp. chýba (predstavuje polyploidiu v užšom zmysle slova).</div>"
             },
             {
-                id: 18,
-                q: "Uveďte enzýmy, ktoré sa podieľajú na reparácii poškodenej DNA.",
-                a: "<div class='answer-text'>Sú to:<br>• <strong>Helikáza</strong><br>• <strong>DNA-glykozyláza</strong><br>• <strong>Nukleázy</strong> (endonukleáza, exonukleáza)<br>• <strong>DNA-polymeráza</strong><br>• <strong>Ligáza</strong></div>"
+                id: 37,
+                q: "Vysvetlite a uveďte príčiny vzniku spontánnych mutácií.",
+                a: "<div class='answer-text'>Spontánne mutácie vznikajú náhodným spôsobom, bez vonkajšieho vplyvu, keď dôjde k prirodzenej chybovosti v 3 systémoch bunky:<br><br>1. <strong>Replikačný systém:</strong> omyl v procese replikácie (DNA-polymeráza zaradí nesprávny nukleotid).<br>2. <strong>Rekombinačný systém:</strong> počas profázy I. meiózy (pri tvorbe pohlavných buniek) prebehne rekombinácia nepresne.<br>3. <strong>Reparačný systém:</strong> zlyhanie - enzýmy, ktoré majú opravovať poškodenú DNA, samé urobia chybu.</div>"
             },
             {
-                id: 19,
-                q: "Definujte 'čítací rámec' a popíšte typy mutácií (nezmyselná a posunová mutácia) vzhľadom na jeho zmenu.",
-                a: "<div class='answer-text'>• <strong>Čítací rámec:</strong> Je to spôsob, ktorým sa dá rozdeliť sekvencia nukleotidov v nukleovej kyseline (od 5' do 3' konca) na sadu po sebe idúcich, neprekrývajúcich sa trojíc (tripletov).<br><br>• <strong>Nezmyselná mutácia:</strong> Bodová mutácia (substitúcia), ktorá zmení kodón na terminačný (STOP kodón). Čítací rámec zostáva zachovaný, ale proteín sa nedokončí.<br><br>• <strong>Posunová mutácia (frameshift):</strong> Nastáva pri delécii (vypadnutí) alebo inzercii (zaradení) nukleotidu, čo posunie čítací rámec od daného miesta. Celá nasledujúca sekvencia sa číta inak a stráca svoj pôvodný zmysel.</div>"
+                id: 38,
+                q: "Definujte indukované mutácie, uveďte ich typy (podľa pôvodu) a charakterizujte ich.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Sú to mutácie, ktoré vznikajú v dôsledku pôsobenia vonkajších mutagénnych faktorov (mutagénov).<br><br><strong>Typy (podľa pôvodu):</strong><br>1. <strong>Fyzikálne:</strong> rôzne druhy ionizačného (RTG, rádioaktívne žiarenie rozbíjajúce väzby DNA) a neionizačného žiarenia (UV žiarenie tvoriace diméry).<br>2. <strong>Chemické:</strong> chemické zlúčeniny, ktoré menia alebo napodobňujú štruktúru báz (analógy báz) alebo sa včleňujú do DNA a spôsobujú zmeny v čítacom rámci (interkalačné činidlá).<br>3. <strong>Biologické:</strong> onkogénne vírusy, ktorých podstatou je vloženie vírusovej sekvencie do genómu hostiteľa.</div>"
             },
             {
-                id: 20,
+                id: 39,
                 q: "Vysvetlite, čo je teloméra a aká je jej úloha pri premene bunky na nádorovú.",
-                a: "<div class='answer-text'><strong>Teloméra:</strong> Je to koncová časť eukaryotických chromozómov tvorená nekódujúcou DNA, ktorá chráni chromozóm pred stratou sekvencií počas delenia.<br><br><strong>Úloha pri nádoroch:</strong> V normálnych bunkách sa teloméry skracujú. Nádorové bunky majú schopnosť udržiavať konštantnú dĺžku telomér (pomocou zvýšenej aktivity enzýmu telomeráza). Bunka tak neprejde do apoptózy, stáva sa nesmrteľnou a nekontrolovane sa delí.</div>"
+                a: "<div class='answer-text'>• <strong>Teloméra:</strong> Je to koncová časť eukaryotických chromozómov patriaca k nekódujúcej DNA, ktorá chráni konce chromozómov pred stratou sekvencií počas delenia.<br><br>• <strong>Pri premene bunky na nádorovú:</strong> Ak sa teloméra obnoví v dôsledku zvýšenej aktivity enzýmu telomeráza (ktorý má nádorová bunka vysoký), udrží si konštantnú dĺžku. Týmto sa nádorová bunka stáva 'nesmrteľnou', obíde apoptózu a môže sa nekontrolovane deliť.</div>"
             },
             {
-                id: 21,
-                q: "Definujte prión, popíšte jeho vznik a uveďte, čo môže spôsobovať v organizme.",
-                a: "<div class='answer-text'><strong>Definícia a vznik:</strong> Je to infekčná bielkovina. Ide o abnormálnu formu proteínu, ktorá je po styku s normálnou formou schopná ju premeniť na abnormálnu ('na svoj obraz'). Z biochemického hľadiska je to prirodzená bielkovina v nervovom tkanive, ktorej sa zmenila sekundárna štruktúra (z alfa-helixu na beta-skladaný list).<br><br><strong>Čo spôsobujú:</strong> Majú tendenciu zhlukovať sa do agregátov v nervovom tkanive, čo vedie k odumieraniu neurónov. Tkanivo získava špongiovú štruktúru. Spôsobujú 100% smrteľné neurodegeneratívne ochorenia (napr. variantná Creutzfeldtova-Jakobova choroba u ľudí).</div>"
+                id: 40,
+                q: "Definujte prión, jeho vznik a uveďte, čo môže spôsobovať v organizme.",
+                a: "<div class='answer-text'>• <strong>Čo sú a ich vznik:</strong> Je to infekčná bielkovina. Ide o abnormálnu formu proteínu, ktorá je po styku s normálnou formou schopná ju premeniť na abnormálnu ('na svoj obraz'). Z biochemického hľadiska je to prirodzená bielkovina v nervovom tkanive, ktorej sa zmenila sekundárna štruktúra (z alfa-helixu na beta-skladaný list).<br><br>• <strong>Čo spôsobujú:</strong> Majú tendenciu zhlukovať sa do agregátov v nervovom tkanive, čo vedie k odumieraniu neurónov. Tkanivo získava špongiovú štruktúru. Spôsobujú 100% smrteľné neurodegeneratívne ochorenia (napr. variantná Creutzfeldtova-Jakobova choroba u ľudí).</div>"
             },
             {
-                id: 22,
+                id: 41,
+                q: "Definujte biologické mutagény. Vymenujte, aké zmeny v génoch môžu nastať v dôsledku ich pôsobenia a popíšte ich.",
+                a: "<div class='answer-text'><strong>Definícia:</strong> Tvoria ju skupinu vírusov (onkogénne vírusy), ktoré sú schopné včleniť svoju genetickú informáciu do hostiteľského genómu na ľubovoľné miesto, čím spôsobujú mutácie v génoch.<br><br><strong>Zmeny v génoch a popis:</strong><br>• <strong>Zmena protoonkogénov na onkogény:</strong> Tieto mutované gény následne produkujú pozitívne regulátory a podporujú nekontrolované delenie buniek (nádorový rast).<br>• <strong>Zmena tumor supresorových génov:</strong> Naruší sa gén, ktorý normálne kontroluje cyklus a brzdí delenie buniek, čím bunka stratí schopnosť opravy DNA a nezabráni vzniku rakoviny.</div>"
+            },
+            {
+                id: 42,
                 q: "Vysvetlite, čo sú metastázy a čo je predpokladom ich vzniku.",
-                a: "<div class='answer-text'><strong>Čo sú:</strong> Sú to sekundárne nádory, ktoré vznikajú viacstupňovým procesom šírenia zhubných rakovinových buniek do iných častí tela.<br><br><strong>Predpoklad vzniku:</strong> Aby nádorová bunka mohla tvoriť metastázy, musí získať schopnosť:<br>1. Odpojiť sa z primárneho ložiska.<br>2. Preniknúť do krvného/lymfatického riečiska.<br>3. Dostať sa na vzdialené miesta.<br>4. Prežiť tam a založiť novú kolóniu.<br>5. Vytvoriť si vlastné krvné kapiláry (angiogenéza) pre výživu.</div>"
+                a: "<div class='answer-text'>• <strong>Čo sú:</strong> Sú to sekundárne nádory, ktoré vznikajú viacstupňovým procesom šírenia zhubných rakovinových buniek do iných častí tela.<br><br>• <strong>Predpoklad vzniku:</strong> Aby nádorová bunka mohla tvoriť metastázy, musí získať schopnosť: 1. odpojiť sa z primárneho ložiska, 2. preniknúť do krvného/lymfatického riečiska, 3. dostať sa na vzdialené miesta, 4. prežiť tam a založiť novú kolóniu, 5. vytvoriť si vlastné krvné kapiláry (angiogenéza) pre výživu.</div>"
             },
             {
-                id: 23,
+                id: 43,
                 q: "Definujte epigenetické mechanizmy, vysvetlite podstatu ich pôsobenia a uveďte, čo patrí medzi tieto mechanizmy.",
-                a: "<div class='answer-text'><strong>Definícia a podstata:</strong> Sú to mechanizmy, ktoré ovplyvňujú fenotyp organizmu a génovú expresiu bez toho, aby menili jeho genotyp (samotnú sekvenciu DNA). Pôsobia ako zapínače a vypínače génov, ktoré reagujú na prostredie.<br><br><strong>Patrí sem:</strong><br>1. Metylácia/demetylácia DNA.<br>2. Chemická modifikácia histónov (napr. acetylácia, deacetylácia).<br>3. Zmeny v usporiadaní chromatínu.<br>4. Účinok malých nekódujúcich RNA (napr. miRNA).</div>"
+                a: "<div class='answer-text'>• <strong>Podstata:</strong> Epigenetické mechanizmy študujú zmeny génovej aktivity, ktoré nie sú spôsobené zmenou genetickej informácie uloženej v samotnej molekule DNA (nemutuje sa sekvencia). Pôsobia ako 'vypínače a zapínače' génov ovplyvňovaním prostredia.<br><br>• <strong>Patrí sem:</strong> 1. Metylácia a demetylácia DNA, 2. Chemická modifikácia histónov (acetylácia, deacetylácia), 3. Zmeny v usporiadaní chromatínu, 4. Účinok malých nekódujúcich RNA (napr. miRNA).</div>"
             },
             {
-                id: 24,
+                id: 44,
                 q: "Charakterizujte, čo je genomický imprinting.",
                 a: "<div class='answer-text'>Je to genetický (epigenetický) jav, pri ktorom je miera expresie niektorých génov závislá od toho, od ktorého rodiča bol gén zdedený. Aktivita génu je obmedzená len na 1 chromozóm (jedna alela je aktívna a druhá neaktívna), a to prostredníctvom špecifického označenia sekvencií DNA (napr. pomocou metylácie báz).</div>"
             },
             {
-                id: 25,
-                q: "Definujte vírusy a uveďte kritérium ich delenia.",
-                a: "<div class='answer-text'><strong>Definícia:</strong> Vírus je infekčná častica (biologický systém) o veľkosti okolo 10 nm, ktorá má nukleovú kyselinu (DNA alebo RNA) vloženú do bielkovinovej schránky (kapsidu) a infikuje bunky.<br><br><strong>Kritérium delenia:</strong> Delia sa primárne podľa typu a štruktúry ich nukleovej kyseliny (napr. na DNA a RNA vírusy, jednovláknové, dvojvláknové) a podľa spôsobu replikácie.</div>"
+                id: 45,
+                q: "Uveďte a stručne popíšte, ktoré epigenetické faktory (životného štýlu) ovplyvňujú naše zdravie.",
+                a: "<div class='answer-text'>Sú to faktory životného štýlu, ktoré menia aktivitu našich génov:<br><br>1. <strong>Strava:</strong> môže pôsobiť pozitívne (látky poskytujúce metylovú skupinu ako kyselina listová chránia) alebo negatívne (alkohol a nadbytok tukov inhibujú správnu metyláciu DNA).<br>2. <strong>Stres:</strong> kľúčový negatívny faktor ovplyvňujúci aktivitu génov a zápalovosť.<br>3. <strong>Spánok:</strong> počas spánku sa zapínajú gény dôležité pre regeneráciu, opravu DNA a imunitu. Nedostatok zvyšuje riziko rakoviny a chorôb.<br>4. <strong>Fyzická aktivita:</strong> pozitívny účinok - zvyšuje kvalitu zdravia, náladu, pamäť a imunitu.</div>"
             },
             {
-                id: 26,
-                q: "Uveďte a stručne popíšte, ktoré epigenetické faktory (faktory životného štýlu) ovplyvňujú naše zdravie.",
-                a: "<div class='answer-text'>Sú to faktory životného štýlu, ktoré menia aktivitu našich génov:<br><br>1. <strong>Strava:</strong> môže pôsobiť pozitívne (látky poskytujúce metylovú skupinu ako kyselina listová chránia) alebo negatívne (alkohol a nadbytok tukov inhibujú správnu metyláciu DNA).<br>2. <strong>Stres:</strong> kľúčový negatívny faktor ovplyvňujúci aktivitu génov a zápalovosť.<br>3. <strong>Spánok:</strong> počas spánku sa zapínajú gény dôležité pre regeneráciu, opravu DNA a imunitu. Nedostatok zvyšuje riziko rakoviny a chorôb.<br>4. <strong>Fyzická aktivita:</strong> pozitívny účinok - zvyšuje hladinu látok pre dobrú náladu, pamäť a reguluje prietok krvi čím zlepšuje imunitu.</div>"
+                id: 46,
+                q: "Definujte vírusy a uveďte základné kritérium ich delenia (prípadne uveďte aspoň 2 konkrétne príklady vírusov).",
+                a: "<div class='answer-text'>• <strong>Definícia:</strong> Vírus je infekčná častica (biologický systém) o veľkosti okolo 10 nm, ktorá má nukleovú kyselinu (DNA alebo RNA) vloženú do bielkovinovej schránky (kapsidu) a infikuje bunky.<br><br>• <strong>Kritérium delenia:</strong> Delia sa primárne podľa typu a štruktúry ich nukleovej kyseliny (napr. na DNA a RNA vírusy, jednovláknové, dvojvláknové) a podľa spôsobu replikácie.<br><br>• <strong>Príklady z PDF:</strong> Onkogénne vírusy (DNA/RNA vírusy schopné vyvolať nádorovú transformáciu), prípadne retrovírusy (HIV, vírus hepatitídy B, vírus Ebola).</div>"
             },
             {
-                id: 27,
-                q: "Uveďte a stručne popíšte najdôležitejšie fyzikálno-chemické procesy prebiehajúce v bunkách (súvisiace s DNA).",
-                a: "<div class='answer-text'>• <strong>Denaturácia DNA:</strong> Oddelenie oboch vlákien DNA vplyvom tepla alebo zmeny pH.<br><br>• <strong>Renaturácia DNA:</strong> Obnovenie pôvodnej štruktúry po odstránení vplyvu.<br><br>• Taktiež sem patria kľúčové procesy prenosu informácie riadené enzýmami: <strong>Replikácia</strong>, <strong>Transkripcia</strong>, <strong>Translácia</strong>.</div>"
+                id: 47,
+                q: "Uveďte, na aké skupiny sa delia živé sústavy a stručne ich popíšte.",
+                a: "<div class='answer-text'>Podľa organizácie genómu a buniek sa živé sústavy delia na:<br><br>• <strong>Nebunkové systémy (Vírusy):</strong> Najvariabilnejšia skupina, sú to infekčné častice (DNA/RNA v kapside), nemajú vlastný metabolizmus.<br><br>• <strong>Bunkové systémy:</strong> Delia sa na prokaryotické (majú genóm vo forme kruhovej molekuly DNA v nukleoide a plazmidy) a eukaryotické (majú jadrovú DNA usporiadanú v chromozómoch chránených v pravom jadre bunky).</div>"
             },
             {
-                id: 28,
+                id: 48,
+                q: "<b>[Obrázok: Schematická ilustrácia vírusovej častice s proteínovým obalom (kapsidom) a vnútornou nukleovou kyselinou]</b><br><br>Uveďte, čo presne je zobrazené na obrázku, a popíšte to aj s jeho jednotlivými časťami.",
+                a: "<div class='answer-text'>Na obrázku je: <strong>Vírus</strong>.<br><br>Zobrazená je častica (biologický systém) o veľkosti okolo 10 nm, ktorá má nukleovú kyselinu (DNA alebo RNA) vloženú do bielkovinovej schránky - kapsidu, ktorá infikuje bunky.</div>"
+            },
+            {
+                id: 49,
+                q: "Uveďte a stručne popíšte najdôležitejšie fyzikálno-chemické procesy prebiehajúce v bunkách.",
+                a: "<div class='answer-text'>Spomedzi fyzikálno-chemických zmien samotnej DNA prednáška definuje:<br><br>• <strong>Denaturácia DNA:</strong> Oddelenie oboch vlákien DNA vplyvom tepla alebo zmeny pH.<br><br>• <strong>Renaturácia DNA:</strong> Obnovenie pôvodnej štruktúry po odstránení vplyvu.<br><br>• Taktiež sem patria kľúčové procesy prenosu informácie riadené enzýmami: <strong>Replikácia</strong>, <strong>Transkripcia</strong>, <strong>Translácia</strong>.</div>"
+            },
+            {
+                id: 50,
                 q: "Vysvetlite, čo sú biogénne prvky, ako sa delia a ku každej skupine uveďte aspoň 2 príklady.",
-                a: "<div class='answer-text'>• <strong>Biogénne prvky:</strong> Sú to prvky nevyhnutné pre život a tvorbu biomolekúl.<br><br>• <strong>Makroprvky:</strong> Tvoria väčšinu hmoty. Z prednášok vieme určiť: Uhlík (C), Kyslík (O), Fosfor (P), Vodík (H).<br><br>• <strong>Mikroprvky (stopové):</strong> Vyskytujú sa v stopových množstvách v enzýmoch/štruktúrach. Príklady: Železo (Fe - spomínané v hemoglobíne), Zinok (Zn).</div>"
+                a: "<div class='answer-text'>• <strong>Biogénne prvky:</strong> Sú to prvky nevyhnutné pre život a tvorbu biomolekúl.<br><br>• <strong>Makroprvky:</strong> (tvoria väčšinu hmoty): Z prednášok vieme určiť: Uhlík (C), Kyslík (O), Fosfor (P).<br><br>• <strong>Mikroprvky:</strong> (vyskytujú sa v stopových množstvách v enzýmoch/štruktúrach): Železo (Fe), Zinok (Zn).</div>"
             },
             {
-                id: 29,
-                q: "Definujte metabolizmus.",
-                a: "<div class='answer-text'>Látková premena (metabolizmus) predstavuje súbor za sebou nasledujúcich chemických a energetických procesov v bunkách, ktoré sú riadené špecifickými enzýmami.</div>"
+                id: 51,
+                q: "Definujte pojem metabolizmus.",
+                a: "<div class='answer-text'>Látková premena (<strong>metabolizmus</strong>) predstavuje súbor za sebou nasledujúcich biochemických a energetických procesov v bunkách, ktoré sú riadené špecifickými enzýmami.</div>"
             },
             {
-                id: 30,
+                id: 52,
                 q: "Vymenujte typy látok, ktoré patria medzi makroergické zlúčeniny, a vysvetlite, na čo všetky slúžia.",
-                a: "<div class='answer-text'>• <strong>Typy látok:</strong> Patria sem vysokoenergetické látky (nukleotidy), ktorých fosfátové skupiny sú spojené makroergickou väzbou, t.j. najmä nukleozidtrifosfáty: ATP, CTP, GTP, TTP, UTP a nukleoziddifosfáty: ADP, CDP, GDP...<br><br>• <strong>Na čo slúžia:</strong> Považujú sa za vysokoenergetické látky, ktoré po hydrolýze makroergickej väzby slúžia ako energetické prenášače a okamžité zdroje chemickej energie pre prácu a procesy bunky.</div>"
+                a: "<div class='answer-text'>• <strong>Typy látok:</strong> Patria sem vysokoenergetické látky (nukleotidy), ktorých fosfátové skupiny sú spojenom makroergickou väzbou, t.j. najmä nukleozidtrifosfáty: ATP, CTP, GTP, TTP, UTP a nukleoziddifosfáty: ADP, CDP, GDP...<br><br>• <strong>Na čo slúžia:</strong> Považujú sa za vysokoenergetické látky, ktoré po hydrolýze makroergickej väzby slúžia ako energetické prenášače a okamžité zdroje chemickej energie pre prácu a procesy bunky.</div>"
             },
             {
-                id: 31,
-                q: "Vysvetlite pojem 'bunkové dýchanie' a uveďte názov najdôležitejšieho metabolického procesu, pomocou ktorého bunky získavávajú energiu pre svoj život.",
+                id: 53,
+                q: "Vysvetlite pojem „bunkové dýchanie“ a uveďte názov najdôležitejšieho metabolického procesu, pomocou ktorého bunky získavajú energiu pre svoj život.",
                 a: "<div class='answer-text'>• <strong>Bunkové dýchanie:</strong> Spadá pod kompetenciu mitochondrií, ktorých úlohou je degradácia a metabolizmus tukov, bielkovín a sacharidov z potravy, aby sa premenili na energiu vo forme ATP.<br><br>• <strong>Najdôležitejší proces:</strong> Systém nazývaný respiračný reťazec (systém enzýmov v mitochondrii potrebný na tvorbu tejto chemickej formy energie - ATP) prostredníctvom oxidačnej fosforylácie.</div>"
             },
             {
-                id: 32,
-                q: "Vytvorte dvojice z termínov, ktoré patria k sebe: telový, gonozóm, bielkovina, triplet, vírus, operón, albinizmus, enhancer, hydrofóbny, nepravé jadro.",
-                a: "<div class='answer-text'>Správne páry presne na základe definícií z vašich prednášok:<br><br>1. <strong>telový</strong> – somatický<br>2. <strong>gonozóm</strong> – chromozóm X<br>3. <strong>bielkovina</strong> – biopolymér<br>4. <strong>triplet</strong> – kodón<br>5. <strong>vírus</strong> – mutagén<br>6. <strong>operón</strong> – transkripčná jednotka<br>7. <strong>albinizmus</strong> – enzýmopatia<br>8. <strong>enhancer</strong> – zosilňovač<br>9. <strong>hydrofóbny</strong> – lipofilný<br>10. <strong>nepravé jadro</strong> – nukleoid</div>"
+                id: 54,
+                q: "Máte k dispozícii nasledujúce biologické pojmy:<br><br><b>Skupina A:</b> telový, gonozóm, bielkovina, triplet, vírus, operón, albinizmus, enhancer, hydrofóbny, nepravé jadro.<br><b>Skupina B:</b> lipofilný, chromozóm X, transkripčná jednotka, mutagén, zosilňovač, enzýmopatia, biopolymér, somatický, nukleoid, kodón.<br><br>Priraďte k pojmom zo Skupiny A ich správne párové pojmy zo Skupiny B na základe biologických prednášok.",
+                a: "<div class='answer-text'>Správne páry presne na základe definícií:<br><br>1. <strong>telový</strong> – somatický<br>2. <strong>gonozóm</strong> – chromozóm X<br>3. <strong>bielkovina</strong> – biopolymér<br>4. <strong>triplet</strong> – kodón<br>5. <strong>vírus</strong> – mutagén<br>6. <strong>operón</strong> – transkripčná jednotka<br>7. <strong>albinizmus</strong> – enzýmopatia<br>8. <strong>enhancer</strong> – zosilňovač<br>9. <strong>hydrofóbny</strong> – lipofilný<br>10. <strong>nepravé jadro</strong> – nukleoid</div>"
             }
         ];
 
         const testCategories = [
-            { min: 1, max: 5 },   // Nukleotidy a Nukleové kyseliny
-            { min: 6, max: 9 },   // Génová expresia a Operóny
-            { min: 10, max: 13 }, // Bunkové delenie a Dedičnosť
-            { min: 14, max: 19 }, // Mutácie, mutagény a reparácia DNA
-            { min: 20, max: 22 }, // Onkológia, teloméry a prióny
-            { min: 23, max: 26 }, // Epigenetika a Vírusy
-            { min: 27, max: 32 }  // Metabolizmus, energia a biogénne prvky
+            { min: 1, max: 12 },   // Základy nukleových kyselín a sacharidy
+            { min: 13, max: 18 },  // Génová expresia a Operóny
+            { min: 19, max: 29 },  // Bunkový cyklus, delenie a dedičnosť
+            { min: 30, max: 38 },  // Mutácie, typy a oprava DNA
+            { min: 39, max: 42 },  // Teloméry, rakovina a prióny
+            { min: 43, max: 48 },  // Epigenetika, vírusy a živé sústavy
+            { min: 49, max: 54 }   // Biogénne prvky, energia a metabolizmus
         ];
 
         const categoryNames = [
-            "Nukleotidy a Nukleové kyseliny",
+            "Základy nukleových kyselín a sacharidy",
             "Génová expresia a Operóny",
-            "Bunkové delenie a Dedičnosť",
-            "Mutácie, mutagény a reparácia DNA",
-            "Onkológia, teloméry a prióny",
-            "Epigenetika a Vírusy",
-            "Metabolizmus, energia a biogénne prvky"
+            "Bunkový cyklus, delenie a dedičnosť",
+            "Mutácie, typy a oprava DNA",
+            "Teloméry, rakovina a prióny",
+            "Epigenetika, vírusy a živé sústavy",
+            "Biogénne prvky, energia a metabolizmus"
         ];
 
         // --- LOGIC ---
@@ -755,9 +853,9 @@
         function startExam() {
             const indices = questions.map((_, index) => index);
             shuffleArray(indices);
-            // Vyberie 20 náhodných otázok zo všetkých dostupných
-            const selectedIndices = indices.slice(0, 20);
-            initSession(selectedIndices, "Režim: SKÚŠKA (20 náhodných)");
+            // Vyberie 30 náhodných otázok zo všetkých dostupných
+            const selectedIndices = indices.slice(0, 30);
+            initSession(selectedIndices, "Režim: SKÚŠKA (30 náhodných)");
         }
 
         // --- UI & GAMEPLAY ---
@@ -778,6 +876,7 @@
             }
         }
 
+        // Generovanie indexových štvorčekov pre rýchly skok na otázku
         function renderNavGrid() {
             const grid = document.getElementById('nav-grid');
             grid.innerHTML = '';
